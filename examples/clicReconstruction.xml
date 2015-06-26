@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!--##########################################
+    #                                        #
+    #     Example steering file for marlin   #
+    #                                        #
+    ##########################################-->
+
+
+<marlin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ilcsoft.desy.de/marlin/marlin.xsd">
+ <execute>
+   <processor name="MyAIDAProcessor"/>
+   <processor name="InitDD4hep"/>
+	 
+   <!-- ========== track digitization and tracking  === -->
+	 <processor name="VXDBarrelDigitiser"/>
+	 <processor name="VXDEndcapDigitiser"/>
+	 <processor name="InnerPlanarDigiProcessor"/>
+	 <processor name="InnerEndcapPlanarDigiProcessor"/>
+	 <processor name="OuterPlanarDigiProcessor"/>
+	 <processor name="OuterEndcapPlanarDigiProcessor"/>
+
+	 <processor name="MyTruthTrackFinder"/>
+	 <processor name="MyClicEfficiencyCalculator"/>
+
+
+   <!-- <processor name="MyDiagnostics_Si"/> -->
+
+
+
+
+<!--   <processor name="MyLCIOOutputProcessor"/>  -->
+
+ </execute>
+
+
+ <global>
+	<parameter name="LCIOInputFiles"> simulatedMuons.slcio </parameter>
+  <!-- Limit the number of processed records (run+evt): -->
+  <parameter name="MaxRecordNumber" value="50" />
+  <parameter name="SkipNEvents" value="0" />  
+  <parameter name="SupressCheck" value="false" />  
+  <parameter name="DD4hepXMLFile" value="/afs/cern.ch/eng/clic/work/ilcsoft/v01-17-07-pre05/lcgeo/v00-04-pre03/CLIC/compact/CLIC_o2_v01/CLIC_o2_v01.xml"/>
+  <parameter name="Verbosity" options="DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT"> MESSAGE  </parameter> 
+  <parameter name="RandomSeed" value="1234567890" />
+ </global>
+
+
+ <processor name="InitDD4hep" type="InitializeDD4hep">
+ <!--InitializeDD4hep reads a compact xml file and initializes the DD4hep::LCDD object-->
+  <!--Name of the DD4hep compact xml file to load-->
+  <parameter name="DD4hepXMLFile" type="string"> /afs/cern.ch/eng/clic/work/ilcsoft/v01-17-07-pre05/lcgeo/v00-04-pre03/CLIC/compact/CLIC_o2_v01/CLIC_o2_v01.xml </parameter>
+</processor>
+
+ <processor name="VXDBarrelDigitiser" type="DDPlanarDigiProcessor">
+	<parameter name="SubDetectorName" type="string">Vertex </parameter>
+  <!--PlanarDigiProcessor creates TrackerHits from SimTrackerHits, smearing them according to the input parameters.-->
+   <!--whether hits are 1D strip hits-->
+	 <parameter name="IsStrip" type="bool">false </parameter>
+   <!--resolution in direction of u-->
+   <parameter name="ResolutionU" type="float"> 0.004 0.004 0.004 0.004 0.004 0.004 </parameter>
+   <!--resolution in direction of v-->
+   <parameter name="ResolutionV" type="float"> 0.004 0.004 0.004 0.004 0.004 0.004  </parameter>
+   <!--Name of the Input SimTrackerHit collection-->
+   <parameter name="SimTrackHitCollectionName" type="string" lcioInType="SimTrackerHit">VertexBarrelCollection </parameter>
+   <!--Name of TrackerHit SimTrackHit relation collection-->
+   <parameter name="SimTrkHitRelCollection" type="string" lcioOutType="LCRelation">VXDTrackerHitRelations </parameter>
+   <!--Name of the TrackerHit output collection-->
+   <parameter name="TrackerHitCollectionName" type="string" lcioOutType="TrackerHitPlane">VXDTrackerHits </parameter>
+   <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
+   <parameter name="Verbosity" type="string">WARNING </parameter>
+ </processor>
+
+ <processor name="VXDEndcapDigitiser" type="DDPlanarDigiProcessor">
+	 <parameter name="SubDetectorName" type="string">Vertex </parameter>
+<!--	 <!--PlanarDigiProcessor creates TrackerHits from SimTrackerHits, smearing them according to the input parameters.-->-->
+<!--	 <!--whether hits are 1D strip hits-->-->
+	 <parameter name="IsStrip" type="bool">false </parameter>
+<!--	 <!--resolution in direction of u-->-->
+	 <parameter name="ResolutionU" type="float"> 0.004 0.004 0.004 0.004 0.004 0.004 </parameter>
+<!--	 <!--resolution in direction of v-->-->
+	 <parameter name="ResolutionV" type="float"> 0.004 0.004 0.004 0.004 0.004 0.004  </parameter>
+<!--	 <!--Name of the Input SimTrackerHit collection-->-->
+	 <parameter name="SimTrackHitCollectionName" type="string" lcioInType="SimTrackerHit">VertexEndcapCollection </parameter>
+<!--	 <!--Name of TrackerHit SimTrackHit relation collection-->-->
+	 <parameter name="SimTrkHitRelCollection" type="string" lcioOutType="LCRelation">VXDEndcapTrackerHitRelations </parameter>
+<!--	 <!--Name of the TrackerHit output collection-->-->
+	 <parameter name="TrackerHitCollectionName" type="string" lcioOutType="TrackerHitPlane">VXDEndcapTrackerHits </parameter>
+<!--	 <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->-->
+ 	 <parameter name="Verbosity" type="string">WARNING </parameter>
+ </processor>
+
+
+ <processor name="InnerPlanarDigiProcessor" type="DDPlanarDigiProcessor">
+   <!--PlanarDigiProcessor creates TrackerHits from SimTrackerHits, smearing them according to the input parameters.-->
+  <parameter name="SubDetectorName" type="string"> InnerTrackers </parameter>
+  <!--whether hits are 1D strip hits-->
+  <parameter name="IsStrip" type="bool"> true </parameter>
+   <!--resolution in direction of u-->
+   <parameter name="ResolutionU" type="float">0.007 </parameter>
+   <!--resolution in direction of v-->
+   <parameter name="ResolutionV" type="float">0.00 </parameter>
+   <!--Name of the Input SimTrackerHit collection-->
+   <parameter name="SimTrackHitCollectionName" type="string" lcioInType="SimTrackerHit"> InnerTrackerBarrelCollection </parameter>
+   <!--Name of TrackerHit SimTrackHit relation collection-->
+   <parameter name="SimTrkHitRelCollection" type="string" lcioOutType="LCRelation">InnerTrackerBarrelHitsRelations </parameter>
+   <!--Name of the TrackerHit output collection-->
+   <parameter name="TrackerHitCollectionName" type="string" lcioOutType="TrackerHitPlane">ITrackerHits </parameter>
+   <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
+   <parameter name="Verbosity" type="string">WARNING </parameter>
+ </processor>
+
+<processor name="InnerEndcapPlanarDigiProcessor" type="DDPlanarDigiProcessor">
+	<!--PlanarDigiProcessor creates TrackerHits from SimTrackerHits, smearing them according to the input parameters.-->
+	<parameter name="SubDetectorName" type="string"> InnerTrackers </parameter>
+	<!--whether hits are 1D strip hits-->
+	<parameter name="IsStrip" type="bool"> true </parameter>
+	<!--resolution in direction of u-->
+	<parameter name="ResolutionU" type="float">0.007 </parameter>
+	<!--resolution in direction of v-->
+	<parameter name="ResolutionV" type="float">0.00 </parameter>
+	<!--Name of the Input SimTrackerHit collection-->
+	<parameter name="SimTrackHitCollectionName" type="string" lcioInType="SimTrackerHit"> InnerTrackerEndcapCollection </parameter>
+	<!--Name of TrackerHit SimTrackHit relation collection-->
+	<parameter name="SimTrkHitRelCollection" type="string" lcioOutType="LCRelation">InnerTrackerEndcapHitsRelations </parameter>
+	<!--Name of the TrackerHit output collection-->
+	<parameter name="TrackerHitCollectionName" type="string" lcioOutType="TrackerHitPlane">ITrackerEndcapHits </parameter>
+	<!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
+	<parameter name="Verbosity" type="string">WARNING </parameter>
+</processor>
+
+ <processor name="OuterPlanarDigiProcessor" type="DDPlanarDigiProcessor">
+   <!--PlanarDigiProcessor creates TrackerHits from SimTrackerHits, smearing them according to the input parameters.-->
+  <parameter name="SubDetectorName" type="string"> OuterTrackers </parameter>
+  <!--whether hits are 1D strip hits-->
+  <parameter name="IsStrip" type="bool"> true </parameter>
+   <!--resolution in direction of u-->
+   <parameter name="ResolutionU" type="float">0.007 </parameter>
+   <!--resolution in direction of v-->
+   <parameter name="ResolutionV" type="float">0.00 </parameter>
+   <!--Name of the Input SimTrackerHit collection-->
+   <parameter name="SimTrackHitCollectionName" type="string" lcioInType="SimTrackerHit">OuterTrackerBarrelCollection </parameter>
+   <!--Name of TrackerHit SimTrackHit relation collection-->
+   <parameter name="SimTrkHitRelCollection" type="string" lcioOutType="LCRelation">OuterTrackerBarrelHitsRelations </parameter>
+   <!--Name of the TrackerHit output collection-->
+   <parameter name="TrackerHitCollectionName" type="string" lcioOutType="TrackerHitPlane">OTrackerHits </parameter>
+   <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
+   <parameter name="Verbosity" type="string">WARNING </parameter>
+ </processor>
+
+<processor name="OuterEndcapPlanarDigiProcessor" type="DDPlanarDigiProcessor">
+	<!--PlanarDigiProcessor creates TrackerHits from SimTrackerHits, smearing them according to the input parameters.-->
+	<parameter name="SubDetectorName" type="string"> OuterTrackers </parameter>
+	<!--whether hits are 1D strip hits-->
+	<parameter name="IsStrip" type="bool"> true </parameter>
+	<!--resolution in direction of u-->
+	<parameter name="ResolutionU" type="float">0.007 </parameter>
+	<!--resolution in direction of v-->
+	<parameter name="ResolutionV" type="float">0.00 </parameter>
+	<!--Name of the Input SimTrackerHit collection-->
+	<parameter name="SimTrackHitCollectionName" type="string" lcioInType="SimTrackerHit">OuterTrackerEndcapCollection </parameter>
+	<!--Name of TrackerHit SimTrackHit relation collection-->
+	<parameter name="SimTrkHitRelCollection" type="string" lcioOutType="LCRelation">OuterTrackerEndcapHitsRelations </parameter>
+	<!--Name of the TrackerHit output collection-->
+	<parameter name="TrackerHitCollectionName" type="string" lcioOutType="TrackerHitPlane">OTrackerEndcapHits </parameter>
+	<!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
+	<parameter name="Verbosity" type="string">WARNING </parameter>
+</processor>
+
+
+ <processor name="MyLCIOOutputProcessor" type="LCIOOutputProcessor">
+  <!--   standard output: full reconstruction keep all collections -->
+  <parameter name="LCIOOutputFile" type="string" >
+       sitracks_outputfile_CLIC_pre03_Zuds.slcio
+  </parameter>
+  <parameter name="LCIOWriteMode" type="string" value="WRITE_NEW"/>
+  <!--parameter name="SplitFileSizekB" type="int" value="1992294"/-->
+ </processor>
+
+	<!-- == Track checker parameters == -->
+	<processor name="MyTrackChecker" type="TrackChecker">
+		<!--Use default settings-->
+		<parameter name="OutputFileName" type="string"> TrackCheckerTestJets.root </parameter>
+<!--		<parameter name="OutputFileName" type="string"> TrackCheckerTestMuons.root </parameter>-->
+<!--		<parameter name="TrackCollectionName" type="string" lcioInType="Track"> RefittedTracks </parameter>-->
+<!--		<parameter name="TrackRelationCollectionName" type="string" lcioInType="LCRelation"> RefittedTrackRelations </parameter>-->
+	</processor>
+
+
+	<!-- == TruthTrackFinder parameters == -->
+	<processor name="MyTruthTrackFinder" type="TruthTrackFinder">
+<!--		<!--Define input tracker hits and relations. NB. Order must be respected -->-->
+		<parameter name="TrackerHitCollectionNames"       type="StringVec" lcioInType="TrackerHitPlane">VXDTrackerHits ITrackerHits OTrackerHits VXDEndcapTrackerHits ITrackerEndcapHits OTrackerEndcapHits </parameter>
+		<parameter name="SimTrackerHitRelCollectionNames" type="StringVec" lcioInType="LCRelation">VXDTrackerHitRelations InnerTrackerBarrelHitsRelations OuterTrackerBarrelHitsRelations VXDEndcapTrackerHitRelations InnerTrackerEndcapHitsRelations OuterTrackerEndcapHitsRelations </parameter>
+<!--		<parameter name="Verbosity" type="string">DEBUG5 </parameter>-->
+	</processor>
+
+	<!-- == Efficiency calculator parameters == -->
+	<processor name="MyClicEfficiencyCalculator" type="ClicEfficiencyCalculator">
+		<parameter name="TrackerHitCollectionNames"       type="StringVec" lcioInType="TrackerHitPlane">VXDTrackerHits ITrackerHits OTrackerHits VXDEndcapTrackerHits ITrackerEndcapHits OTrackerEndcapHits </parameter>
+		<parameter name="TrackerHitRelCollectionNames" type="StringVec" lcioInType="LCRelation">VXDTrackerHitRelations InnerTrackerBarrelHitsRelations OuterTrackerBarrelHitsRelations VXDEndcapTrackerHitRelations InnerTrackerEndcapHitsRelations OuterTrackerEndcapHitsRelations </parameter>
+	</processor>
+
+
+
+
+ <processor name="MyAIDAProcessor" type="AIDAProcessor">
+ <!--Processor that handles AIDA files. Creates on directory per processor.  Processors only need to create and fill the histograms, clouds and tuples. Needs to be the first ActiveProcessor-->
+  <!-- compression of output file 0: false >0: true (default) -->
+  <parameter name="Compress" type="int" value="1"/>
+  <!-- filename without extension-->
+  <parameter name="FileName" type="string" value="bbudsc_3evt_stdreco"/>
+  <!-- type of output file xml (default) or root ( only OpenScientist)-->
+  <parameter name="FileType" type="string" value="root "/>
+</processor>
+
+
+
+
+  <processor name="MyDiagnostics_Si" type="DiagnosticsCLIC">
+  <!-- <processor name="MyDiagnostics_Si" type="Diagnostics"> -->
+    <!--Name of the FullLDC track collection-->
+    <parameter name="MarlinTrkTracks" type="string" lcioInType="Track"> SiTracks </parameter>
+    <parameter name="MCTracksTruthLinkCollectionName" type="string" lcioInType="Track"> MCTruthSiTracksLink </parameter>
+    <parameter name="TracksMCTruthLinkCollectionName" type="string" lcioInType="Track"> SiTracksMCTruthLink </parameter>
+    <parameter name="MCParticleCollection" type="string" lcioInType="MCParticle"> MCParticle </parameter>
+    <!--Enables cuts to define the examined track sample-->
+    <parameter name="TrkEffOn" type="bool"> true </parameter>
+    <!--If we want to apply a cut on the minimum TPC hits-->
+    <parameter name="CutOnTPChits" type="int"> 10 </parameter>
+    <!--If we want to apply a cut on the minimum transverse momentum-->
+    <parameter name="CutOnPt" type="float"> 0.3 </parameter>
+    <parameter name="SimTrackerHitCollections" type="StringVec" lcioInType="SimTrackerHit"> VertexBarrelHits InnerTrackerBarrelHits  </parameter>
+    <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
+    <parameter name="Verbosity" type="string"> WARNING </parameter>
+  </processor>
+
+
+
+
+
+
+</marlin>
