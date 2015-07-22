@@ -70,13 +70,13 @@ ClicEfficiencyCalculator::ClicEfficiencyCalculator() : Processor("ClicEfficiency
 													"TrackCollectionName",
 													"Track collection name",
 													m_inputTrackCollection,
-													std::string("SiTracks"));
+													std::string("CATracks"));
 	
-	registerInputCollection( LCIO::LCRELATION,
-													"TrackRelationCollectionName",
-													"Track relation collection name",
-													m_inputTrackRelationCollection,
-													std::string("SiTrackRelations"));
+//	registerInputCollection( LCIO::LCRELATION,
+//													"TrackRelationCollectionName",
+//													"Track relation collection name",
+//													m_inputTrackRelationCollection,
+//													std::string("SiTrackRelations"));
 	
 	registerInputCollection( LCIO::MCPARTICLE,
 													"MCParticleCollectionName",
@@ -154,11 +154,11 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
 	getCollection(particleCollection, m_inputParticleCollection, evt); if(particleCollection == 0) return;
 	
 	// Get the collection of track relations to MC particles
-	LCCollection* trackRelationCollection = 0 ;
-	getCollection(trackRelationCollection, m_inputTrackRelationCollection, evt); if(trackRelationCollection == 0) return;
+//	LCCollection* trackRelationCollection = 0 ;
+//	getCollection(trackRelationCollection, m_inputTrackRelationCollection, evt); if(trackRelationCollection == 0) return;
 	
 	// Create the relations navigator
-	LCRelationNavigator* trackRelation = new LCRelationNavigator( trackRelationCollection );
+//	LCRelationNavigator* trackRelation = new LCRelationNavigator( trackRelationCollection );
 	
 	// Make objects to hold all of the tracker hit and relation collections
 	std::map<int,LCCollection*> trackerHitCollections;
@@ -295,6 +295,8 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
 	   reconstructable or not, and check if they were reconstructed more than once (clones).
 	 */
 	
+	int nReconstructed=0;
+	int nReconstructable=0;
 	// Loop over particles
 	int nParticles = particleCollection->getNumberOfElements();
 	for(int itParticle=0;itParticle<nParticles;itParticle++){
@@ -305,8 +307,8 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
 		// Check if it was reconstructed
 		if(particleTracks.count(particle)){
 			// Assumption: if particle was reconstructed then it is reconstructable!
-			m_particles["all"]++; m_particles["reconstructable"]++;
-			m_reconstructedParticles["all"]++;
+			m_particles["all"]++; m_particles["reconstructable"]++; nReconstructable++;
+			m_reconstructedParticles["all"]++; nReconstructed++;
 			// Check if clones were produced (1 particle, more than 1 track)
 			if(particleTracks[particle] > 1) m_reconstructedParticles["clones"]+=(particleTracks[particle]-1);
 			continue;
@@ -323,14 +325,16 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
 		
 		// Only make tracks with 3 or more hits
 		std::vector<TrackerHit*> trackHits = particleHits[particle];
-		if(trackHits.size() < 3) continue;
+		if(trackHits.size() < 6) continue;
 
 		m_particles["reconstructable"]++; // reconstructable particles
+		nReconstructable++;
 		
 	}
 	
 	// Increment the event number
 	m_eventNumber++ ;
+	std::cout<<"For this event reconstructed "<<100.*(double)nReconstructed/(double)nReconstructable<<" % ("<<nReconstructed<<"/"<<nReconstructable<<")"<<std::endl;
 	
 }
 
