@@ -329,7 +329,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
 		
 		// Only make tracks with 3 or more hits
 		std::vector<TrackerHit*> trackHits = particleHits[particle];
-		if(trackHits.size() < 6) continue;
+		if(trackHits.size() < 3) continue;
 
 		m_particles["reconstructable"]++; // reconstructable particles
 		nReconstructable++;
