@@ -220,13 +220,14 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
 		
 		// Loop over hits and check the MC particle that they correspond to, and which subdetector they are on
 		int nHits = hitVector.size();
+		int nExcluded = 0;
 		for(int itHit=0;itHit<nHits;itHit++){
 			// Get the tracker hit
 			TrackerHitPlane* hit = dynamic_cast<TrackerHitPlane*>(hitVector.at(itHit));
 			// Get the subdetector number
 			int subdetector = getSubdetector(hit,m_encoder);
 			// Check if this subdetector is to be included in the efficiency calculation
-			if( activeDetectors.count(subdetector) == 0 ) continue;
+			if( activeDetectors.count(subdetector) == 0 ){nExcluded++; continue;}
 			// Get the simulated hit
 			const LCObjectVec& simHitVector = relations[subdetector]->getRelatedToObjects( hit );
 			// Take the first hit only (this should be changed? Yes - loop over all related simHits and add an entry for each mcparticle so that this hit is in each fit)
@@ -246,7 +247,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
 			int nParticleHits = trackParticleHits[trackParticles[itParticle]];
 			if(nParticleHits>maxHits){ maxHits=nParticleHits; associatedParticle = trackParticles[itParticle]; }
 		}
-		double purity = (double)maxHits/(double)nHits;
+		double purity = (double)maxHits/(double)(nHits-nExcluded);
 		if(purity < m_purity) continue; // do something with ghosts here
 
 		// Now have a track which is associated to a particle
