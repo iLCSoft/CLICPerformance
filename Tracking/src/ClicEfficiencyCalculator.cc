@@ -164,6 +164,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
 	std::map<int,LCCollection*> trackerHitCollections;
 	std::map<int,LCCollection*> trackerHitRelationCollections;
 	std::map<int,LCRelationNavigator*> relations;
+	std::map<int,bool> activeDetectors;
 	
 	// Loop over each input collection and get the data
 	for(unsigned int collection=0; collection<m_inputTrackerHitCollections.size();collection++){
@@ -184,6 +185,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
 		
 		// Get the subdetector for this set of collections
 		int subdetector = getSubdetector(trackerHitCollection,m_encoder);
+		activeDetectors[subdetector] = true;
 
 		// Save all of the created collections
 		trackerHitCollections[subdetector] = trackerHitCollection;
@@ -223,6 +225,8 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
 			TrackerHitPlane* hit = dynamic_cast<TrackerHitPlane*>(hitVector.at(itHit));
 			// Get the subdetector number
 			int subdetector = getSubdetector(hit,m_encoder);
+			// Check if this subdetector is to be included in the efficiency calculation
+			if( activeDetectors.count(subdetector) == 0 ) continue;
 			// Get the simulated hit
 			const LCObjectVec& simHitVector = relations[subdetector]->getRelatedToObjects( hit );
 			// Take the first hit only (this should be changed? Yes - loop over all related simHits and add an entry for each mcparticle so that this hit is in each fit)
