@@ -12,11 +12,17 @@
 #include <gsl/gsl_rng.h>
 #include "DDRec/Surface.h"
 #include <EVENT/LCCollection.h>
+#include <EVENT/MCParticle.h>
 #include "MarlinTrk/IMarlinTrkSystem.h"
 #include <UTIL/CellIDDecoder.h>
 #include <IMPL/TrackerHitPlaneImpl.h>
 
 #include <AIDA/AIDA.h>
+
+#include <TH1F.h>
+#include <TCanvas.h>
+#include <TGraphAsymmErrors.h>
+
 
 using namespace lcio ;
 using namespace marlin ;
@@ -39,18 +45,21 @@ public:
 	// Run over each event - the main algorithm
 	virtual void processEvent( LCEvent * evt ) ;
 	
-  // Run at the end of each event
+	// Run at the end of each event
 	virtual void check( LCEvent * evt ) ;
 	
 	// Called at the very end for cleanup, histogram saving, etc.
 	virtual void end() ;
 	
-  // Call to get collections
-  void getCollection(LCCollection*&, std::string, LCEvent*);
+	// Call to get collections
+	void getCollection(LCCollection*&, std::string, LCEvent*);
 
 	// Get the subdetector ID from a collection or hit
 	int getSubdetector(LCCollection*, UTIL::BitField64&);
-	int getSubdetector(TrackerHitPlane*, UTIL::BitField64&);
+	int getSubdetector(TrackerHit*, UTIL::BitField64&);
+
+	bool isReconstructable(MCParticle*& particle, std::string cut);
+
 
 	
 protected:
@@ -74,7 +83,25 @@ protected:
 	double m_magneticField;
 	std::map<std::string,double> m_particles;
 	std::map<std::string,double> m_reconstructedParticles;
-	
+
+	int m_vertexBarrelID;
+	std::string m_cuts;
+	std::map<MCParticle*, std::vector<TrackerHit*> > particleHits;
+
+
+	// Plots 
+
+	TCanvas *eff_vs_theta;
+	TGraphAsymmErrors *g_eff_vs_theta;
+	TH1F *h_theta_reconstructed ;
+	TH1F *h_theta_reconstructable ;
+
+	TCanvas *eff_vs_pt;
+	TGraphAsymmErrors *g_eff_vs_pt;
+	TH1F *h_pt_reconstructed ;
+	TH1F *h_pt_reconstructable ;
+
+
 } ;
 
 #endif

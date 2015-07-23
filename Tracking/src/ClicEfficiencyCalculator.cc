@@ -16,7 +16,6 @@
 #include <IMPL/LCRelationImpl.h>
 #include <EVENT/SimTrackerHit.h>
 #include <IMPL/TrackerHitPlaneImpl.h>
-#include <EVENT/MCParticle.h>
 #include <IMPL/TrackImpl.h>
 
 #include <UTIL/CellIDEncoder.h>
@@ -38,6 +37,8 @@
 
 #include <AIDA/IAnalysisFactory.h>
 #include <AIDA/IHistogramFactory.h>
+
+#include <TLorentzVector.h>
 
 #include <cmath>
 #include <algorithm>
@@ -103,6 +104,18 @@ ClicEfficiencyCalculator::ClicEfficiencyCalculator() : Processor("ClicEfficiency
 													 "Name of TrackerHit relation collections",
 													 m_inputTrackerHitRelationCollections,
 													 inputTrackerHitRelationCollections );
+
+
+  registerProcessorParameter( "reconstructableDefinition",
+                              "Set of cuts to define 'reconstractable' particles for eff computation. The options are: NHits, NHitsVXD, ILDLike",
+                              m_cuts,
+                              std::string("NHits"));
+
+  registerProcessorParameter( "vertexBarrelID",
+                              "Detector element ID for the vertex Barrel",
+                              m_vertexBarrelID,
+                              int(1));
+
 	
 }
 
@@ -128,7 +141,10 @@ void ClicEfficiencyCalculator::init() {
 	
 	// Register this process
 	Global::EVENTSEEDER->registerProcessor(this);
+
 	
+
+
 }
 
 
@@ -137,6 +153,35 @@ void ClicEfficiencyCalculator::processRunHeader( LCRunHeader* run) {
 }
 
 void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
+
+  if( isFirstEvent() ) { 
+
+    // Plots
+
+    eff_vs_theta = new TCanvas("eff_vs_theta","Trk Eff vs Theta",800,800);
+    g_eff_vs_theta = new TGraphAsymmErrors() ;
+
+    const int nbins_theta = 13;
+    double theta_edges[nbins_theta+1] = { 0.0, 10., 20., 30., 45., 60., 70, 87., 93., 110., 145., 160., 170., 180. } ;
+
+    h_theta_reconstructed  = new TH1F( "h_theta_reconstructed", "Theta distributions of reconstructed tracks passing purity criteria", nbins_theta , theta_edges ) ;
+    h_theta_reconstructable  = new TH1F( "h_theta_reconstructable", "Theta distribution of reconstructable tracks", nbins_theta , theta_edges ) ;
+
+
+
+    eff_vs_pt = new TCanvas("eff_vs_pt","Trk Eff vs Pt",800,800);
+    g_eff_vs_pt = new TGraphAsymmErrors() ;
+
+    const int nbins_pt = 12;
+    double pt_edges[nbins_pt+1] = { 0.01, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 500., 1000. } ;
+
+    h_pt_reconstructed  = new TH1F( "h_pt_reconstructed", "Pt distributions of reconstructed tracks passing purity criteria", nbins_pt , pt_edges ) ;
+    h_pt_reconstructable  = new TH1F( "h_pt_reconstructable", "Pt distribution of reconstructable tracks", nbins_pt , pt_edges ) ;
+
+    
+  }
+
+
 	
 	std::cout<<"Processing event "<<m_eventNumber<<std::endl;
 	// First pick up all of the collections that will be used - tracks, MCparticles, hits from relevent subdetectors - and their relations
@@ -253,6 +298,12 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
 		// Now have a track which is associated to a particle
 		particleTracks[associatedParticle]++;
 
+
+    // // Fill the histogram of the theta distribution for the reconstructed tracks (numerator for the eff)
+    // double tanLambda = track->getTanLambda();
+    // double theta = M_PI/2 - atan(tanLambda);
+    // h_theta_reconstructed->Fill(theta*180./M_PI);
+
 	}
 	
 	
@@ -264,8 +315,9 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
   */
 	
 	// Make the container
-	std::map<MCParticle*, std::vector<TrackerHit*> > particleHits;
-	
+	//std::map<MCParticle*, std::vector<TrackerHit*> > particleHits;
+  particleHits.clear();
+
 	// Loop over all input collections
 	for(unsigned int itCollection=0; itCollection<m_collections.size();itCollection++){
 	
@@ -308,14 +360,30 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
 		
 		// Get the particle
 		MCParticle* particle = dynamic_cast<MCParticle*>( particleCollection->getElementAt(itParticle) ) ;
+    // get theta angle for plot: eff vs theta
+    TLorentzVector tv_mcp;
+    tv_mcp.SetPxPyPzE(particle->getMomentum()[0],particle->getMomentum()[1],particle->getMomentum()[2],particle->getEnergy());
+    double theta_mcp=tv_mcp.Theta()*180./M_PI;
+    double pt_mcp=tv_mcp.Pt();
+
 		
 		// Check if it was reconstructed
 		if(particleTracks.count(particle)){
+      
 			// Assumption: if particle was reconstructed then it is reconstructable!
 			m_particles["all"]++; m_particles["reconstructable"]++; nReconstructable++;
 			m_reconstructedParticles["all"]++; nReconstructed++;
 			// Check if clones were produced (1 particle, more than 1 track)
 			if(particleTracks[particle] > 1) m_reconstructedParticles["clones"]+=(particleTracks[particle]-1);
+
+      //fill theta distribution for reconstructable mc particle (denominator of the eff) and for the reco one (numerator of the eff)
+      h_theta_reconstructable -> Fill(theta_mcp);
+      h_theta_reconstructed -> Fill(theta_mcp);
+
+      h_pt_reconstructable -> Fill(pt_mcp);
+      h_pt_reconstructed -> Fill(pt_mcp);
+
+
 			continue;
 		}
 		
@@ -328,13 +396,17 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
 		// Exclude particles which are not "real"
 		if(particle->vertexIsNotEndpointOfParent()) continue;
 		
-		// Only make tracks with 3 or more hits
-		std::vector<TrackerHit*> trackHits = particleHits[particle];
-		if(trackHits.size() < 3) continue;
+    if (!isReconstructable(particle,m_cuts)) continue;
 
 		m_particles["reconstructable"]++; // reconstructable particles
 		nReconstructable++;
 		
+
+    //fill theta distribution for reconstructable mc particle (denominator of the eff)
+    h_theta_reconstructable -> Fill(theta_mcp);
+
+    h_pt_reconstructable -> Fill(pt_mcp);
+
 	}
 	
 	// Increment the event number
@@ -357,6 +429,40 @@ void ClicEfficiencyCalculator::end(){
 	// Calculate efficiency results
 	streamlog_out(MESSAGE)<<std::fixed<<std::setprecision(2)<<"Reconstructable particle efficiency: "<<100.*m_reconstructedParticles["all"]/m_particles["reconstructable"]<<" % ("<<std::setprecision(0)<<m_reconstructedParticles["all"]<<"/"<<m_particles["reconstructable"]<<")"<<std::endl;
 	
+
+  // Plots
+
+  eff_vs_theta->cd();
+
+  g_eff_vs_theta->Divide( h_theta_reconstructed , h_theta_reconstructable , "v" ) ;
+  g_eff_vs_theta->SetMarkerColor(kRed) ;
+  g_eff_vs_theta->SetLineColor(kRed) ;
+  g_eff_vs_theta->GetYaxis()->SetTitle( "#epsilon_{trk}" );
+  g_eff_vs_theta->GetXaxis()->SetTitle( "#theta [rad]" );
+  g_eff_vs_theta->Draw("AP");
+  g_eff_vs_theta->Write();
+  eff_vs_theta->Write();
+
+  h_theta_reconstructed->Write();
+  h_theta_reconstructable->Write();
+
+
+  eff_vs_pt->cd();
+  gPad->SetLogx();
+
+  g_eff_vs_pt->Divide( h_pt_reconstructed , h_pt_reconstructable , "v" ) ;
+  g_eff_vs_pt->SetMarkerColor(kRed) ;
+  g_eff_vs_pt->SetLineColor(kRed) ;
+  g_eff_vs_pt->GetYaxis()->SetTitle( "#epsilon_{trk}" );
+  g_eff_vs_pt->GetXaxis()->SetTitle( "p_{T} [GeV]" );
+  g_eff_vs_pt->Draw("AP");
+  g_eff_vs_pt->Write();
+  eff_vs_pt->Write();
+
+  h_pt_reconstructed->Write();
+  h_pt_reconstructable->Write();
+
+
 }
 
 void ClicEfficiencyCalculator::getCollection(LCCollection* &collection, std::string collectionName, LCEvent* evt){
@@ -378,13 +484,75 @@ int ClicEfficiencyCalculator::getSubdetector(LCCollection* collection, UTIL::Bit
 	return subdet;
 }
 
-int ClicEfficiencyCalculator::getSubdetector(TrackerHitPlane* hit, UTIL::BitField64 &encoder){
+
+int ClicEfficiencyCalculator::getSubdetector(TrackerHit* hit, UTIL::BitField64 &encoder){
 	const int celId = hit->getCellID0() ;
 	encoder.setValue(celId) ;
 	int subdet = encoder[lcio::ILDCellID0::subdet];
 	return subdet;
 }
 
+
+
+bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::string cut){
+
+  if (cut=="NHits") {
+
+    // Only make tracks with 6 or more hits
+		std::vector<TrackerHit*> trackHits = particleHits[particle];
+		if(trackHits.size() >= 6) return true;
+
+  } else if (cut=="NHitsVXD") {
+
+    // Only make tracks with 4 or more hits in the vertex detector
+		std::vector<TrackerHit*> trackHits = particleHits[particle];
+    int nVXDHits = 0;
+    UTIL::BitField64 encoder( lcio::ILDCellID0::encoder_string ) ;
+    for (size_t ihit=0; ihit<trackHits.size(); ihit++){
+      int subdetector = getSubdetector(trackHits.at(ihit), encoder);
+      if (subdetector == m_vertexBarrelID) nVXDHits++;
+    }
+    if (nVXDHits >= 4) return true;
+
+  } else if (cut=="ILDLike") {
+
+    // Only consider particles: charged, stable, pT>0.1GeV, cosTheta<0.89, nHits>=4, IP in 10 cm 
+    //(a.t.m. cut in cosTheta is up to 0.89 instead of the usal 0.99 for cutting also particles in the vertex endcap region)
+    //(a.t.m. no same cut on reco pT/theta but no bias because in that case also the mc particle is kept)
+
+    //add condition for decay outside vertex/tracker? 
+    bool isCharge = false;
+    bool isStable = false;
+    bool passPt = false;
+    bool passTheta = false;
+    bool passNHits = false;
+    bool passIP = false;
+
+    double charge = fabs(particle->getCharge());
+    if (charge>0.5) isCharge = true;
+    int genStatus = particle->getGeneratorStatus();
+    //int nDaughters = particle->getDaughters().size();
+    if (genStatus == 1 ) isStable = true;
+    TLorentzVector p;
+    p.SetPxPyPzE(particle->getMomentum()[0], particle->getMomentum()[1], particle->getMomentum()[2], particle->getEnergy());//in GeV
+    if ( p.Pt()>=0.1 ) passPt = true;
+    if ( fabs(cos(p.Theta()))<0.89 ) passTheta = true; 
+		std::vector<TrackerHit*> trackHits = particleHits[particle];
+		if(trackHits.size() >= 4) passNHits = true;
+    double dist = sqrt( pow(particle->getVertex()[0],2) + pow(particle->getVertex()[1],2) );
+    if (dist<100.) passIP = true;
+
+    bool keepParticle = isCharge && isStable && passPt && passTheta && passNHits && passIP;
+    if (keepParticle) return true;
+    
+  } else {
+    streamlog_out( ERROR )<<"Set of cuts " << cut.c_str() << " not defined" << std::endl;
+    return false;
+  }
+
+  return false;
+
+}
 
   
   
