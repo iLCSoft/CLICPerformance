@@ -24,6 +24,8 @@
 #include <TGraphAsymmErrors.h>
 
 
+class TTree;
+
 using namespace lcio ;
 using namespace marlin ;
 using namespace AIDA ;
@@ -60,6 +62,7 @@ public:
 
 	bool isReconstructable(MCParticle*& particle, std::string cut);
 
+	void clearTreeVar();
 
 	
 protected:
@@ -87,7 +90,7 @@ protected:
 	int m_vertexBarrelID;
 	std::string m_cuts;
 	std::map<MCParticle*, std::vector<TrackerHit*> > particleHits;
-
+	bool m_morePlots;
 
 	// Plots 
 
@@ -100,6 +103,17 @@ protected:
 	TGraphAsymmErrors *g_eff_vs_pt;
 	TH1F *h_pt_reconstructed ;
 	TH1F *h_pt_reconstructable ;
+
+	// Tree
+
+	TTree *mctree ;
+	std::vector<int > m_mcCat;
+	std::vector<double > m_mcTheta;
+	std::vector<double > m_mcPt;
+	std::vector<int > m_mcIsDecayedInTracker;
+	std::vector<std::vector<int > > m_mcNHits;
+	std::vector<int > m_mcNHits_helper;
+
 
 
 } ;

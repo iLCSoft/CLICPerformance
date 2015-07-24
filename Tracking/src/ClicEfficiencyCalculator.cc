@@ -39,6 +39,8 @@
 #include <AIDA/IHistogramFactory.h>
 
 #include <TLorentzVector.h>
+#include "TTree.h"
+#include "LinkDef.h"
 
 #include <cmath>
 #include <algorithm>
@@ -116,6 +118,11 @@ ClicEfficiencyCalculator::ClicEfficiencyCalculator() : Processor("ClicEfficiency
                               m_vertexBarrelID,
                               int(1));
 
+  registerProcessorParameter( "morePlots",
+                              "If true additional plots (n of hits per subdetector per mc particle, mc theta, mc pt, info if the particle is decayed in the tracker) will be added to the Ntuple mctree",
+                              m_morePlots,
+                              bool(true));
+
 	
 }
 
@@ -178,14 +185,29 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     h_pt_reconstructed  = new TH1F( "h_pt_reconstructed", "Pt distributions of reconstructed tracks passing purity criteria", nbins_pt , pt_edges ) ;
     h_pt_reconstructable  = new TH1F( "h_pt_reconstructable", "Pt distribution of reconstructable tracks", nbins_pt , pt_edges ) ;
 
-    
+
+    if (m_morePlots){
+      // Tree
+      
+      mctree = new TTree("mctree","mctree");
+      int bufsize = 32000; //default buffer size 32KB
+
+      mctree->Branch("mcCat", "std::vector<int >",&m_mcCat,bufsize,0); //mc particle categorization: 0 is charge but not econstructable, 1 is reconstructable but not reconstructed, 2 is reconstructed
+      mctree->Branch("mcTheta", "std::vector<double >",&m_mcTheta,bufsize,0); 
+      mctree->Branch("mcPt", "std::vector<double >",&m_mcPt,bufsize,0); 
+      mctree->Branch("mcNHits", "std::vector<std::vector<int > >",&m_mcNHits,bufsize,0); 
+      mctree->Branch("mcIsDecayedInTracker", "std::vector<int >",&m_mcIsDecayedInTracker,bufsize,0); 
+    }
+
   }
 
-
-	
+  
 	std::cout<<"Processing event "<<m_eventNumber<<std::endl;
 	// First pick up all of the collections that will be used - tracks, MCparticles, hits from relevent subdetectors - and their relations
 	
+  clearTreeVar();
+
+
 	// Initialise CELLID encoder to get the subdetector ID from a hit
 	UTIL::BitField64 m_encoder( lcio::ILDCellID0::encoder_string ) ;
 	std::vector<int> m_collections;
@@ -199,11 +221,11 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
 	getCollection(particleCollection, m_inputParticleCollection, evt); if(particleCollection == 0) return;
 	
 	// Get the collection of track relations to MC particles
-//	LCCollection* trackRelationCollection = 0 ;
-//	getCollection(trackRelationCollection, m_inputTrackRelationCollection, evt); if(trackRelationCollection == 0) return;
+  //	LCCollection* trackRelationCollection = 0 ;
+  //	getCollection(trackRelationCollection, m_inputTrackRelationCollection, evt); if(trackRelationCollection == 0) return;
 	
 	// Create the relations navigator
-//	LCRelationNavigator* trackRelation = new LCRelationNavigator( trackRelationCollection );
+  //	LCRelationNavigator* trackRelation = new LCRelationNavigator( trackRelationCollection );
 	
 	// Make objects to hold all of the tracker hit and relation collections
 	std::map<int,LCCollection*> trackerHitCollections;
@@ -366,6 +388,23 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     double theta_mcp=tv_mcp.Theta()*180./M_PI;
     double pt_mcp=tv_mcp.Pt();
 
+    if (m_morePlots){
+      double charge_mcp=fabs(particle->getCharge());
+      bool decay_mcp=particle->isDecayedInTracker();
+
+      if (charge_mcp>0.5){
+        m_mcCat.push_back(0);
+        m_mcTheta.push_back(theta_mcp);
+        m_mcPt.push_back(pt_mcp);
+        m_mcIsDecayedInTracker.push_back(decay_mcp);  
+        std::vector<TrackerHit*> trackHits_helper = particleHits[particle];
+        for (size_t ihit=0; ihit<trackHits_helper.size(); ihit++){
+          int subdetector = getSubdetector(trackHits_helper.at(ihit), m_encoder);
+          m_mcNHits_helper.push_back(subdetector);
+        }
+        m_mcNHits.push_back(m_mcNHits_helper);
+      }    
+    }
 		
 		// Check if it was reconstructed
 		if(particleTracks.count(particle)){
@@ -383,6 +422,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
       h_pt_reconstructable -> Fill(pt_mcp);
       h_pt_reconstructed -> Fill(pt_mcp);
 
+      if (m_morePlots) m_mcCat.push_back(2);
 
 			continue;
 		}
@@ -407,7 +447,12 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
 
     h_pt_reconstructable -> Fill(pt_mcp);
 
+    if (m_morePlots) m_mcCat.push_back(1);
+
+
 	}
+
+  if (m_morePlots) mctree->Fill();
 	
 	// Increment the event number
 	m_eventNumber++ ;
@@ -554,7 +599,19 @@ bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::str
 
 }
 
+
+
+void ClicEfficiencyCalculator::clearTreeVar(){
+
+  m_mcCat.clear();
+  m_mcTheta.clear();
+  m_mcPt.clear();
+  m_mcTheta.clear();
+  m_mcIsDecayedInTracker.clear();
+  m_mcNHits_helper.clear();
+  m_mcNHits.clear();
   
+}  
   
   
   
