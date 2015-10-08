@@ -73,6 +73,7 @@ protected:
 	std::string m_inputParticleCollection ;
 	std::string m_inputTrackCollection ;
 	std::string m_inputTrackRelationCollection;
+	std::string m_notRecoMCColName;
 	
 	// Run and event counters
 	int m_eventNumber ;
@@ -111,8 +112,17 @@ protected:
 	std::vector<double > m_mcTheta;
 	std::vector<double > m_mcPt;
 	std::vector<int > m_mcIsDecayedInTracker;
-	std::vector<std::vector<int > > m_mcNHits;
-	std::vector<int > m_mcNHits_helper;
+	//std::vector<std::vector<int > > m_mcNHits;
+	//std::vector<int > m_mcNHits_helper;
+	std::vector<int > m_mcNHitsTot;
+	std::vector<int > m_mcNHitsVXD;
+
+	std::vector<int > m_mcNTracks; 
+	std::vector<int > m_mcNTrkHits; 
+	std::vector<int > m_mcThetaTrk; 
+	std::vector<int > m_mcPtTrk; 
+	std::vector<int > m_mcPhiTrk; 
+	std::vector<int > m_mcNTracksCone; 
 
 
 
