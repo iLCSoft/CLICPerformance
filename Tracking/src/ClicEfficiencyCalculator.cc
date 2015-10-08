@@ -121,7 +121,15 @@ ClicEfficiencyCalculator::ClicEfficiencyCalculator() : Processor("ClicEfficiency
   registerProcessorParameter( "morePlots",
                               "If true additional plots (n of hits per subdetector per mc particle, mc theta, mc pt, info if the particle is decayed in the tracker) will be added to the Ntuple mctree",
                               m_morePlots,
-                              bool(true));
+                              bool(false));
+
+
+  
+  registerOutputCollection( LCIO::MCPARTICLE,
+                            "MCParticleNotReco" , 
+                            "Name of the output collection of the not reconstructed charged MCParticle"  ,
+                            m_notRecoMCColName ,
+                            std::string("MCParticleNotReco") ) ;
 
 	
 }
@@ -168,8 +176,10 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     eff_vs_theta = new TCanvas("eff_vs_theta","Trk Eff vs Theta",800,800);
     g_eff_vs_theta = new TGraphAsymmErrors() ;
 
-    const int nbins_theta = 13;
-    double theta_edges[nbins_theta+1] = { 0.0, 10., 20., 30., 45., 60., 70, 87., 93., 110., 145., 160., 170., 180. } ;
+    // const int nbins_theta = 13;
+    // double theta_edges[nbins_theta+1] = { 0.0, 10., 20., 30., 45., 60., 70, 87., 93., 110., 145., 160., 170., 180. } ;
+    const int nbins_theta = 18;
+    double theta_edges[nbins_theta+1] = { 0.0, 7., 15., 23., 30., 45., 60, 75, 88., 90., 92., 105., 120., 135., 150., 157., 165., 173., 180.} ;
 
     h_theta_reconstructed  = new TH1F( "h_theta_reconstructed", "Theta distributions of reconstructed tracks passing purity criteria", nbins_theta , theta_edges ) ;
     h_theta_reconstructable  = new TH1F( "h_theta_reconstructable", "Theta distribution of reconstructable tracks", nbins_theta , theta_edges ) ;
@@ -195,8 +205,19 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
       mctree->Branch("mcCat", "std::vector<int >",&m_mcCat,bufsize,0); //mc particle categorization: 0 is charge but not econstructable, 1 is reconstructable but not reconstructed, 2 is reconstructed
       mctree->Branch("mcTheta", "std::vector<double >",&m_mcTheta,bufsize,0); 
       mctree->Branch("mcPt", "std::vector<double >",&m_mcPt,bufsize,0); 
-      mctree->Branch("mcNHits", "std::vector<std::vector<int > >",&m_mcNHits,bufsize,0); 
+      //mctree->Branch("mcNHits", "std::vector<std::vector<int > >",&m_mcNHits,bufsize,0); 
+      mctree->Branch("mcNHitsTot", "std::vector<int >",&m_mcNHitsTot,bufsize,0); 
+      mctree->Branch("mcNHitsVXD", "std::vector<int >",&m_mcNHitsVXD,bufsize,0); 
       mctree->Branch("mcIsDecayedInTracker", "std::vector<int >",&m_mcIsDecayedInTracker,bufsize,0); 
+
+      // not reconstructed tracks
+      mctree->Branch("mcNTrks", "std::vector<int >",&m_mcNTracks,bufsize,0); 
+      mctree->Branch("mcNTrkHits", "std::vector<int >",&m_mcNTrkHits,bufsize,0); 
+      mctree->Branch("mcThetaTrk", "std::vector<int >",&m_mcThetaTrk,bufsize,0); 
+      mctree->Branch("mcPtTrk", "std::vector<int >",&m_mcPtTrk,bufsize,0); 
+      mctree->Branch("mcPhiTrk", "std::vector<int >",&m_mcPhiTrk,bufsize,0); 
+      mctree->Branch("mcNTrksCone", "std::vector<int >",&m_mcNTracksCone,bufsize,0); 
+
     }
 
   }
@@ -206,6 +227,9 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
 	// First pick up all of the collections that will be used - tracks, MCparticles, hits from relevent subdetectors - and their relations
 	
   clearTreeVar();
+
+  //LCCollectionVec* skimVec = new LCCollectionVec( LCIO::MCPARTICLE )  ;
+  //skimVec->setSubset(true) ; 
 
 
 	// Initialise CELLID encoder to get the subdetector ID from a hit
@@ -315,6 +339,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
 			if(nParticleHits>maxHits){ maxHits=nParticleHits; associatedParticle = trackParticles[itParticle]; }
 		}
 		double purity = (double)maxHits/(double)(nHits-nExcluded);
+    streamlog_out(DEBUG4) << " purity = " << purity << std::endl;
 		if(purity < m_purity) continue; // do something with ghosts here
 
 		// Now have a track which is associated to a particle
@@ -377,9 +402,11 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
 	int nReconstructed=0;
 	int nReconstructable=0;
 	// Loop over particles
+  int nChargePart=0;
+  int nCloseTrk=0;
 	int nParticles = particleCollection->getNumberOfElements();
 	for(int itParticle=0;itParticle<nParticles;itParticle++){
-		
+		 nCloseTrk=0;
 		// Get the particle
 		MCParticle* particle = dynamic_cast<MCParticle*>( particleCollection->getElementAt(itParticle) ) ;
     // get theta angle for plot: eff vs theta
@@ -392,26 +419,34 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
       double charge_mcp=fabs(particle->getCharge());
       bool decay_mcp=particle->isDecayedInTracker();
 
-      if (charge_mcp>0.5){
+      if (charge_mcp>0.5 && particle->getGeneratorStatus()==1){
+        nChargePart++;
+
         m_mcCat.push_back(0);
         m_mcTheta.push_back(theta_mcp);
         m_mcPt.push_back(pt_mcp);
         m_mcIsDecayedInTracker.push_back(decay_mcp);  
         std::vector<TrackerHit*> trackHits_helper = particleHits[particle];
+        int nhitsVXD = 0;
         for (size_t ihit=0; ihit<trackHits_helper.size(); ihit++){
           int subdetector = getSubdetector(trackHits_helper.at(ihit), m_encoder);
-          m_mcNHits_helper.push_back(subdetector);
+          if (subdetector == m_vertexBarrelID) nhitsVXD++;
+          //m_mcNHits_helper.push_back(subdetector);
         }
-        m_mcNHits.push_back(m_mcNHits_helper);
+        m_mcNHitsVXD.push_back(nhitsVXD);
+        m_mcNHitsTot.push_back(trackHits_helper.size());
+        //m_mcNHits.push_back(m_mcNHits_helper);
       }    
     }
 		
+    bool isReco=false;
 		// Check if it was reconstructed
 		if(particleTracks.count(particle)){
       
 			// Assumption: if particle was reconstructed then it is reconstructable!
 			m_particles["all"]++; m_particles["reconstructable"]++; nReconstructable++;
 			m_reconstructedParticles["all"]++; nReconstructed++;
+      isReco=true;
 			// Check if clones were produced (1 particle, more than 1 track)
 			if(particleTracks[particle] > 1) m_reconstructedParticles["clones"]+=(particleTracks[particle]-1);
 
@@ -422,8 +457,10 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
       h_pt_reconstructable -> Fill(pt_mcp);
       h_pt_reconstructed -> Fill(pt_mcp);
 
-      if (m_morePlots) m_mcCat.push_back(2);
-
+      if (m_morePlots) {
+        m_mcCat.pop_back();
+        m_mcCat.push_back(2);
+     }
 			continue;
 		}
 		
@@ -447,13 +484,45 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
 
     h_pt_reconstructable -> Fill(pt_mcp);
 
-    if (m_morePlots) m_mcCat.push_back(1);
+    if (m_morePlots) {
+      m_mcCat.pop_back();
+      m_mcCat.push_back(1);
 
+      //for(int j=itParticle+1; j<nParticles; j++){
+      for(int j=0; j<nParticles; j++){
+        if (itParticle!=j){ 
+          MCParticle* particle2 = dynamic_cast<MCParticle*>( particleCollection->getElementAt(j) );
+          bool part2IsCharge = fabs(particle2->getCharge()) > 0.5;
+          bool part2IsStable = particle2->getGeneratorStatus() == 1 ;
+          if ( part2IsCharge && part2IsStable ) {            
+            TLorentzVector tv_mcp2;
+            tv_mcp2.SetPxPyPzE(particle2->getMomentum()[0],particle2->getMomentum()[1],particle2->getMomentum()[2],particle2->getEnergy());
+            double DR = tv_mcp.DeltaR(tv_mcp2);
+            if (DR<0.4) nCloseTrk++; 
+          }
+        }
+      }
+
+      if (!isReco) {
+        m_mcNTracks.push_back(nChargePart);
+        m_mcNTrkHits.push_back(m_mcNHitsTot.back());
+        m_mcThetaTrk.push_back(m_mcTheta.back());
+        m_mcPtTrk.push_back(m_mcPt.back());         
+        m_mcNTracksCone.push_back(nCloseTrk);
+
+        //skimVec->addElement( particle );
+
+      }
+    }
 
 	}
 
-  if (m_morePlots) mctree->Fill();
-	
+  if (m_morePlots) {
+    mctree->Fill();
+	}
+
+  //evt->addCollection(  skimVec , m_notRecoMCColName ) ;
+
 	// Increment the event number
 	m_eventNumber++ ;
 	std::cout<<"For this event reconstructed "<<100.*(double)nReconstructed/(double)nReconstructable<<" % ("<<nReconstructed<<"/"<<nReconstructable<<")"<<std::endl;
@@ -572,22 +641,40 @@ bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::str
     bool passTheta = false;
     bool passNHits = false;
     bool passIP = false;
+    bool passEndPoint = false;
 
     double charge = fabs(particle->getCharge());
     if (charge>0.5) isCharge = true;
     int genStatus = particle->getGeneratorStatus();
     //int nDaughters = particle->getDaughters().size();
     if (genStatus == 1 ) isStable = true;
+    
     TLorentzVector p;
     p.SetPxPyPzE(particle->getMomentum()[0], particle->getMomentum()[1], particle->getMomentum()[2], particle->getEnergy());//in GeV
     if ( p.Pt()>=0.1 ) passPt = true;
-    if ( fabs(cos(p.Theta()))<0.89 ) passTheta = true; 
+    if ( fabs(cos(p.Theta()))<0.99 ) passTheta = true; 
+    //if ( fabs(cos(p.Theta()))<0.8 ) passTheta = true; 
 		std::vector<TrackerHit*> trackHits = particleHits[particle];
 		if(trackHits.size() >= 4) passNHits = true;
+		//if(trackHits.size() >= 6) passNHits = true;
+
+    // int nVXDHits = 0;
+    // UTIL::BitField64 encoder( lcio::ILDCellID0::encoder_string ) ;
+    // for (size_t ihit=0; ihit<trackHits.size(); ihit++){
+    //   int subdetector = getSubdetector(trackHits.at(ihit), encoder);
+    //   if (subdetector == m_vertexBarrelID) nVXDHits++;
+    // }
+    // if (nVXDHits >= 4) return true;
+
     double dist = sqrt( pow(particle->getVertex()[0],2) + pow(particle->getVertex()[1],2) );
     if (dist<100.) passIP = true;
+    //if (dist<30.) passIP = true;
+    
+    double e = sqrt( pow(particle->getEndpoint()[0],2) + pow(particle->getEndpoint()[1],2) );
+    if (e==0. || e>40.) passEndPoint=true;
 
-    bool keepParticle = isCharge && isStable && passPt && passTheta && passNHits && passIP;
+
+    bool keepParticle = isCharge && isStable && passPt && passTheta && passNHits && passIP && passEndPoint;
     if (keepParticle) return true;
     
   } else {
@@ -608,9 +695,20 @@ void ClicEfficiencyCalculator::clearTreeVar(){
   m_mcPt.clear();
   m_mcTheta.clear();
   m_mcIsDecayedInTracker.clear();
-  m_mcNHits_helper.clear();
-  m_mcNHits.clear();
-  
+  //m_mcNHits_helper.clear();
+  //m_mcNHits.clear();
+  m_mcNHitsTot.clear();
+  m_mcNHitsVXD.clear();
+
+
+  m_mcNTracks.clear();
+  m_mcNTrkHits.clear();
+  m_mcThetaTrk.clear();
+  m_mcPtTrk.clear();
+  m_mcPhiTrk.clear();
+  m_mcNTracksCone.clear();
+
+
 }  
   
   
