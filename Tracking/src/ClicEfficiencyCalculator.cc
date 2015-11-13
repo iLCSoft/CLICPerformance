@@ -189,8 +189,10 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     eff_vs_pt = new TCanvas("eff_vs_pt","Trk Eff vs Pt",800,800);
     g_eff_vs_pt = new TGraphAsymmErrors() ;
 
-    const int nbins_pt = 12;
-    double pt_edges[nbins_pt+1] = { 0.01, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 500., 1000. } ;
+    // const int nbins_pt = 12;
+    // double pt_edges[nbins_pt+1] = { 0.01, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 500., 1000. } ;
+    const int nbins_pt = 16;
+    double pt_edges[nbins_pt+1] = { 0.01, 0.1, 0.2, 0.5, 1., 2., 4., 8., 10., 20., 40., 80., 100., 150., 200., 500., 1000. } ;
 
     h_pt_reconstructed  = new TH1F( "h_pt_reconstructed", "Pt distributions of reconstructed tracks passing purity criteria", nbins_pt , pt_edges ) ;
     h_pt_reconstructable  = new TH1F( "h_pt_reconstructable", "Pt distribution of reconstructable tracks", nbins_pt , pt_edges ) ;
@@ -645,17 +647,21 @@ bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::str
 
     double charge = fabs(particle->getCharge());
     if (charge>0.5) isCharge = true;
+    //else std::cout<<"----- mc not charged"<<std::endl;
     int genStatus = particle->getGeneratorStatus();
     //int nDaughters = particle->getDaughters().size();
     if (genStatus == 1 ) isStable = true;
+    //else std::cout<<"----- mc not stable in generator"<<std::endl;
     
     TLorentzVector p;
     p.SetPxPyPzE(particle->getMomentum()[0], particle->getMomentum()[1], particle->getMomentum()[2], particle->getEnergy());//in GeV
     if ( p.Pt()>=0.1 ) passPt = true;
     if ( fabs(cos(p.Theta()))<0.99 ) passTheta = true; 
     //if ( fabs(cos(p.Theta()))<0.8 ) passTheta = true; 
+    //else std::cout<<"----- mc does not pass theta acceptance cut"<<std::endl;
 		std::vector<TrackerHit*> trackHits = particleHits[particle];
 		if(trackHits.size() >= 4) passNHits = true;
+    //else std::cout<<"----- mc has not 4 hits associated"<<std::endl;
 		//if(trackHits.size() >= 6) passNHits = true;
 
     // int nVXDHits = 0;
@@ -668,10 +674,12 @@ bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::str
 
     double dist = sqrt( pow(particle->getVertex()[0],2) + pow(particle->getVertex()[1],2) );
     if (dist<100.) passIP = true;
+    //else std::cout<<"----- mc has dist from IP > 100mm"<<std::endl;
     //if (dist<30.) passIP = true;
     
     double e = sqrt( pow(particle->getEndpoint()[0],2) + pow(particle->getEndpoint()[1],2) );
     if (e==0. || e>40.) passEndPoint=true;
+    //else std::cout<<"----- mc has endpoint < 40mm"<<std::endl;
 
 
     bool keepParticle = isCharge && isStable && passPt && passTheta && passNHits && passIP && passEndPoint;
