@@ -335,11 +335,19 @@
         <!--Whether to calculate track states manually, rather than copy stored fitter values-->
         <parameter name="UseOldTrackStateCalculation" type="int">1 </parameter>
         <parameter name="NEventsToSkip" type="int">0</parameter>
-        <parameter name="Verbosity" options="DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT"> WARNING </parameter>
+        <parameter name="Verbosity" options="DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT"> WARNING</parameter>
         <!--Energy Corrections in Marlin Pandora-->
         <!--parameter name="InputEnergyCorrectionPoints" type="FloatVec">InputEnergyCorrectionPoints_XXXX</parameter-->
         <!--parameter name="OutputEnergyCorrectionPoints" type="FloatVec">OutputEnergyCorrectionPoints_XXXX</parameter-->
-        <parameter name="MinFtdHitsForTpcHitFraction" type="int">0 </parameter>
+        
+        <!--Decides whether to create gaps in the geometry (ILD-specific)-->
+        <parameter name="CreateGaps" type="bool">false </parameter>
+        
+        <!--Track quality settings: need to be optimized! More in processor-->
+        <!--Cut on fractional of expected number of BarrelTracker hits-->
+        <parameter name="MinBarrelTrackerHitFractionOfExpected" type="int">0 </parameter>
+        <!--Cut on minimum number of FTD hits of BarrelTracker hit fraction to be applied-->
+        <parameter name="MinFtdHitsForBarrelTrackerHitFraction" type="int">0 </parameter>
         <!--Track quality cut: the minimum number of ftd track hits for ftd only tracks-->
         <parameter name="MinFtdTrackHits" type="int">0 </parameter>
         <!--Min track momentum required to perform final quality checks on number of hits-->
@@ -350,8 +358,6 @@
         <parameter name="MinTrackECalDistanceFromIp" type="float">0 </parameter>
         <!--Track quality cut: the minimum number of track hits-->
         <parameter name="MinTrackHits" type="int">0 </parameter>
-        <!--Decides whether to create gaps in the geometry (ILD-specific)-->
-        <parameter name="CreateGaps" type="bool">false </parameter>
     </processor>
 
     <processor name="MyPfoAnalysis" type="PfoAnalysis">
