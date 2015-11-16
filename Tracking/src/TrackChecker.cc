@@ -201,6 +201,8 @@ void TrackChecker::processEvent( LCEvent* evt ) {
   }//end is first event
 
 
+  clearEventVariables();
+
   // Get the collection of tracks
   LCCollection* trackCollection = 0 ;
   getCollection(trackCollection, m_inputTrackCollection, evt); if(trackCollection == 0) return;
