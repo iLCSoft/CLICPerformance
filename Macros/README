@@ -1,0 +1,12 @@
+=============
+ plotter.py
+=============
+
+- it runs for python version < 3
+- it draws distributions for the track pulls, residuals and resolution given a root file produced using the ClicPerformanceProcessor
+- specify the name of your root file and tree in "list_files"
+- more files name can be added to compare the performance among different cases
+- binning and range of the histograms can be changed in lines 19-40
+- more resolution plots may be added in "list_resolution_var" like in the example in lines 39-40
+
+--------------------------------
