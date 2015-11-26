@@ -1,20 +1,21 @@
 from ROOT import *
+import sys
 import math
-
+ 
 ########################################
 
 draw_pulls = True
 draw_residuals = True
-draw_resolution = True
+draw_resolution = False
 
 ########################################
 
 # list of files, if more than one plots will be superimposed
 
 list_files = [] #arguments: root file name, name of tree including path, name for legend (optional), color (optional)  
-list_files.append(["/Users/simoniel/workspace/files_root/tracking/aida_clic_o2_v03_mu_15deg_5GeV_1000evts.root","MyRecoMCTruthLinker_Refit/perftree","test1",kBlue])
-# list_files.append(["/Users/simoniel/workspace/files_root/tracking/aida_clic_o2_v03_mu_15deg_5GeV_1000evts_testmacro.root","MyRecoMCTruthLinker_Refit/perftree","test2",kRed])
-
+list_files.append(["../files_root/tracking/nocombact_refit/aida_clic_o2_v04_mu-_85deg_5GeV_5000evts.root.root","MyRecoMCTruthLinker_Refit/perftree","#theta = 85#circ",kBlue])
+list_files.append(["../files_root/tracking/nocombact_refit/aida_clic_o2_v04_mu-_75deg_5GeV_5000evts.root.root","MyRecoMCTruthLinker_Refit/perftree","#theta = 75#circ",kOrange+7])
+list_files.append(["../files_root/tracking/nocombact_refit/aida_clic_o2_v04_mu-_65deg_5GeV_5000evts.root.root","MyRecoMCTruthLinker_Refit/perftree","#theta = 65#circ",kGreen+1])
 
 # parameters for pull plots
 
@@ -25,11 +26,11 @@ range_pulls = 10.
 # parameters for residual plots
 
 nbins_residuals = 100
-range_residuals_omega = 0.0002 
-range_residuals_phi = 0.1 
-range_residuals_tanl = 0.1 
-range_residuals_d0 = 5 
-range_residuals_z0 = 5 
+range_residuals_omega = 0.000005 
+range_residuals_phi = 0.002 
+range_residuals_tanl = 0.002 
+range_residuals_d0 = 0.05 
+range_residuals_z0 = 0.05 
 
 
 #parameters for resolution plots
@@ -46,9 +47,22 @@ gStyle.SetOptFit(111111);
 gStyle.SetOptStat(111111);
 #gROOT.ProcessLine(".x style/CLICdpSettingsScript.C");
 #gStyle.SetOptStat(0000);
+#gStyle.SetOptFit(0000);
 #gStyle.SetOptFit(1);
 
 ########################################
+
+
+def CheckInput(list):
+    for file in list:
+        if len(file) < 2:
+            print "ERROR: file and/or tree name not given"
+            sys.exit(1)
+        elif len(file)<3:
+            file.append("test "+str(list.index(file)+1))
+        if len(file)<4:
+            file.append(list.index(file)+1)
+  
 
 
 def GetHisto(f, v, cond=None):
@@ -65,9 +79,9 @@ def GetHisto(f, v, cond=None):
     tree.Project("histo",v[0],cond)
     histo = gDirectory.GetList().FindObject("histo")
 
-    if len(f) > 3:
-        histo.SetLineColor(f[3])
-        histo.SetMarkerColor(f[3])
+    histo.SetTitle( v[0] ) 
+    histo.SetLineColor(f[3])
+    histo.SetMarkerColor(f[3])
 
     return histo
         
@@ -75,13 +89,12 @@ def GetHisto(f, v, cond=None):
 
 def DoGaussFit(f, v, histo=None):
 
-    if not isinstance(histo,TH1D):
+    if not isinstance(histo,TH1):
         histo = GetHisto(f, v)
 
-    histo.Fit( "gaus","","", v[2], v[3] )
-    histo.SetTitle( v[0] )    
-    
-    fitsf = histo.GetFunction("gaus")
+    fitsf = TF1("fit","gaus",v[2],v[3])
+    histo.Fit(fitsf,"N","",v[2],v[3])
+
     fitsf.SetLineColor(histo.GetLineColor())
 
     return histo ,fitsf
@@ -188,6 +201,9 @@ def GetResolution(f, v):
 ########################################
 ########################################
 
+CheckInput(list_files)
+
+########################################
 
 if draw_pulls:
     
@@ -198,20 +214,38 @@ if draw_pulls:
     list_var.append(["pullD0", nbins_pulls, -range_pulls, range_pulls])
     list_var.append(["pullZ0", nbins_pulls, -range_pulls, range_pulls])
     
+    
     c_data_pulls = TCanvas( 'c_data_pulls', 'pulls', 200, 10, 800, 600 )
     npad = math.sqrt(len(list_var))
     c_data_pulls.Divide(int(math.ceil(npad)), int(math.floor(npad)))
 
+    tab = [[None for x in range(len(list_files)+1)] for x in range(len(list_var)+1)] 
     hists = []
-    for file in list_files:
-        for var in list_var:
-
-            c_data_pulls.cd(list_var.index(var)+1)
-            hists.append(DoGaussFit(file, var)[0])
-            # hists[-1].SetLineColor(list_files.index(file)+1)
+    fits = []
+    legs = []
+    for var in list_var:
+        leg = TLegend(0.15, 0.88-0.04*len(list_files), 0.25, 0.88)
+        leg.SetBorderSize(0)
+        legs.append(leg)
+        c_data_pulls.cd(list_var.index(var)+1)
+        for file in list_files:
+            h, f = DoGaussFit(file, var)
+            hists.append(h)
+            fits.append(f)
             hists[-1].Draw("same")
-
+            fits[-1].Draw("same")
+            legs[-1].AddEntry(hists[-1], file[2], "l")
+            tab[0][list_files.index(file)+1] = file[2]
+            tab[list_var.index(var)+1][0] = var[0]
+            tab[list_var.index(var)+1][list_files.index(file)+1] = str(fits[-1].GetParameter(1))+" +- "+str(fits[-1].GetParError(1)) +"   "+str(fits[-1].GetParameter(2))+" +- "+str(fits[-1].GetParError(2))
+        legs[-1].Draw("same")
     c_data_pulls.Print("pulls.eps")
+    
+    outfile = open("tab_pulls.txt", "w")
+    for row in tab:
+        outfile.write(str([str(x) for x in row])+"\n")
+    outfile.close()
+    
 
 
  ########################################
@@ -231,13 +265,17 @@ if draw_residuals:
     c_data_residuals.Divide(int(math.ceil(npad)), int(math.floor(npad)))
 
     hists = []
-    for file in list_files:
-        for var in list_var:
-
-            c_data_residuals.cd(list_var.index(var)+1)
+    legs = []
+    for var in list_var:
+        leg = TLegend(0.15, 0.88-0.04*len(list_files), 0.25, 0.88)
+        leg.SetBorderSize(0)
+        legs.append(leg)
+        c_data_residuals.cd(list_var.index(var)+1)
+        for file in list_files:            
             hists.append(GetHisto(file, var))
-            # hists[-1].SetLineColor(list_files.index(file)+1)
             hists[-1].Draw("same")
+            legs[-1].AddEntry(hists[-1], file[2], "l");
+        legs[-1].Draw("same")
 
     c_data_residuals.Print("residuals.eps")
 
@@ -263,16 +301,9 @@ if draw_resolution:
             graphs.append(GetResolution(file, var))
             graphs[-1].SetMarkerSize(1.)
             graphs[-1].SetMarkerStyle(20)
-            if len(file) > 3:
-                graphs[-1].SetLineColor(file[3])
-                graphs[-1].SetMarkerColor(file[3])
-            else:
-                graphs[-1].SetLineColor(list_files.index(file)+1)
-                graphs[-1].SetMarkerColor(list_files.index(file)+1)
-            if len(file) > 2:
-                leg.AddEntry(graphs[-1], file[2], "lp");
-            else:
-                leg.AddEntry(graphs[-1], "test "+str(list_files.index(file)+1), "lp");
+            graphs[-1].SetLineColor(file[3])
+            graphs[-1].SetMarkerColor(file[3])
+            leg.AddEntry(graphs[-1], file[2], "lp");
             mg.Add(graphs[-1])
 
         mg.Draw("AP")
