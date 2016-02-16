@@ -69,7 +69,6 @@
         <ClusterListName>PhotonClusters</ClusterListName>
         <ReplaceCurrentClusterList>false</ReplaceCurrentClusterList>
         <ShouldMakePdfHistograms>false</ShouldMakePdfHistograms>
-        <NEnergyBins>9</NEnergyBins>
         <HistogramFile>PandoraSettings/PandoraLikelihoodData9EBin.xml</HistogramFile>
     </algorithm>
 
@@ -94,6 +93,10 @@
                 </algorithm>
                 <algorithm type = "MipPhotonSeparation">
                     <algorithm type = "TrackClusterAssociation"/>
+                </algorithm>
+                <algorithm type = "HighEnergyPhotonRecovery">
+                    <algorithm type = "TrackClusterAssociation"/>
+                    <AdditionalClusterListNames>PhotonClusters</AdditionalClusterListNames>
                 </algorithm>
                 <algorithm type = "SoftClusterMerging">
                     <algorithm type = "TrackClusterAssociation"/>
@@ -420,6 +423,9 @@
         <CandidateListNames>PrimaryClusters PhotonClusters</CandidateListNames>
         <MergedCandidateListName>PfoCreation</MergedCandidateListName>
     </algorithm>
+
+    <algorithm type = "PhotonSplitting"/>
+    <algorithm type = "PhotonFragmentMerging"/>
 
     <!-- Create particle flow objects -->
     <algorithm type = "ForceSplitTrackAssociations"/>

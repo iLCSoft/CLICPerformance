@@ -48,6 +48,9 @@
 #include <iostream>
 #include <climits>
 #include <cfloat>
+#include "sys/types.h"
+#include "sys/sysinfo.h"
+
 
 using namespace lcio ;
 using namespace marlin ;
@@ -524,6 +527,21 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
 	}
 
   //evt->addCollection(  skimVec , m_notRecoMCColName ) ;
+
+
+  struct sysinfo memInfo;
+
+  sysinfo (&memInfo);
+
+  unsigned long physMemUsed = memInfo.totalram - memInfo.freeram;
+  //Multiply in next statement to avoid int overflow on right hand side...                                                                         \
+                                                                                                                                                      
+  physMemUsed *= memInfo.mem_unit;
+
+
+  streamlog_out(MESSAGE) << " Processed event  "<<m_eventNumber
+                         << " Physical memory in use: "<<physMemUsed
+                         << std::endl ;
 
 	// Increment the event number
 	m_eventNumber++ ;

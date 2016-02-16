@@ -55,7 +55,7 @@
   <processor name="InitDD4hep" type="InitializeDD4hep">
     <!--InitializeDD4hep reads a compact xml file and initializes the DD4hep::LCDD object-->
     <!--Name of the DD4hep compact xml file to load-->
-    <parameter name="DD4hepXMLFile" type="string"> /afs/cern.ch/eng/clic/work/ilcsoft/HEAD-2015-11-16/lcgeo/HEAD/CLIC/compact/CLIC_o2_v03/CLIC_o2_v03.xml </parameter>
+    <parameter name="DD4hepXMLFile" type="string"> /afs/cern.ch/eng/clic/work/ilcsoft/HEAD-2015-12-02/lcgeo/HEAD/CLIC/compact/CLIC_o2_v04/CLIC_o2_v04.xml </parameter>
   </processor>
 
   <processor name="VXDBarrelDigitiser" type="DDPlanarDigiProcessor">
@@ -245,16 +245,16 @@
   <processor name="MyDDCaloDigi" type="DDCaloDigi">
     <!--ILD digitizer...-->
     <!--Calibration coefficients for ECAL-->
-    <parameter name="CalibrECAL" type="FloatVec">24.8955 49.791</parameter>
+    <parameter name="CalibrECAL" type="FloatVec">40.3366 80.6732</parameter>
     <!--Calibration coefficients for HCAL barrel-->
-    <parameter name="CalibrHCALBarrel" type="FloatVec">38.9</parameter>
+    <parameter name="CalibrHCALBarrel" type="FloatVec">46.6171</parameter>
     <!-- CalibrHcalBarrel Should be 38.995 for 17 mm -->
     <!--Calibration coefficients for HCAL endcap -->
-    <parameter name="CalibrHCALEndcap" type="FloatVec">38.9</parameter>
+    <parameter name="CalibrHCALEndcap" type="FloatVec">50.0706</parameter>
     <!--Calibration coefficients for HCAL plug-->
-    <parameter name="CalibrHCALOther" type="FloatVec">38.9</parameter>
+    <parameter name="CalibrHCALOther" type="FloatVec">57.0109</parameter>
     <!--ECAL Collection Names-->
-    <parameter name="ECALCollections" type="StringVec">ECalBarrelCollection ECalEndcapCollection</parameter>
+    <parameter name="ECALCollections" type="StringVec">ECalBarrelCollection ECalEndcapCollection ECalPlugCollection</parameter>
     <!--Index of ECal Layers-->
     <parameter name="ECALLayers" type="IntVec">17 100  </parameter>
     <!--Threshold for ECAL Hits in GeV-->
@@ -286,9 +286,9 @@
     <!-- Timing -->
     <parameter name="UseEcalTiming" type="int">1</parameter>
     <parameter name="UseHcalTiming" type="int">1</parameter>
-    <parameter name="ECALBarrelTimeWindowMax" type="float"> 10.0 </parameter>
-    <parameter name="HCALBarrelTimeWindowMax" type="float"> 100.0 </parameter>
-    <parameter name="ECALEndcapTimeWindowMax" type="float"> 10.0 </parameter>
+    <parameter name="ECALBarrelTimeWindowMax" type="float"> 20.0 </parameter>
+    <parameter name="HCALBarrelTimeWindowMax" type="float"> 10.0 </parameter>
+    <parameter name="ECALEndcapTimeWindowMax" type="float"> 20.0 </parameter>
     <parameter name="HCALEndcapTimeWindowMax" type="float"> 10.0 </parameter>
     <parameter name="ECALTimeWindowMin" type="float"> -1.0 </parameter>
     <parameter name="HCALTimeWindowMin" type="float"> -1.0 </parameter>
@@ -319,21 +319,20 @@
     <parameter name="ClusterCollectionName" type="String">PandoraClusters</parameter>
     <parameter name="PFOCollectionName" type="String">PandoraPFOs</parameter>
     <!-- Calibration constants -->
-    <parameter name="ECalToMipCalibration" type="float">269.47</parameter>
-    <parameter name="HCalToMipCalibration" type="float">53.27</parameter>
+    <parameter name="ECalToMipCalibration" type="float">163.934</parameter>
+    <parameter name="HCalToMipCalibration" type="float">43.29</parameter>
     <parameter name="ECalMipThreshold" type="float">0.5</parameter>
     <parameter name="HCalMipThreshold" type="float">0.3</parameter>
-    <parameter name="ECalToEMGeVCalibration" type="float">0.882</parameter>
-    <parameter name="HCalToEMGeVCalibration" type="float">0.882</parameter>
-    <parameter name="ECalToHadGeVCalibrationBarrel" type="float">1.0</parameter>
-    <parameter name="ECalToHadGeVCalibrationEndCap" type="float">1.0</parameter>
-    <parameter name="HCalToHadGeVCalibration" type="float">1.28</parameter>
+    <parameter name="ECalToEMGeVCalibration" type="float">1.0043</parameter>
+    <parameter name="HCalToEMGeVCalibration" type="float">1.0043</parameter>
+    <parameter name="ECalToHadGeVCalibrationBarrel" type="float">0.97499</parameter>
+    <parameter name="ECalToHadGeVCalibrationEndCap" type="float">0.97499</parameter>
+    <parameter name="HCalToHadGeVCalibration" type="float">1.04848</parameter>
     <parameter name="MuonToMipCalibration" type="float">10.0</parameter>
     <parameter name="DigitalMuonHits" type="int">0</parameter>
-    <parameter name="MaxHCalHitHadronicEnergy" type="float">100000</parameter> 
-    <parameter name="AbsorberRadiationLength" type="float">0.2857</parameter>
+    <parameter name="MaxHCalHitHadronicEnergy" type="float">1</parameter> 
     <!--Whether to calculate track states manually, rather than copy stored fitter values-->
-    <parameter name="UseOldTrackStateCalculation" type="int">1 </parameter>
+    <parameter name="UseOldTrackStateCalculation" type="int">0 </parameter>
     <parameter name="NEventsToSkip" type="int">0</parameter>
     <parameter name="Verbosity" options="DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT"> WARNING</parameter>
     <!--Energy Corrections in Marlin Pandora-->
@@ -358,50 +357,52 @@
     <parameter name="MinTrackECalDistanceFromIp" type="float">0 </parameter>
     <!--Track quality cut: the minimum number of track hits-->
     <parameter name="MinTrackHits" type="int">0 </parameter>
+    
+    <!-- MORE TRACKING  CUTS -->
+    <!--Max distance from track to BarrelTracker r max to id whether track reaches ecal-->
+    <parameter name="ReachesECalBarrelTrackerOuterDistance" type="float">-100 </parameter>
+    <!--Max distance from track to BarrelTracker z max to id whether track reaches ecal-->
+    <parameter name="ReachesECalBarrelTrackerZMaxDistance" type="float">-50 </parameter>
+    <!--Max distance from track hit to ftd z position to identify ftd hits-->
+    <parameter name="ReachesECalFtdZMaxDistance" type="float">1 </parameter>
+    <!--Min FTD layer for track to be considered to have reached ecal-->
+    <parameter name="ReachesECalMinFtdLayer" type="int">0 </parameter>
+    <!--Minimum number of BarrelTracker hits to consider track as reaching ecal-->
+    <parameter name="ReachesECalNBarrelTrackerHits" type="int">0 </parameter>
+    <!--Minimum number of ftd hits to consider track as reaching ecal-->
+    <parameter name="ReachesECalNFtdHits" type="int">0 </parameter>
+    <!--Maximum energy for unmatched vertex track-->
+    <parameter name="UnmatchedVertexTrackMaxEnergy" type="float">5 </parameter>
+    <!--Whether can form pfos from tracks that don't start at vertex-->
+    <parameter name="UseNonVertexTracks" type="int">1 </parameter>
+    <!--Whether to calculate track states manually, rather than copy stored fitter values-->
+    <parameter name="UseOldTrackStateCalculation" type="int">0 </parameter>
+    <!--Whether can form pfos from unmatched tracks that don't start at vertex-->
+    <parameter name="UseUnmatchedNonVertexTracks" type="int">0 </parameter>
+    <!--Whether can form pfos from unmatched tracks that start at vertex-->
+    <parameter name="UseUnmatchedVertexTracks" type="int">1 </parameter>
+    <!--Track z0 cut used to determine whether track can be used to form pfo-->
+    <parameter name="Z0TrackCut" type="float">50 </parameter>
+    <!--z0 cut used to determine whether unmatched vertex track can form pfo-->
+    <parameter name="Z0UnmatchedVertexTrackCut" type="float">5 </parameter>
+    <!--Non vtx track z cut to determine whether track can be used to form pfo-->
+    <parameter name="ZCutForNonVertexTracks" type="float">250 </parameter>
+    <!--Track quality cut: the maximum number of track hits-->
+    <parameter name="MaxTrackHits" type="int">5000 </parameter>
+    <!--Cut on fractional track momentum error-->
+    <parameter name="MaxTrackSigmaPOverP" type="float">0.15 </parameter>
+    <!--Constant relating track curvature in b field to momentum-->
+    <parameter name="CurvatureToMomentumFactor" type="float">0.00015 </parameter>
+    <!--Track d0 cut used to determine whether track can be used to form pfo-->
+    <parameter name="D0TrackCut" type="float">50 </parameter>
+    <!--d0 cut used to determine whether unmatched vertex track can form pfo-->
+    <parameter name="D0UnmatchedVertexTrackCut" type="float">5 </parameter>
   </processor>
-
-  <processor name="MyPfoAnalysis" type="PfoAnalysis">
-    <!--Names of input pfo collection-->
-    <parameter name="PfoCollection" type="string" lcioInType="ReconstructedParticle">PandoraPFOs </parameter>
-    <!--Names of mc particle collection-->
-    <parameter name="MCParticleCollection" type="string" lcioInType="MCParticle">MCParticle </parameter>
-    <!--Collect Calibration Details-->
-    <parameter name="CollectCalibrationDetails" type="int">0</parameter>
-    <!--Detector Geometry Missing From Gear-->
-    <parameter name="HCalRingOuterSymmetryOrder" type="int">12</parameter>
-    <parameter name="HCalRingOuterPhi0" type="int">0</parameter>
-    <!--Name of the ECAL collection used to form clusters-->
-    <parameter name="ECalCollections" type="StringVec" lcioInType="CalorimeterHit">ECALBarrel ECALEndcap ECALOther</parameter>
-    <!--Name of the HCAL collection used to form clusters-->
-    <parameter name="HCalCollections" type="StringVec" lcioInType="CalorimeterHit">HCALBarrel HCALEndcap HCALOther </parameter>
-    <!--Name of the MUON collection used to form clusters-->
-    <parameter name="MuonCollections" type="StringVec" lcioInType="CalorimeterHit">MUON </parameter>
-    <!--Name of the BCAL collection used to form clusters-->
-    <parameter name="BCalCollections" type="StringVec" lcioInType="CalorimeterHit">BCAL</parameter>
-    <!--Name of the LHCAL collection used to form clusters-->
-    <parameter name="LHCalCollections" type="StringVec" lcioInType="CalorimeterHit"> </parameter>
-    <!--Name of the LCAL collection used to form clusters-->
-    <parameter name="LCalCollections" type="StringVec" lcioInType="CalorimeterHit">LCAL </parameter>
-    <!--ECal Collection ADC Names-->
-    <parameter name="ECalCollectionsADC" type="StringVec">ECalBarrelCollection ECalEndcapCollection</parameter>
-    <!--HCal Barrel Collection ADC Names-->
-    <parameter name="HCalBarrelCollectionsADC" type="StringVec"> HCalBarrelCollection </parameter>
-    <!--HCal Endcap Collection ADC Names-->
-    <parameter name="HCalEndCapCollectionsADC" type="StringVec"> HCalEndcapCollection </parameter>
-    <!--HCal Other/Ring Collection ADC Names-->
-    <parameter name="HCalOtherCollectionsADC" type="StringVec"> HCalRingCollection</parameter>
-    <!--Set the debug print level-->
-    <parameter name="Printing" type="int">0 </parameter>
-    <!--Output root file name-->
-    <parameter name="RootFile" type="string"> pfoAnalysis.root </parameter>
-
-  </processor>
-
 
   <processor name="MyDDSimpleMuonDigi" type="DDSimpleMuonDigi">
     <!--Performs simple digitization of sim calo hits...-->
     <!--Calibration coefficients for MUON-->
-    <parameter name="CalibrMUON" type="FloatVec">56.7</parameter>
+    <parameter name="CalibrMUON" type="FloatVec">70.1</parameter>
     <!-- maximum hit energy for a MUON hit -->
     <parameter name="MaxHitEnergyMUON" type="float">2.0</parameter>
     <!--MUON Collection Names-->
@@ -410,7 +411,7 @@
     <!--MUON Collection of real Hits-->
     <parameter name="MUONOutputCollection" type="string">MUON </parameter>
     <!--Threshold for MUON Hits in GeV-->
-    <parameter name="MUONThreshold" type="float">1e-06 </parameter>
+    <parameter name="MuonThreshold" type="float">1e-06 </parameter>
     <!--MuonHit Relation Collection-->
     <parameter name="RelationOutputCollection" type="string">RelationMuonHit </parameter>
   </processor>

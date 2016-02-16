@@ -33,13 +33,13 @@ from SystemOfUnits import *
 # some configuration variables (could go to a seperate 'steering' file)
 #
 
-numberOfEvents = 50
+numberOfEvents = 1000
 
 # ---------------------------------------
 # input file: either .slcio or .stdhep
 # --------------------------------------
 
-lcioInputFile  = 'rawMuons.slcio'
+lcioInputFile  = 'uds91_00.slcio'
 #lcioInputFile  = 'bbudsc_3evt.stdhep'
 #lcioInputFile  = 'bbudsc_3evt_dd4hep.slcio'
 #lcioInputFile  = 'mcparticles_single_muon_5GeV_10deg.slcio'
@@ -49,8 +49,8 @@ lcioInputFile  = 'rawMuons.slcio'
 #lcioOutputFile  = 'bbudsc_3evt_dd4hep_sim.slcio'
 #lcioOutputFile = 'simpleCLIC_single_muon_5GeV_85deg.slcio'
 #lcioOutputFile = 'simpleILD_single_muon_5GeV_85deg.slcio'
-lcioOutputFile = 'simulatedMuons.slcio'
-#lcioOutputFile = lcioInputFile[:len(lcioInputFile)-len('.slcio')]+'_SIM_simple.slcio'
+#lcioOutputFile = 'simulatedMuons.slcio'
+lcioOutputFile = lcioInputFile[:len(lcioInputFile)-len('.slcio')]+'_SIM_simple.slcio'
 
 physicsList    = 'FTFP_BERT'  # 'QGSP_BERT'
 
