@@ -82,10 +82,10 @@ void ShowerStudy::init() {
     
     double energyBins[11] = {0.,2.,11.,22.,51.,101.,151.,201,501,1001.,1501};
     int nbins = 10;
-    m_showerProfile = new TProfile2D("showerProfile","Shower profile; Distance [mm]; E_{true} [GeV]; E/0.5 mm [GeV]",1000,1500,2000,nbins,energyBins);
+    m_showerProfile = new TProfile2D("showerProfile","Shower profile; Distance [mm]; E_{true} [GeV]; E/0.1 mm [GeV]",2000,1500,1700,nbins,energyBins);
     m_totalEnergyHist = new TH2F("totalEnergyHist","Total Energy;E [GeV];E_{true} [GeV];Entries/0.5 GeV",6000,0,3000,nbins,energyBins);
     
-    m_showerProfileLayers = new TProfile2D("showerProfileLayers","Shower profile; Layer #; E_{true} [GeV]; E/0.5 mm [GeV]",50,0,50,nbins,energyBins);
+    m_showerProfileLayers = new TProfile2D("showerProfileLayers","Shower profile; Layer No; E_{true} [GeV]; E/0.5 mm [GeV]",50,0,50,nbins,energyBins);
     
     m_rootFile = new TFile(m_rootFileName.c_str(),"RECREATE");
     
@@ -177,9 +177,7 @@ void ShowerStudy::processEvent( LCEvent* evt ) {
         _encoder.setValue(cellId);
         int layer=_encoder["layer"].value();
         
-        totalEnergy = totalEnergy + hitEnergy;
-        m_showerProfile->Fill(radius, trueEnergy,hitEnergy);
-        m_showerProfileLayers->Fill(layer, trueEnergy,hitEnergy);
+  
     
         m_hitDistances->push_back(radius);
         m_hitEnergies->push_back(hitEnergy);
@@ -191,6 +189,11 @@ void ShowerStudy::processEvent( LCEvent* evt ) {
         m_hitLayerThicknesses->push_back(thickness);
         m_hitLayerRadiationLengths->push_back(nRadLengths);
         m_nhits++;
+        
+        
+        totalEnergy = totalEnergy + hitEnergy;
+        m_showerProfile->Fill(radius, trueEnergy,hitEnergy);
+        m_showerProfileLayers->Fill(layer, trueEnergy,hitEnergy/nRadLengths);
         
     }
     
