@@ -95,7 +95,7 @@ void ShowerStudy::init() {
     
     m_showerProfileX0 = new TProfile2D("showerProfileX0","Shower profile; Number of X0; E_{true} [GeV]; E/0.1 [GeV]",50,0,25,nbins,energyBins);
     
-    m_leakageProfile = new TProfile("m_leakageProfile","Leakage vs E_{true};  E_{true} [GeV]; E_{HCal}/E_{ECal}",nbins,energyBins);
+    m_leakageProfile = new TProfile("leakageProfile","Leakage vs E_{true};  E_{true} [GeV]; E_{HCal}/E_{ECal}",nbins,energyBins);
 
     
     m_rootFile = new TFile(m_rootFileName.c_str(),"RECREATE");
@@ -222,7 +222,7 @@ void ShowerStudy::processEvent( LCEvent* evt ) {
         double distance = layers[layer].distance/dd4hep::mm;
         
         double intX0=layers[layer].inner_nRadiationLengths;
-        for(int l=layer-1; i>=0; l--)
+        for(int l=layer-1; l>=0; l--)
             intX0=intX0+layers[l].inner_nRadiationLengths+layers[l].outer_nRadiationLengths;
         
         
