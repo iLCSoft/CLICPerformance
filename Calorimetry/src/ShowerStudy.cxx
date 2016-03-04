@@ -260,7 +260,7 @@ void ShowerStudy::processEvent( LCEvent* evt ) {
     }
     
     
-    m_leakageProfile->Fill(trueEnergy,totalLeakEnergy/totalEnergy);
+    m_leakageProfile->Fill(trueEnergy,(totalEnergy>0?totalLeakEnergy/totalEnergy:0));
     m_totalLeakEnergy= totalLeakEnergy;
 
     m_outputTree->Fill();
