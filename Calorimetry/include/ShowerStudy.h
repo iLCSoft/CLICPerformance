@@ -49,7 +49,7 @@ protected:
     // Collection names for (in/out)put
     std::string m_inputCalorimeterHitCollection ;
     std::string m_inputMCParticleCollection ;
-
+    std::string m_inputLeakageCalorimeterHitCollection;
     std::string m_rootFileName;
     
     // Run and event counters
@@ -62,6 +62,9 @@ protected:
     // Plots 
     TProfile2D * m_showerProfileLayers;
     TProfile2D * m_showerProfile;
+    TProfile2D * m_showerProfileX0;
+    TProfile * m_leakageProfile;
+
     TH2F * m_totalEnergyHist;
     TTree * m_outputTree;
     TFile * m_rootFile;
@@ -69,12 +72,21 @@ protected:
     
     float m_trueEnergy;
     float m_totalEnergy;
+    float m_totalLeakEnergy;
+
     unsigned int m_nhits;
+    
+    
     std::vector<float> * m_hitEnergies;
-    std::vector<float> * m_hitDistances;
+    std::vector<float> * m_hit_x;
+    std::vector<float> * m_hit_y;
+    std::vector<float> * m_hit_z;
+
     std::vector<int> * m_hitLayers;
     std::vector<float> * m_hitLayerThicknesses;
     std::vector<float> * m_hitLayerRadiationLengths;
+    std::vector<float> * m_hitLayerIntRadiationLengths;
+    std::vector<float> * m_hitLayerDistances;
 
 
     
