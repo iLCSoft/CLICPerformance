@@ -86,8 +86,12 @@ void ShowerStudy::init() {
     m_runNumber = 0 ;
     m_eventNumber = 0 ;
     
-    double energyBins[11] = {0.,2.,11.,22.,51.,101.,151.,201,501,1001.,1501};
-    int nbins = 10;
+//     double energyBins[11] = {0.,2.,11.,22.,51.,101.,151.,201,501,1001.,1501};
+    double energyBins[20] = {0.,2.,9.,11.,19.,21.,49.,51.,99.,101.,149,151.,199.,201.,499.,501.,999,1001.,1499.,1501};
+
+//     int nbins = 10;
+    int nbins = 19;
+
     m_showerProfile = new TProfile2D("showerProfile","Shower profile; Distance [mm]; E_{true} [GeV]; E/0.1 mm [GeV]",2000,1500,1700,nbins,energyBins);
     m_totalEnergyHist = new TH2F("totalEnergyHist","Total Energy;E [GeV];E_{true} [GeV];Entries/0.5 GeV",6000,0,3000,nbins,energyBins);
     
