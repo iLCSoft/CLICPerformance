@@ -99,7 +99,7 @@ void ShowerStudy::init() {
     
     m_showerProfileX0 = new TProfile2D("showerProfileX0","Shower profile; Number of X0; E_{true} [GeV]; E/0.1 [GeV]",50,0,25,nbins,energyBins);
     
-    m_leakageProfile = new TProfile("leakageProfile","Leakage vs E_{true};  E_{true} [GeV]; E_{HCal}/E_{ECal}",nbins,energyBins);
+    m_leakageProfile = new TProfile("leakageProfile","Leakage vs E_{true};  E_{true} [GeV]; E_{HCal}/(E_{ECal}+E_{HCal})",nbins,energyBins);
 
     
     m_rootFile = new TFile(m_rootFileName.c_str(),"RECREATE");
@@ -264,7 +264,7 @@ void ShowerStudy::processEvent( LCEvent* evt ) {
     }
     
     
-    m_leakageProfile->Fill(trueEnergy,(totalEnergy>0?totalLeakEnergy/totalEnergy:0));
+    m_leakageProfile->Fill(trueEnergy,(totalEnergy+totalLeakEnergy>0?totalLeakEnergy/(totalEnergy+totalLeakEnergy):0));
     m_totalLeakEnergy= totalLeakEnergy;
 
     m_outputTree->Fill();
