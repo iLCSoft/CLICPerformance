@@ -4,12 +4,15 @@
 #include <IMPL/LCCollectionVec.h>
 #include <IMPL/LCRelationImpl.h>
 #include <EVENT/CalorimeterHit.h>
+#include <EVENT/SimCalorimeterHit.h>
 
 #include "DD4hep/LCDD.h"
 #include "DD4hep/DD4hepUnits.h"
 #include "DD4hep/DetType.h"
 #include "DDRec/DetectorData.h"
 #include "DD4hep/DetectorSelector.h"
+
+#include "UTIL/LCRelationNavigator.h"
 
 #include "TFile.h"
 
@@ -92,13 +95,16 @@ void ShowerStudy::init() {
 //     int nbins = 10;
     int nbins = 21;
 
-    m_showerProfile = new TProfile2D("showerProfile","Shower profile; Distance [mm]; E_{true} [GeV]; E/0.1 mm [GeV]",2000,1500,1700,nbins,energyBins);
     m_totalEnergyHist = new TH2F("totalEnergyHist","Total Energy;E [GeV];E_{true} [GeV];Entries/0.5 GeV",6000,0,3000,nbins,energyBins);
     
-    m_showerProfileLayers = new TProfile2D("showerProfileLayers","Shower profile; Layer No; E_{true} [GeV]; E/0.5 mm [GeV]",50,0,50,nbins,energyBins);
+    m_showerHist = new TH2F("showerHist","Shower profile; Distance [mm]; E_{true} [GeV]; E/0.1 mm [GeV]",2000,1500,1700,nbins,energyBins);
+    m_showerHistLayers = new TH2F("showerHistLayers","Shower profile; Layer No; E_{true} [GeV]; E/0.5 mm [GeV]",50,0,50,nbins,energyBins);
+    m_showerHistX0 = new TH2F("showerHistX0","Shower profile; Number of X0; E_{true} [GeV]; E/0.1 [GeV]",50,0,25,nbins,energyBins);
     
-    m_showerProfileX0 = new TProfile2D("showerProfileX0","Shower profile; Number of X0; E_{true} [GeV]; E/0.1 [GeV]",50,0,25,nbins,energyBins);
-    
+    m_raw_showerHist = new TH2F("rawShowerHist","Shower profile; Distance [mm]; E_{true} [GeV]; E/0.1 mm [GeV]",2000,1500,1700,nbins,energyBins);
+    m_raw_showerHistLayers = new TH2F("rawShowerHistLayers","Shower profile; Layer No; E_{true} [GeV]; E/0.5 mm [GeV]",50,0,50,nbins,energyBins);
+    m_raw_showerHistX0 = new TH2F("rawShowerHistX0","Shower profile; Number of X0; E_{true} [GeV]; E/0.1 [GeV]",50,0,25,nbins,energyBins);
+
     m_leakageProfile = new TProfile("leakageProfile","Leakage vs E_{true};  E_{true} [GeV]; E_{HCal}/(E_{ECal}+E_{HCal})",nbins,energyBins);
 
     
@@ -121,8 +127,11 @@ void ShowerStudy::init() {
     m_outputTree->Branch("totalEnergy",&m_totalEnergy,"totalEnergy/F");
     m_outputTree->Branch("hit_n",&m_nhits,"hit_n/i");
     m_outputTree->Branch("totalLeakEnergy",&m_totalLeakEnergy,"totalLeakEnergy/F");
+    m_outputTree->Branch("hit_leak_n",&m_leak_nhits,"hit_leak_n/i");
 
     m_outputTree->Branch("hit_E","std::vector< float >", m_hitEnergies);
+    m_outputTree->Branch("hit_rawE","std::vector< float >", m_raw_hitEnergies);
+
     m_outputTree->Branch("hit_x","std::vector< float >", m_hit_x);
     m_outputTree->Branch("hit_y","std::vector< float >", m_hit_y);
     m_outputTree->Branch("hit_z","std::vector< float >", m_hit_z);
@@ -133,6 +142,18 @@ void ShowerStudy::init() {
     m_outputTree->Branch("hit_layer_intX0","std::vector< float >", m_hitLayerIntRadiationLengths);
     m_outputTree->Branch("hit_layer_distances","std::vector< float >", m_hitLayerDistances);
 
+    m_outputTree->Branch("hit_leak_E","std::vector< float >", m_leak_hitEnergies);
+    m_outputTree->Branch("hit_leak_rawE","std::vector< float >", m_leak_raw_hitEnergies);
+
+    m_outputTree->Branch("hit_leak_x","std::vector< float >", m_leak_hit_x);
+    m_outputTree->Branch("hit_leak_y","std::vector< float >", m_leak_hit_y);
+    m_outputTree->Branch("hit_leak_z","std::vector< float >", m_leak_hit_z);
+
+    m_outputTree->Branch("hit_leak_layer","std::vector< int >", m_leak_hitLayers);
+    m_outputTree->Branch("hit_leak_layer_thickness","std::vector< float >", m_leak_hitLayerThicknesses);
+    m_outputTree->Branch("hit_leak_layer_X0","std::vector< float >", m_leak_hitLayerRadiationLengths);
+    m_outputTree->Branch("hit_leak_layer_intX0","std::vector< float >", m_leak_hitLayerIntRadiationLengths);
+    m_outputTree->Branch("hit_leak_layer_distances","std::vector< float >", m_leak_hitLayerDistances);
     
 }
 
@@ -147,18 +168,30 @@ void ShowerStudy::processEvent( LCEvent* evt ) {
     m_trueEnergy=0.;
     m_totalEnergy=0.;
     m_totalLeakEnergy=0.;
-    m_hitEnergies->clear(); 
+    m_leak_nhits=0;
 
+    m_hitEnergies->clear(); 
+    m_raw_hitEnergies->clear(); 
     m_hit_x->clear();
     m_hit_y->clear();
     m_hit_z->clear();
-
-
     m_hitLayers->clear();
     m_hitLayerThicknesses->clear();
     m_hitLayerRadiationLengths->clear();
     m_hitLayerIntRadiationLengths->clear();
     m_hitLayerDistances->clear();
+    
+    m_leak_hitEnergies->clear(); 
+    m_leak_raw_hitEnergies->clear(); 
+
+    m_leak_hit_x->clear();
+    m_leak_hit_y->clear();
+    m_leak_hit_z->clear();
+    m_leak_hitLayers->clear();
+    m_leak_hitLayerThicknesses->clear();
+    m_leak_hitLayerRadiationLengths->clear();
+    m_leak_hitLayerIntRadiationLengths->clear();
+    m_leak_hitLayerDistances->clear();
 
     //Get ECal Barrel extension by type, ignore plugs and rings 
     const DD4hep::DDRec::LayeredCalorimeterData * eCalBarrelExtension= getExtension( ( DD4hep::DetType::CALORIMETER | DD4hep::DetType::ELECTROMAGNETIC | DD4hep::DetType::BARREL), 
@@ -168,8 +201,16 @@ void ShowerStudy::processEvent( LCEvent* evt ) {
     const std::vector<DD4hep::DDRec::LayeredCalorimeterStruct::Layer> & layers = eCalBarrelExtension->layers;
     
     LCCollection * mcColl =0;
-    
     getCollection(mcColl,m_inputMCParticleCollection,evt);
+    
+
+    LCCollection * relColl =0;
+    getCollection(relColl,"RelationCaloHit",evt);
+
+    LCRelationNavigator * nav = new LCRelationNavigator(relColl);
+    
+    
+
     
     MCParticle * photonMcParticle = 0;
     //Look for a photon
@@ -200,6 +241,7 @@ void ShowerStudy::processEvent( LCEvent* evt ) {
     UTIL::BitField64 _encoder(caloColl->getParameters().getStringVal( EVENT::LCIO::CellIDEncoding ));
 
     double totalEnergy=0.;
+    
     for(int i=0; i< caloColl->getNumberOfElements(); i++){ 
 	CalorimeterHit* hit = dynamic_cast<CalorimeterHit*>( caloColl->getElementAt(i) ) ;
         
@@ -240,9 +282,21 @@ void ShowerStudy::processEvent( LCEvent* evt ) {
         
         
         totalEnergy = totalEnergy + hitEnergy;
-        m_showerProfile->Fill(distance, trueEnergy,hitEnergy/nRadLengths);
-        m_showerProfileLayers->Fill(layer, trueEnergy,hitEnergy/nRadLengths);
-        m_showerProfileX0->Fill(intX0, trueEnergy,hitEnergy/nRadLengths);
+        m_showerHist->Fill(distance, trueEnergy,hitEnergy/nRadLengths);
+        m_showerHistLayers->Fill(layer, trueEnergy,hitEnergy/nRadLengths);
+        m_showerHistX0->Fill(intX0, trueEnergy,hitEnergy/nRadLengths);
+        
+        const EVENT::LCObjectVec & rawHitVec = nav->getRelatedToObjects(hit);
+        
+        //There should be only one hit
+        float rawHitEnergy = dynamic_cast<SimCalorimeterHit*>(rawHitVec.at(0))->getEnergy();
+        
+        m_raw_showerHist->Fill(distance, trueEnergy,rawHitEnergy);
+        m_raw_showerHistLayers->Fill(layer, trueEnergy,rawHitEnergy);
+        m_raw_showerHistX0->Fill(intX0, trueEnergy,rawHitEnergy);
+        
+        m_raw_hitEnergies->push_back(hitEnergy);
+
     }
     
     
@@ -253,13 +307,80 @@ void ShowerStudy::processEvent( LCEvent* evt ) {
     
     caloColl =0;
     
+    //All X0 before HCal (due to the ECal)
+    double startX0=0.;
+    
+    for(int l=layers.size()-1; l>=0; l--)
+        startX0=startX0+layers[l].inner_nRadiationLengths+layers[l].outer_nRadiationLengths;
+    
+    int startLayer= layers.size(); //Use largest layer number +1 from ECal
+    
     getCollection(caloColl,m_inputLeakageCalorimeterHitCollection,evt);
+    UTIL::BitField64 _leak_encoder(caloColl->getParameters().getStringVal( EVENT::LCIO::CellIDEncoding ));
+    
+    
+    //Get HCal Barrel extension by type, ignore plugs and rings 
+    const DD4hep::DDRec::LayeredCalorimeterData * hCalBarrelExtension= getExtension( ( DD4hep::DetType::CALORIMETER | DD4hep::DetType::HADRONIC| DD4hep::DetType::BARREL), 
+										     ( DD4hep::DetType::AUXILIARY  |  DD4hep::DetType::FORWARD ) );
+
+    
+    const std::vector<DD4hep::DDRec::LayeredCalorimeterStruct::Layer> & leak_layers = hCalBarrelExtension->layers;
     double totalLeakEnergy=0.;
     for(int i=0; i< caloColl->getNumberOfElements(); i++){ 
 	CalorimeterHit* hit = dynamic_cast<CalorimeterHit*>( caloColl->getElementAt(i) ) ;
+        
+        double hit_x = hit->getPosition()[0];
+        double hit_y = hit->getPosition()[1];
+        double hit_z = hit->getPosition()[2];
+//         double radius= sqrt(hit_x*hit_x+hit_y*hit_y);
         double hitEnergy = hit->getEnergy();
+        lcio::long64 cellId = long( hit->getCellID0() & 0xffffffff ) | ( long( hit->getCellID1() ) << 32 );
+        _leak_encoder.setValue(cellId);
+        int layer=_leak_encoder["layer"].value();
+        
+  
+    
+        m_leak_hit_x->push_back(hit_x);
+        m_leak_hit_y->push_back(hit_y);
+        m_leak_hit_z->push_back(hit_z);
 
-        totalLeakEnergy+=hitEnergy;
+        m_leak_hitEnergies->push_back(hitEnergy);
+        m_leak_hitLayers->push_back(layer);
+        
+        double thickness = (leak_layers[layer].inner_thickness+leak_layers[layer].outer_thickness)/dd4hep::mm;
+        double nRadLengths = leak_layers[layer].inner_nRadiationLengths+leak_layers[layer].outer_nRadiationLengths;
+        double distance = leak_layers[layer].distance/dd4hep::mm;
+        
+        double intX0=leak_layers[layer].inner_nRadiationLengths + startX0;
+        for(int l=layer-1; l>=0; l--)
+            intX0=intX0+leak_layers[l].inner_nRadiationLengths+leak_layers[l].outer_nRadiationLengths;
+        
+        
+        
+        m_leak_hitLayerDistances->push_back(distance);
+        m_leak_hitLayerIntRadiationLengths->push_back(intX0);
+
+        m_leak_hitLayerThicknesses->push_back(thickness);
+        m_leak_hitLayerRadiationLengths->push_back(nRadLengths);
+
+        m_leak_nhits++;
+        
+        
+        totalLeakEnergy = totalLeakEnergy + hitEnergy;
+        m_showerHist->Fill(distance, trueEnergy,hitEnergy/nRadLengths);
+        m_showerHistLayers->Fill(startLayer+layer, trueEnergy,hitEnergy/nRadLengths);
+        m_showerHistX0->Fill(intX0, trueEnergy,hitEnergy/nRadLengths);
+        
+        const EVENT::LCObjectVec & rawHitVec = nav->getRelatedToObjects(hit);
+        
+        //There should be only one hit
+        float rawHitEnergy = dynamic_cast<SimCalorimeterHit*>(rawHitVec.at(0))->getEnergy();
+        
+        m_raw_showerHist->Fill(distance, trueEnergy,rawHitEnergy);
+        m_raw_showerHistLayers->Fill(startLayer+layer, trueEnergy,rawHitEnergy);
+        m_raw_showerHistX0->Fill(intX0, trueEnergy,rawHitEnergy);
+        
+        m_leak_raw_hitEnergies->push_back(hitEnergy);
 
     }
     
@@ -290,13 +411,13 @@ void ShowerStudy::end(){
     
     
     m_totalEnergyHist->Write();
-    m_showerProfile->Write();
-    m_showerProfileLayers->Write();
-    m_showerProfileX0->Write();
+    m_showerHist->Write();
+    m_showerHistLayers->Write();
+    m_showerHistX0->Write();
     m_leakageProfile->Write();
     m_outputTree->Write();
     m_rootFile->Close();
-    
-    
-    
+    m_raw_showerHist->Write();
+    m_raw_showerHistLayers->Write();
+    m_raw_showerHistX0->Write();
 }

@@ -60,10 +60,15 @@ protected:
     void getCollection(LCCollection*&, std::string, LCEvent*);
     
     // Plots 
-    TProfile2D * m_showerProfileLayers;
-    TProfile2D * m_showerProfile;
-    TProfile2D * m_showerProfileX0;
+    TH2F * m_showerHistLayers;
+    TH2F * m_showerHist;
+    TH2F * m_showerHistX0;
     TProfile * m_leakageProfile;
+    
+
+    TH2F * m_raw_showerHistLayers;
+    TH2F * m_raw_showerHist;
+    TH2F * m_raw_showerHistX0;
 
     TH2F * m_totalEnergyHist;
     TTree * m_outputTree;
@@ -75,9 +80,12 @@ protected:
     float m_totalLeakEnergy;
 
     unsigned int m_nhits;
-    
+    unsigned int m_leak_nhits;
+
     
     std::vector<float> * m_hitEnergies;
+    std::vector<float> * m_raw_hitEnergies;
+
     std::vector<float> * m_hit_x;
     std::vector<float> * m_hit_y;
     std::vector<float> * m_hit_z;
@@ -89,8 +97,18 @@ protected:
     std::vector<float> * m_hitLayerDistances;
 
 
-    
-    
+    std::vector<float> * m_leak_hitEnergies;
+    std::vector<float> * m_leak_hit_x;
+    std::vector<float> * m_leak_hit_y;
+    std::vector<float> * m_leak_hit_z;
+
+    std::vector<int> * m_leak_hitLayers;
+    std::vector<float> * m_leak_hitLayerThicknesses;
+    std::vector<float> * m_leak_hitLayerRadiationLengths;
+    std::vector<float> * m_leak_hitLayerIntRadiationLengths;
+    std::vector<float> * m_leak_hitLayerDistances;
+    std::vector<float> * m_leak_raw_hitEnergies;
+
 
 } ;
 
