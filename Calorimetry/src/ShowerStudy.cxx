@@ -112,7 +112,9 @@ void ShowerStudy::init() {
     
     m_outputTree = new TTree("showerData","showerData");
     m_hitEnergies = new std::vector<float>();
-    
+    m_raw_hitEnergies = new std::vector<float>();
+
+
     m_hit_x = new std::vector<float>();
     m_hit_y = new std::vector<float>();
     m_hit_z = new std::vector<float>();
@@ -122,6 +124,19 @@ void ShowerStudy::init() {
     m_hitLayerRadiationLengths = new std::vector<float>();
     m_hitLayerIntRadiationLengths = new std::vector<float>();
     m_hitLayerDistances = new std::vector<float>();
+    
+    m_leak_hit_x = new std::vector<float>();
+    m_leak_hit_y = new std::vector<float>();
+    m_leak_hit_z = new std::vector<float>();
+    
+    m_leak_hitEnergies = new std::vector<float>();
+    m_leak_raw_hitEnergies = new std::vector<float>();
+    
+    m_leak_hitLayers = new std::vector<int>();
+    m_leak_hitLayerThicknesses = new std::vector<float>();
+    m_leak_hitLayerRadiationLengths = new std::vector<float>();
+    m_leak_hitLayerIntRadiationLengths = new std::vector<float>();
+    m_leak_hitLayerDistances = new std::vector<float>();
 
     m_outputTree->Branch("trueEnergy",&m_trueEnergy,"trueEnergy/F");
     m_outputTree->Branch("totalEnergy",&m_totalEnergy,"totalEnergy/F");
