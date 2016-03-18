@@ -97,13 +97,13 @@ void ShowerStudy::init() {
 
     m_totalEnergyHist = new TH2F("totalEnergyHist","Total Energy;E [GeV];E_{true} [GeV];Entries/0.5 GeV",6000,0,3000,nbins,energyBins);
     
-    m_showerHist = new TH2F("showerHist","Shower profile; Distance [mm]; E_{true} [GeV]; E/0.1 mm [GeV]",2000,1500,1700,nbins,energyBins);
+    m_showerHist = new TH2F("showerHist","Shower profile; Distance [mm]; E_{true} [GeV]; E/1 mm [GeV]",2500,1500,4000,nbins,energyBins);
     m_showerHistLayers = new TH2F("showerHistLayers","Shower profile; Layer No; E_{true} [GeV]; E/0.5 mm [GeV]",80,0,80,nbins,energyBins);
-    m_showerHistX0 = new TH2F("showerHistX0","Shower profile; Number of X0; E_{true} [GeV]; E/0.1 [GeV]",50,0,25,nbins,energyBins);
+    m_showerHistX0 = new TH2F("showerHistX0","Shower profile; Number of X0; E_{true} [GeV]; E/0.1 [GeV]",100,0,50,nbins,energyBins);
     
-    m_raw_showerHist = new TH2F("rawShowerHist","Shower profile; Distance [mm]; E_{true} [GeV]; E/0.1 mm [GeV]",2000,1500,1700,nbins,energyBins);
+    m_raw_showerHist = new TH2F("rawShowerHist","Shower profile; Distance [mm]; E_{true} [GeV]; E/1 mm [GeV]",2500,1500,4000,nbins,energyBins);
     m_raw_showerHistLayers = new TH2F("rawShowerHistLayers","Shower profile; Layer No; E_{true} [GeV]; E/0.5 mm [GeV]",80,0,80,nbins,energyBins);
-    m_raw_showerHistX0 = new TH2F("rawShowerHistX0","Shower profile; Number of X0; E_{true} [GeV]; E/0.1 [GeV]",50,0,25,nbins,energyBins);
+    m_raw_showerHistX0 = new TH2F("rawShowerHistX0","Shower profile; Number of X0; E_{true} [GeV]; E/0.1 [GeV]",100,0,50,nbins,energyBins);
 
     m_leakageProfile = new TProfile("leakageProfile","Leakage vs E_{true};  E_{true} [GeV]; E_{HCal}/(E_{ECal}+E_{HCal})",nbins,energyBins);
 
