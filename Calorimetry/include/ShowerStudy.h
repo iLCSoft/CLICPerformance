@@ -95,6 +95,7 @@ protected:
     std::vector<float> * m_hitLayerRadiationLengths;
     std::vector<float> * m_hitLayerIntRadiationLengths;
     std::vector<float> * m_hitLayerDistances;
+    std::vector<float> * m_hitLayerSensitiveThicknesses;
 
 
     std::vector<float> * m_leak_hitEnergies;
@@ -108,6 +109,7 @@ protected:
     std::vector<float> * m_leak_hitLayerIntRadiationLengths;
     std::vector<float> * m_leak_hitLayerDistances;
     std::vector<float> * m_leak_raw_hitEnergies;
+    std::vector<float> * m_leak_hitLayerSensitiveThicknesses;
 
 
 } ;

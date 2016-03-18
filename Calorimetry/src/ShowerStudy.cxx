@@ -124,7 +124,8 @@ void ShowerStudy::init() {
     m_hitLayerRadiationLengths = new std::vector<float>();
     m_hitLayerIntRadiationLengths = new std::vector<float>();
     m_hitLayerDistances = new std::vector<float>();
-    
+    m_hitLayerSensitiveThicknesses = new std::vector<float>();
+
     m_leak_hit_x = new std::vector<float>();
     m_leak_hit_y = new std::vector<float>();
     m_leak_hit_z = new std::vector<float>();
@@ -137,6 +138,7 @@ void ShowerStudy::init() {
     m_leak_hitLayerRadiationLengths = new std::vector<float>();
     m_leak_hitLayerIntRadiationLengths = new std::vector<float>();
     m_leak_hitLayerDistances = new std::vector<float>();
+    m_leak_hitLayerSensitiveThicknesses = new std::vector<float>();
 
     m_outputTree->Branch("trueEnergy",&m_trueEnergy,"trueEnergy/F");
     m_outputTree->Branch("totalEnergy",&m_totalEnergy,"totalEnergy/F");
@@ -156,6 +158,7 @@ void ShowerStudy::init() {
     m_outputTree->Branch("hit_layer_X0","std::vector< float >", m_hitLayerRadiationLengths);
     m_outputTree->Branch("hit_layer_intX0","std::vector< float >", m_hitLayerIntRadiationLengths);
     m_outputTree->Branch("hit_layer_distances","std::vector< float >", m_hitLayerDistances);
+    m_outputTree->Branch("hit_sensitive_thickness","std::vector< float >", m_hitLayerSensitiveThicknesses);
 
     m_outputTree->Branch("hit_leak_E","std::vector< float >", m_leak_hitEnergies);
     m_outputTree->Branch("hit_leak_rawE","std::vector< float >", m_leak_raw_hitEnergies);
@@ -169,7 +172,8 @@ void ShowerStudy::init() {
     m_outputTree->Branch("hit_leak_layer_X0","std::vector< float >", m_leak_hitLayerRadiationLengths);
     m_outputTree->Branch("hit_leak_layer_intX0","std::vector< float >", m_leak_hitLayerIntRadiationLengths);
     m_outputTree->Branch("hit_leak_layer_distances","std::vector< float >", m_leak_hitLayerDistances);
-    
+    m_outputTree->Branch("hit_leak_sensitive_thickness","std::vector< float >", m_leak_hitLayerSensitiveThicknesses);
+
 }
 
 
@@ -195,7 +199,8 @@ void ShowerStudy::processEvent( LCEvent* evt ) {
     m_hitLayerRadiationLengths->clear();
     m_hitLayerIntRadiationLengths->clear();
     m_hitLayerDistances->clear();
-    
+    m_hitLayerSensitiveThicknesses->clear();
+
     m_leak_hitEnergies->clear(); 
     m_leak_raw_hitEnergies->clear(); 
 
@@ -207,6 +212,7 @@ void ShowerStudy::processEvent( LCEvent* evt ) {
     m_leak_hitLayerRadiationLengths->clear();
     m_leak_hitLayerIntRadiationLengths->clear();
     m_leak_hitLayerDistances->clear();
+    m_leak_hitLayerSensitiveThicknesses->clear();
 
     //Get ECal Barrel extension by type, ignore plugs and rings 
     const DD4hep::DDRec::LayeredCalorimeterData * eCalBarrelExtension= getExtension( ( DD4hep::DetType::CALORIMETER | DD4hep::DetType::ELECTROMAGNETIC | DD4hep::DetType::BARREL), 
@@ -281,6 +287,8 @@ void ShowerStudy::processEvent( LCEvent* evt ) {
         double thickness = (layers[layer].inner_thickness+layers[layer].outer_thickness)/dd4hep::mm;
         double nRadLengths = layers[layer].inner_nRadiationLengths+layers[layer].outer_nRadiationLengths;
         double distance = layers[layer].distance/dd4hep::mm;
+        double sensitiveThickness = layers[layer].sensitive_thickness/dd4hep::mm;
+        m_hitLayerSensitiveThicknesses->push_back(sensitiveThickness);
         
         double intX0=layers[layer].inner_nRadiationLengths;
         for(int l=layer-1; l>=0; l--)
@@ -306,9 +314,9 @@ void ShowerStudy::processEvent( LCEvent* evt ) {
         //There should be only one hit
         float rawHitEnergy = dynamic_cast<SimCalorimeterHit*>(rawHitVec.at(0))->getEnergy();
         
-        m_raw_showerHist->Fill(distance, trueEnergy,rawHitEnergy);
-        m_raw_showerHistLayers->Fill(layer, trueEnergy,rawHitEnergy);
-        m_raw_showerHistX0->Fill(intX0, trueEnergy,rawHitEnergy);
+        m_raw_showerHist->Fill(distance, trueEnergy,rawHitEnergy/sensitiveThickness);
+        m_raw_showerHistLayers->Fill(layer, trueEnergy,rawHitEnergy/sensitiveThickness);
+        m_raw_showerHistX0->Fill(intX0, trueEnergy,rawHitEnergy/sensitiveThickness);
         
         m_raw_hitEnergies->push_back(rawHitEnergy);
 
@@ -365,6 +373,8 @@ void ShowerStudy::processEvent( LCEvent* evt ) {
         double thickness = (leak_layers[layer].inner_thickness+leak_layers[layer].outer_thickness)/dd4hep::mm;
         double nRadLengths = leak_layers[layer].inner_nRadiationLengths+leak_layers[layer].outer_nRadiationLengths;
         double distance = leak_layers[layer].distance/dd4hep::mm;
+        double sensitiveThickness = layers[layer].sensitive_thickness/dd4hep::mm;
+        m_leak_hitLayerSensitiveThicknesses->push_back(sensitiveThickness);
         
         double intX0=leak_layers[layer].inner_nRadiationLengths + startX0;
         for(int l=layer-1; l>=0; l--)
@@ -391,9 +401,9 @@ void ShowerStudy::processEvent( LCEvent* evt ) {
         //There should be only one hit
         float rawHitEnergy = dynamic_cast<SimCalorimeterHit*>(rawHitVec.at(0))->getEnergy();
         
-        m_raw_showerHist->Fill(distance, trueEnergy,rawHitEnergy);
-        m_raw_showerHistLayers->Fill(startLayer+layer, trueEnergy,rawHitEnergy);
-        m_raw_showerHistX0->Fill(intX0, trueEnergy,rawHitEnergy);
+        m_raw_showerHist->Fill(distance, trueEnergy,rawHitEnergy/sensitiveThickness);
+        m_raw_showerHistLayers->Fill(startLayer+layer, trueEnergy,rawHitEnergy/sensitiveThickness);
+        m_raw_showerHistX0->Fill(intX0, trueEnergy,rawHitEnergy/sensitiveThickness);
         
         m_leak_raw_hitEnergies->push_back(rawHitEnergy);
 
