@@ -373,7 +373,7 @@ void ShowerStudy::processEvent( LCEvent* evt ) {
         double thickness = (leak_layers[layer].inner_thickness+leak_layers[layer].outer_thickness)/dd4hep::mm;
         double nRadLengths = leak_layers[layer].inner_nRadiationLengths+leak_layers[layer].outer_nRadiationLengths;
         double distance = leak_layers[layer].distance/dd4hep::mm;
-        double sensitiveThickness = layers[layer].sensitive_thickness/dd4hep::mm;
+        double sensitiveThickness = leak_layers[layer].sensitive_thickness/dd4hep::mm;
         m_leak_hitLayerSensitiveThicknesses->push_back(sensitiveThickness);
         
         double intX0=leak_layers[layer].inner_nRadiationLengths + startX0;
