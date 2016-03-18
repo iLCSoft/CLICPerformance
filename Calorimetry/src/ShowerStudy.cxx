@@ -310,7 +310,7 @@ void ShowerStudy::processEvent( LCEvent* evt ) {
         m_raw_showerHistLayers->Fill(layer, trueEnergy,rawHitEnergy);
         m_raw_showerHistX0->Fill(intX0, trueEnergy,rawHitEnergy);
         
-        m_raw_hitEnergies->push_back(hitEnergy);
+        m_raw_hitEnergies->push_back(rawHitEnergy);
 
     }
     
@@ -395,7 +395,7 @@ void ShowerStudy::processEvent( LCEvent* evt ) {
         m_raw_showerHistLayers->Fill(startLayer+layer, trueEnergy,rawHitEnergy);
         m_raw_showerHistX0->Fill(intX0, trueEnergy,rawHitEnergy);
         
-        m_leak_raw_hitEnergies->push_back(hitEnergy);
+        m_leak_raw_hitEnergies->push_back(rawHitEnergy);
 
     }
     
