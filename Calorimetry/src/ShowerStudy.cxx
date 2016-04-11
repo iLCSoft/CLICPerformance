@@ -77,6 +77,12 @@ ShowerStudy::ShowerStudy() : Processor("ShowerStudy") {
                                 "ROOT File name to collect plots",
                                 m_rootFileName,
                                 std::string("showerStudy.root"));
+    
+    //Only accommodates two groups. Eventually could become more generic
+    registerProcessorParameter( "ECalLayerThreshold",
+                                "Layer number where thickness changes",
+                                m_layerThreshold,
+                                100);
 }
 
 
@@ -105,6 +111,7 @@ void ShowerStudy::init() {
     m_raw_showerHistLayers = new TH2F("rawShowerHistLayers","Shower profile; Layer No; E_{true} [GeV]; E/0.5 mm [GeV]",80,0,80,nbins,energyBins);
     m_raw_showerHistX0 = new TH2F("rawShowerHistX0","Shower profile; Number of X0; E_{true} [GeV]; E/0.1 [GeV]",100,0,50,nbins,energyBins);
 
+    //Probably overestimates leakage since E_{HCal} is measured at the hadronic scale
     m_leakageProfile = new TProfile("leakageProfile","Leakage vs E_{true};  E_{true} [GeV]; E_{HCal}/(E_{ECal}+E_{HCal})",nbins,energyBins);
 
     
@@ -114,6 +121,7 @@ void ShowerStudy::init() {
     m_hitEnergies = new std::vector<float>();
     m_raw_hitEnergies = new std::vector<float>();
 
+    m_totalEnergyInLayerGroup = new std::vector<float>();
 
     m_hit_x = new std::vector<float>();
     m_hit_y = new std::vector<float>();
@@ -146,6 +154,9 @@ void ShowerStudy::init() {
     m_outputTree->Branch("totalLeakEnergy",&m_totalLeakEnergy,"totalLeakEnergy/F");
     m_outputTree->Branch("hit_leak_n",&m_leak_nhits,"hit_leak_n/i");
 
+    m_outputTree->Branch("total_layerGroup_energy","std::vector< float >", m_totalEnergyInLayerGroup);
+
+    
     m_outputTree->Branch("hit_E","std::vector< float >", m_hitEnergies);
     m_outputTree->Branch("hit_rawE","std::vector< float >", m_raw_hitEnergies);
 
@@ -188,6 +199,12 @@ void ShowerStudy::processEvent( LCEvent* evt ) {
     m_totalEnergy=0.;
     m_totalLeakEnergy=0.;
     m_leak_nhits=0;
+
+    m_totalEnergyInLayerGroup->clear();
+    //Could be more generic. For now, only prepare two groups
+    m_totalEnergyInLayerGroup->push_back(0.0);
+    m_totalEnergyInLayerGroup->push_back(0.0);
+
 
     m_hitEnergies->clear(); 
     m_raw_hitEnergies->clear(); 
@@ -305,6 +322,15 @@ void ShowerStudy::processEvent( LCEvent* evt ) {
         
         
         totalEnergy = totalEnergy + hitEnergy;
+        
+        if (layer<m_layerThreshold){
+            
+            m_totalEnergyInLayerGroup->at(0) = m_totalEnergyInLayerGroup->at(0)+ hitEnergy;
+        }else {
+            m_totalEnergyInLayerGroup->at(1) = m_totalEnergyInLayerGroup->at(1) + hitEnergy;
+
+        }
+        
         m_showerHist->Fill(distance, trueEnergy,hitEnergy/nRadLengths);
         m_showerHistLayers->Fill(layer, trueEnergy,hitEnergy/nRadLengths);
         m_showerHistX0->Fill(intX0, trueEnergy,hitEnergy/nRadLengths);
@@ -409,7 +435,7 @@ void ShowerStudy::processEvent( LCEvent* evt ) {
 
     }
     
-    
+    //Beware! totalLeakEnergy is probably measured at the hadronic scale!
     m_leakageProfile->Fill(trueEnergy,(totalEnergy+totalLeakEnergy>0?totalLeakEnergy/(totalEnergy+totalLeakEnergy):0));
     m_totalLeakEnergy= totalLeakEnergy;
 

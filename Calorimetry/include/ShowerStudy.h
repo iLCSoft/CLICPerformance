@@ -78,11 +78,14 @@ protected:
     float m_trueEnergy;
     float m_totalEnergy;
     float m_totalLeakEnergy;
+    
+    std::vector<float> * m_totalEnergyInLayerGroup;
 
     unsigned int m_nhits;
     unsigned int m_leak_nhits;
 
-    
+    int m_layerThreshold;
+
     std::vector<float> * m_hitEnergies;
     std::vector<float> * m_raw_hitEnergies;
 
