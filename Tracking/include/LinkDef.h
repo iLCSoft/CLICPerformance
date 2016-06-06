@@ -9,6 +9,8 @@
 #pragma link C++ class std::vector< double >+;
 #pragma link C++ class std::vector< std::vector<int> >+;
 #pragma link C++ class std::vector< int >+;
+#pragma link C++ class std::vector< std::vector<bool> >+;
+#pragma link C++ class std::vector< bool >+;
 
 //#pragma link C++ class std::vector< std::vector<unsigned int> >+;
 //#pragma link C++ class std::vector< std::map< const std::string, int > >+;

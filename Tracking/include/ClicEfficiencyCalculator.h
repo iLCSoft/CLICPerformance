@@ -59,6 +59,7 @@ public:
 	// Get the subdetector ID from a collection or hit
 	int getSubdetector(LCCollection*, UTIL::BitField64&);
 	int getSubdetector(TrackerHit*, UTIL::BitField64&);
+	int getLayer(TrackerHit*, UTIL::BitField64&);
 
 	bool isReconstructable(MCParticle*& particle, std::string cut);
 
@@ -123,6 +124,25 @@ protected:
 	std::vector<int > m_mcPtTrk; 
 	std::vector<int > m_mcPhiTrk; 
 	std::vector<int > m_mcNTracksCone; 
+
+
+	TTree *trktree ;
+	std::vector<double > m_vec_pt_reconstructable; 
+	std::vector<double > m_vec_theta_reconstructable; 
+	std::vector<bool > m_vec_is_reconstructed; 
+
+
+
+	TTree *puritytree ;
+	std::vector<int > m_vec_nhits_vtx;
+	std::vector<int > m_vec_nhits_trk;
+	std::vector<int > m_vec_nhits;
+	std::vector<double > m_vec_purity;
+	std::vector<int > m_vec_pdg;
+	std::vector<double > m_vec_theta;
+	std::vector<double > m_vec_phi;
+	std::vector<double > m_vec_p;
+
 
 
 
