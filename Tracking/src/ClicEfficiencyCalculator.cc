@@ -201,13 +201,34 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     h_pt_reconstructable  = new TH1F( "h_pt_reconstructable", "Pt distribution of reconstructable tracks", nbins_pt , pt_edges ) ;
 
 
+   
+    trktree = new TTree("trktree","trktree");
+    int bufsize_trk = 32000; //default buffer size 32KB
+    trktree->Branch("pt_reconstructable", "std::vector<double >",&m_vec_pt_reconstructable,bufsize_trk,0); 
+    trktree->Branch("theta_reconstructable", "std::vector<double >",&m_vec_theta_reconstructable,bufsize_trk,0); 
+    trktree->Branch("is_reconstructed", "std::vector<bool >",&m_vec_is_reconstructed,bufsize_trk,0); 
+
+   
+    puritytree = new TTree("puritytree","puritytree");
+    int bufsize_purity = 32000; //default buffer size 32KB
+    puritytree->Branch("trk_nhits_vtx", "std::vector<int >",&m_vec_nhits_vtx,bufsize_purity,0); 
+    puritytree->Branch("trk_nhits_trk", "std::vector<int >",&m_vec_nhits_trk,bufsize_purity,0); 
+    puritytree->Branch("trk_nhits", "std::vector<int >",&m_vec_nhits,bufsize_purity,0); 
+    puritytree->Branch("trk_purity", "std::vector<double >",&m_vec_purity,bufsize_purity,0); 
+    puritytree->Branch("mc_pdg", "std::vector<int >",&m_vec_pdg,bufsize_purity,0); 
+    puritytree->Branch("mc_theta", "std::vector<double >",&m_vec_theta,bufsize_purity,0); 
+    puritytree->Branch("mc_phi", "std::vector<double >",&m_vec_phi,bufsize_purity,0); 
+    puritytree->Branch("mc_p", "std::vector<double >",&m_vec_p,bufsize_purity,0); 
+
+
+
     if (m_morePlots){
       // Tree
       
       mctree = new TTree("mctree","mctree");
       int bufsize = 32000; //default buffer size 32KB
 
-      mctree->Branch("mcCat", "std::vector<int >",&m_mcCat,bufsize,0); //mc particle categorization: 0 is charge but not econstructable, 1 is reconstructable but not reconstructed, 2 is reconstructed
+      mctree->Branch("mcCat", "std::vector<int >",&m_mcCat,bufsize,0); //mc particle categorization: 0 is charge but not reconstructable, 1 is reconstructable but not reconstructed, 2 is reconstructed
       mctree->Branch("mcTheta", "std::vector<double >",&m_mcTheta,bufsize,0); 
       mctree->Branch("mcPt", "std::vector<double >",&m_mcPt,bufsize,0); 
       //mctree->Branch("mcNHits", "std::vector<std::vector<int > >",&m_mcNHits,bufsize,0); 
@@ -291,6 +312,8 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
   
 	}
 
+
+
 	std::map<MCParticle*,int> particleTracks;
 	
 	/*
@@ -302,7 +325,10 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
 	
 	// Loop over all tracks
 	int nTracks = trackCollection->getNumberOfElements();
+
+
 	for(int itTrack=0;itTrack<nTracks;itTrack++){
+
 		
 		// Get the track
 		Track* track = dynamic_cast<Track*>( trackCollection->getElementAt(itTrack) ) ;
@@ -315,6 +341,8 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
 		std::map<MCParticle*,int> trackParticleHits;
 		
 		// Loop over hits and check the MC particle that they correspond to, and which subdetector they are on
+    int nHitsVertex = 0;
+    int nHitsTracker = 0;
 		int nHits = hitVector.size();
 		int nExcluded = 0;
 		for(int itHit=0;itHit<nHits;itHit++){
@@ -324,6 +352,8 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
 			int subdetector = getSubdetector(hit,m_encoder);
 			// Check if this subdetector is to be included in the efficiency calculation
 			if( activeDetectors.count(subdetector) == 0 ){nExcluded++; continue;}
+      if (subdetector==1 || subdetector==2) nHitsVertex++;
+      else nHitsTracker++;
 			// Get the simulated hit
 			const LCObjectVec& simHitVector = relations[subdetector]->getRelatedToObjects( hit );
 			// Take the first hit only (this should be changed? Yes - loop over all related simHits and add an entry for each mcparticle so that this hit is in each fit)
@@ -343,8 +373,53 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
 			int nParticleHits = trackParticleHits[trackParticles[itParticle]];
 			if(nParticleHits>maxHits){ maxHits=nParticleHits; associatedParticle = trackParticles[itParticle]; }
 		}
+
+    /*
+    bool found = false;
+    //check if MC particle associated to the track (from the simhit) is from te physics signal mc collection
+    for(int imcp=0; imcp<particleCollection->getNumberOfElements(); imcp++){
+      MCParticle* mcp = dynamic_cast<MCParticle*>(particleCollection->getElementAt(imcp));
+      if (associatedParticle == mcp){
+        found = true;
+        break;
+      }
+    } // end loop on signal physics mc particle collection
+    if (!found) {
+      //streamlog_out(MESSAGE) << " I AM DOING SOMETHING ABOUT MC PARTICLE NOT FROM THE PHYSICS COLLECTION " << std::endl;
+      associatedParticle = 0;
+    }
+    */
+
+
 		double purity = (double)maxHits/(double)(nHits-nExcluded);
-    streamlog_out(DEBUG4) << " purity = " << purity << std::endl;
+    streamlog_out(MESSAGE) << " purity = " << purity << std::endl;
+    
+    m_vec_nhits_vtx.push_back(nHitsVertex);
+    m_vec_nhits_trk.push_back(nHitsTracker);
+    m_vec_nhits.push_back(nHits-nExcluded);
+    m_vec_purity.push_back(purity);
+
+    if (associatedParticle == 0){
+
+      m_vec_theta.push_back(-1.);
+      m_vec_phi.push_back(0.);
+      m_vec_p.push_back(0.);
+      m_vec_pdg.push_back(-1);
+
+    }else {
+
+      TLorentzVector mc_helper;
+      mc_helper.SetPxPyPzE(associatedParticle->getMomentum()[0],associatedParticle->getMomentum()[1],associatedParticle->getMomentum()[2],associatedParticle->getEnergy());
+
+      m_vec_theta.push_back(mc_helper.Theta());
+      m_vec_phi.push_back(mc_helper.Phi());
+      m_vec_p.push_back(mc_helper.P());
+      m_vec_pdg.push_back(fabs(associatedParticle->getPDG()));
+
+
+    }
+
+
 		if(purity < m_purity) continue; // do something with ghosts here
 
 		// Now have a track which is associated to a particle
@@ -462,32 +537,55 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
       h_pt_reconstructable -> Fill(pt_mcp);
       h_pt_reconstructed -> Fill(pt_mcp);
 
+
+      //fill also vector for tree variable - it would allow to make plots with different binning directly offline 
+
+      m_vec_pt_reconstructable.push_back(pt_mcp);
+      m_vec_theta_reconstructable.push_back(theta_mcp);
+      m_vec_is_reconstructed.push_back(true);
+  
+      // m_vec_theta_reconstructed.push_back(theta_mcp);
+      // m_vec_pt_reconstructed.push_back(pt_mcp);
+
+
       if (m_morePlots) {
         m_mcCat.pop_back();
         m_mcCat.push_back(2);
-     }
+      }
 			continue;
 		}
 		
 		// Now decide on criteria for different particle types/classifications
+
+
+
 		m_particles["all"]++; // all particles
 		
 		// No hits in the input collections
 		if(particleHits.count(particle) == 0) continue; // No hits in the input collections
 
-		// Exclude particles which are not "real"
-		if(particle->vertexIsNotEndpointOfParent()) continue;
+
+		// // Exclude particles which are not "real"
+		// if(particle->vertexIsNotEndpointOfParent()) continue;
+
 		
     if (!isReconstructable(particle,m_cuts)) continue;
 
+
 		m_particles["reconstructable"]++; // reconstructable particles
 		nReconstructable++;
-		
+
+    
 
     //fill theta distribution for reconstructable mc particle (denominator of the eff)
     h_theta_reconstructable -> Fill(theta_mcp);
 
     h_pt_reconstructable -> Fill(pt_mcp);
+
+    m_vec_pt_reconstructable.push_back(pt_mcp);
+    m_vec_theta_reconstructable.push_back(theta_mcp);
+    m_vec_is_reconstructed.push_back(false);
+
 
     if (m_morePlots) {
       m_mcCat.pop_back();
@@ -526,6 +624,9 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     mctree->Fill();
 	}
 
+  trktree->Fill();
+  puritytree->Fill();
+
   //evt->addCollection(  skimVec , m_notRecoMCColName ) ;
 
 
@@ -534,8 +635,8 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
   sysinfo (&memInfo);
 
   unsigned long physMemUsed = memInfo.totalram - memInfo.freeram;
-  //Multiply in next statement to avoid int overflow on right hand side...                                                                         \
-                                                                                                                                                      
+  //Multiply in next statement to avoid int overflow on right hand side...                                         
+                                                                                                     
   physMemUsed *= memInfo.mem_unit;
 
 
@@ -626,9 +727,17 @@ int ClicEfficiencyCalculator::getSubdetector(TrackerHit* hit, UTIL::BitField64 &
 	return subdet;
 }
 
+int ClicEfficiencyCalculator::getLayer(TrackerHit* hit, UTIL::BitField64 &encoder){
+	const int celId = hit->getCellID0() ;
+	encoder.setValue(celId) ;
+	int layer = encoder[lcio::ILDCellID0::layer];
+	return layer;
+}
+
 
 
 bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::string cut){
+
 
   if (cut=="NHits") {
 
@@ -650,6 +759,7 @@ bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::str
 
   } else if (cut=="ILDLike") {
 
+
     // Only consider particles: charged, stable, pT>0.1GeV, cosTheta<0.89, nHits>=4, IP in 10 cm 
     //(a.t.m. cut in cosTheta is up to 0.89 instead of the usal 0.99 for cutting also particles in the vertex endcap region)
     //(a.t.m. no same cut on reco pT/theta but no bias because in that case also the mc particle is kept)
@@ -662,6 +772,8 @@ bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::str
     bool passNHits = false;
     bool passIP = false;
     bool passEndPoint = false;
+    // bool isOverlay = particle->isOverlay();
+    // if (isOverlay) std::cout<<"----- ehi there are overlay particles in this mc collection"<<std::endl;
 
     double charge = fabs(particle->getCharge());
     if (charge>0.5) isCharge = true;
@@ -670,12 +782,14 @@ bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::str
     //int nDaughters = particle->getDaughters().size();
     if (genStatus == 1 ) isStable = true;
     //else std::cout<<"----- mc not stable in generator"<<std::endl;
+
     
     TLorentzVector p;
     p.SetPxPyPzE(particle->getMomentum()[0], particle->getMomentum()[1], particle->getMomentum()[2], particle->getEnergy());//in GeV
     if ( p.Pt()>=0.1 ) passPt = true;
     if ( fabs(cos(p.Theta()))<0.99 ) passTheta = true; 
-    //if ( fabs(cos(p.Theta()))<0.8 ) passTheta = true; 
+    //if ( fabs(cos(p.Theta()))>0.86 && fabs(cos(p.Theta()))<0.99 ) passTheta = true; 
+    //if ( fabs(cos(p.Theta()))<0.89 ) passTheta = true; 
     //else std::cout<<"----- mc does not pass theta acceptance cut"<<std::endl;
 		std::vector<TrackerHit*> trackHits = particleHits[particle];
 		if(trackHits.size() >= 4) passNHits = true;
@@ -700,7 +814,79 @@ bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::str
     //else std::cout<<"----- mc has endpoint < 40mm"<<std::endl;
 
 
-    bool keepParticle = isCharge && isStable && passPt && passTheta && passNHits && passIP && passEndPoint;
+    //bool keepParticle = isCharge && isStable && passPt && passTheta && passNHits && passIP && passEndPoint;
+    //bool keepParticle = isCharge && passTheta && passNHits;
+    //bool keepParticle = passTheta && passNHits && passPt && passIP && passEndPoint && isStable; //81.98%
+    //bool keepParticle = passTheta && passNHits && passPt && passIP && isStable; //81.98%
+    //bool keepParticle = passTheta && passNHits && passPt && isStable; //81.98%
+    //bool keepParticle = passTheta && passNHits && passPt; //59.09
+    //bool keepParticle = passTheta && passNHits && passPt && passIP && passEndPoint; //71.65%
+
+    bool keepParticle = passTheta && passNHits && passPt && isStable; // && !isOverlay;
+
+
+    if (keepParticle) return true;
+    
+  }  else if (cut=="SingleMu") {
+
+    // Only consider particles: muons (|PDG|=13) with at least 4 hits pass
+
+    bool isMu = false;
+    bool passNHits = false;
+    bool passPt = false;
+    bool passTheta = false;
+    bool passIP = false;
+    bool passEndPoint = false;
+    //bool passVertexHits = false;
+    bool isNotLoop = true;
+
+    double pdg = fabs(particle->getPDG());
+    if (pdg==13) isMu = true;
+    
+		std::vector<TrackerHit*> trackHits = particleHits[particle];
+		if(trackHits.size() >= 4) passNHits = true;
+
+    int nVXDHits = 0;
+    UTIL::BitField64 encoder( lcio::ILDCellID0::encoder_string ) ;
+    std::vector<int > vec_hit_subdet;
+    std::vector<int > vec_hit_layer;
+    for (size_t ihit=0; ihit<trackHits.size(); ihit++){
+      int subdetector = getSubdetector(trackHits.at(ihit), encoder);
+      int layer = getLayer(trackHits.at(ihit), encoder);
+      if (subdetector == m_vertexBarrelID) nVXDHits++;
+      vec_hit_subdet.push_back(subdetector);
+      vec_hit_layer.push_back(layer);
+    }
+    //if (nVXDHits >= 6) passVertexHits = true;
+
+    for (size_t j = 0; j < vec_hit_subdet.size()-1; j++){
+      for (size_t k = j+1; k < vec_hit_subdet.size(); k++){
+        if ( vec_hit_subdet.at(j) == vec_hit_subdet.at(k) ) {
+          if ( vec_hit_layer.at(j) == vec_hit_layer.at(k) ) {
+            isNotLoop = false;
+            std::cout << "=====> loop track " << std::endl;
+          }
+        }
+      }
+    }
+
+    vec_hit_subdet.clear();
+    vec_hit_layer.clear();
+
+    double dist = sqrt( pow(particle->getVertex()[0],2) + pow(particle->getVertex()[1],2) );
+    std::cout<<"----- for mc_pdg = "<< pdg << "   dist from IP = " << dist <<std::endl;
+    if (dist<100.) passIP = true;
+    
+    double e = sqrt( pow(particle->getEndpoint()[0],2) + pow(particle->getEndpoint()[1],2) );
+    if (e==0. || e>40.) passEndPoint=true;
+
+    TLorentzVector p;
+    p.SetPxPyPzE(particle->getMomentum()[0], particle->getMomentum()[1], particle->getMomentum()[2], particle->getEnergy());//in GeV
+    if ( p.Pt()>=0.1 ) passPt = true;
+    if ( fabs(cos(p.Theta()))<0.99 ) passTheta = true; 
+
+    //bool keepParticle = isMu && passNHits && passTheta && passPt && passIP && passEndPoint && passVertexHits && isNotLoop;
+    bool keepParticle = isMu && passNHits && passTheta && passPt && passIP && passEndPoint && isNotLoop;
     if (keepParticle) return true;
     
   } else {
@@ -733,6 +919,23 @@ void ClicEfficiencyCalculator::clearTreeVar(){
   m_mcPtTrk.clear();
   m_mcPhiTrk.clear();
   m_mcNTracksCone.clear();
+
+
+  m_vec_pt_reconstructable.clear(); 
+  m_vec_theta_reconstructable.clear(); 
+  m_vec_is_reconstructed.clear(); 
+
+  // m_vec_theta_reconstructed.clear(); 
+  // m_vec_pt_reconstructed.clear(); 
+
+  m_vec_nhits_vtx.clear();
+  m_vec_nhits_trk.clear();
+  m_vec_nhits.clear();
+  m_vec_purity.clear();
+  m_vec_pdg.clear();
+  m_vec_theta.clear();
+  m_vec_phi.clear();
+  m_vec_p.clear();
 
 
 }  

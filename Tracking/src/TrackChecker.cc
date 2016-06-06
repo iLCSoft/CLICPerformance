@@ -125,6 +125,7 @@ void TrackChecker::init() {
 	// Register this process
 	Global::EVENTSEEDER->registerProcessor(this);
   
+
 }
 
 
@@ -157,7 +158,7 @@ void TrackChecker::processEvent( LCEvent* evt ) {
     perftree->Branch("recoChi2OverNDF","std::vector<double >",&recoChi2OverNDF,bufsize,0) ;
     perftree->Branch("recoMinDist","std::vector<double >",&recoMinDist,bufsize,0) ;
 
-    if(m_useOnlyTree) {
+    //   if(m_useOnlyTree) {
       perftree->Branch("pullOmega","std::vector<double >",&pullOmega,bufsize,0) ;
       perftree->Branch("pullPhi","std::vector<double >",&pullPhi,bufsize,0) ;
       perftree->Branch("pullTanLambda","std::vector<double >",&pullTanLambda,bufsize,0) ;
@@ -169,7 +170,7 @@ void TrackChecker::processEvent( LCEvent* evt ) {
       perftree->Branch("resTanLambda","std::vector<double >",&resTanLambda,bufsize,0) ;
       perftree->Branch("resD0","std::vector<double >",&resD0,bufsize,0) ;
       perftree->Branch("resZ0","std::vector<double >",&resZ0,bufsize,0) ;
-    } else {
+      //    } else {
       // Create output histograms
       m_omegaPull = new TH1F("OmegaPullPlot","OmegaPullPlot",200,-10,10);
       m_phiPull = new TH1F("PhiPullPlot","PhiPullPlot",200,-10,10);
@@ -196,7 +197,7 @@ void TrackChecker::processEvent( LCEvent* evt ) {
       m_tanLambdaResidual = new TH1F("tanLambdaResidual","tanLambdaResidual",100,-0.005,0.005);
       m_d0Residual = new TH1F("d0Residual","d0Residual",200,-0.1,0.1);
       m_z0Residual = new TH1F("z0Residual","z0Residual",200,-0.1,0.1);
-    }
+      //    }
 
   }//end is first event
 
@@ -218,6 +219,11 @@ void TrackChecker::processEvent( LCEvent* evt ) {
   // Create the relations navigator
   LCRelationNavigator* relation = new LCRelationNavigator( trackRelationCollection );
   
+  //TEST - just try to run on single muons with only 1 mcparticle
+  //int nmcp =  particleCollection->getNumberOfElements();
+  //if (nmcp==1) {
+
+
   /*
     Loop over all tracks, get the MC particle that produced it, and make
     a helical track fit to produce the "true" path of the particle. Then
@@ -236,7 +242,7 @@ void TrackChecker::processEvent( LCEvent* evt ) {
 
     // Take the first MC particle (there should only be one)
     MCParticle* particle = dynamic_cast<MCParticle*>(mcparticleVector.at(0));
-    
+
     /*
       Now apply some cuts - only valid MC particles will be considered
     */
@@ -258,11 +264,16 @@ void TrackChecker::processEvent( LCEvent* evt ) {
     double z0mcp = helix.getZ0() ;
     double tLmcp = helix.getTanLambda() ;
 
+
+    streamlog_out(MESSAGE) << " ---- reference point of track fit x,y,z =  " << track->getReferencePoint()[0] << " , " << track->getReferencePoint()[1] << " , " << track->getReferencePoint()[2] << std::endl;
+
+
     double d0track = track->getD0() ;
     double phtrack = track->getPhi() ;
     double omtrack = track->getOmega() ;
     double z0track = track->getZ0() ;
     double tLtrack = track->getTanLambda() ;
+
 
     double d0trackError = track->getCovMatrix()[0] ;
     double phtrackError = track->getCovMatrix()[2] ;
@@ -271,11 +282,12 @@ void TrackChecker::processEvent( LCEvent* evt ) {
     double tLtrackError = track->getCovMatrix()[14] ;
 
 
+
     //angle conversions
     angleInFixedRange(phmcp);
 	  angleInFixedRange(phtrack);    
 
-    if (m_useOnlyTree) {
+    //    if (m_useOnlyTree) {
 
       resOmega.push_back(omtrack-ommcp);
       resPhi.push_back(phtrack-phmcp);
@@ -289,7 +301,7 @@ void TrackChecker::processEvent( LCEvent* evt ) {
       pullD0.push_back(resD0.back()/sqrt(d0trackError)); 
       pullZ0.push_back(resZ0.back()/sqrt(z0trackError)); 
 
-    } else {
+      //   } else {
       // Fill the output histograms
       m_d0Pull->Fill( (d0track-d0mcp)/sqrt(d0trackError) );
       m_phiPull->Fill( (phtrack-phmcp)/sqrt(phtrackError) );
@@ -317,7 +329,7 @@ void TrackChecker::processEvent( LCEvent* evt ) {
     
       m_trackChi2->Fill(track->getChi2());
       //    if(track->getChi2() < 0.05) std::cout<<"EVENT NUMBER "<<m_eventNumber<<std::endl;
-    }
+      //   }
 
 	  truePt.push_back(0.3*m_magneticField/fabs(ommcp*1000.)); //omega in 1/mm -> transformed in 1/m
     double trueThetaRad = M_PI/2 - atan(tLmcp); 
@@ -350,6 +362,8 @@ void TrackChecker::processEvent( LCEvent* evt ) {
   
   perftree->Fill();
 
+  //} // END TEST
+
 	// Increment the event number
 	m_eventNumber++ ;
 	delete relation;
@@ -371,33 +385,42 @@ void TrackChecker::end(){
                          << std::endl ;
 	
 
-  if (!m_useOnlyTree) {
+	
+  gStyle->SetOptStat(111111);
+
+
+  //  if (!m_useOnlyTree) {
+
+
 
     m_omegaPull->Write();
     m_phiPull->Write();
     m_tanLambdaPull->Write();
     m_d0Pull->Write();
     m_z0Pull->Write();
-	
-    gStyle->SetOptFit(1111);
  
     pulls = new TCanvas("pulls","Pulls of the track parameters",800,800);
     pulls->Divide(3,2);
     pulls->cd(1);
     m_omegaPull->Draw();
     m_omegaPull->Fit("gaus","");
+    gStyle->SetOptFit(1111);
     pulls->cd(2);
     m_phiPull->Draw();
     m_phiPull->Fit("gaus","");
+    gStyle->SetOptFit(1111);
     pulls->cd(3);
     m_tanLambdaPull->Draw();
     m_tanLambdaPull->Fit("gaus","");
+    gStyle->SetOptFit(1111);
     pulls->cd(4);
     m_d0Pull->Draw();
     m_d0Pull->Fit("gaus","");
+    gStyle->SetOptFit(1111);
     pulls->cd(5);
     m_z0Pull->Draw();
     m_z0Pull->Fit("gaus","");
+    gStyle->SetOptFit(1111);
     pulls->Write();
 
     res = new TCanvas("res","Residuals of the track parameters",800,800);
@@ -427,7 +450,7 @@ void TrackChecker::end(){
     m_z0Track->Write();
   
     m_trackChi2->Write();
-  }
+    //  }
 
   perftree->Write();
 
@@ -442,7 +465,7 @@ void TrackChecker::getCollection(LCCollection* &collection, std::string collecti
   }
   catch(DataNotAvailableException &e){
     std::cout<<"- cannot get collections !!"<<std::endl;
-    streamlog_out(DEBUG4) << "Collection " << collectionName.c_str() << " is unavailable" << std::endl;
+    streamlog_out(ERROR) << "Collection " << collectionName.c_str() << " is unavailable" << std::endl;
     return;
   }
   return;
