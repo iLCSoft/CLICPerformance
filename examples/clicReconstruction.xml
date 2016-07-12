@@ -1,11 +1,4 @@
 <?xml version="1.0" encoding="us-ascii"?>
-<!--##########################################
-   #                                        #
-   #     Example steering file for marlin   #
-   #                                        #
-   ##########################################-->
-
-
 <marlin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ilcsoft.desy.de/marlin/marlin.xsd">
   <execute>
 
@@ -419,6 +412,5 @@
   <processor name="MyStatusmonitor" type="Statusmonitor">
     <parameter name="howOften" type="int">100</parameter>
     <parameter name="Verbosity" type="string">MESSAGE </parameter>
-    
   </processor>
 </marlin>
