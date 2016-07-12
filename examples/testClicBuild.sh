@@ -26,5 +26,5 @@ echo "Running GEANT4"
 python lcio_geant4.py $DETECTOR &> geant4.log
 
 # run the CLIC reconstruction chain includin all tracking detectors
-Marlin clicReconstruction.xml 
+Marlin clicReconstruction.xml  --global.LCIOInputFiles=simulatedMuons.slcio
 
