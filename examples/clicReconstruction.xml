@@ -72,20 +72,20 @@
 
   <processor name="VXDEndcapDigitiser" type="DDPlanarDigiProcessor">
     <parameter name="SubDetectorName" type="string">Vertex </parameter>
-    <!--	 <!--PlanarDigiProcessor creates TrackerHits from SimTrackerHits, smearing them according to the input parameters.-->-->
-    <!--	 <!--whether hits are 1D strip hits-->-->
+    <!--PlanarDigiProcessor creates TrackerHits from SimTrackerHits, smearing them according to the input parameters.-->
+    <!--whether hits are 1D strip hits-->
     <parameter name="IsStrip" type="bool">false </parameter>
-    <!--	 <!--resolution in direction of u-->-->
+    <!--resolution in direction of u-->
     <parameter name="ResolutionU" type="float"> 0.003 0.003 0.003 0.003 0.003 0.003 </parameter>
-    <!--	 <!--resolution in direction of v-->-->
+    <!--resolution in direction of v-->
     <parameter name="ResolutionV" type="float"> 0.003 0.003 0.003 0.003 0.003 0.003  </parameter>
-    <!--	 <!--Name of the Input SimTrackerHit collection-->-->
+    <!--Name of the Input SimTrackerHit collection-->
     <parameter name="SimTrackHitCollectionName" type="string" lcioInType="SimTrackerHit">VertexEndcapCollection </parameter>
-    <!--	 <!--Name of TrackerHit SimTrackHit relation collection-->-->
+    <!--Name of TrackerHit SimTrackHit relation collection-->
     <parameter name="SimTrkHitRelCollection" type="string" lcioOutType="LCRelation">VXDEndcapTrackerHitRelations </parameter>
-    <!--	 <!--Name of the TrackerHit output collection-->-->
+    <!--Name of the TrackerHit output collection-->
     <parameter name="TrackerHitCollectionName" type="string" lcioOutType="TrackerHitPlane">VXDEndcapTrackerHits </parameter>
-    <!--	 <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->-->
+    <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
     <parameter name="Verbosity" type="string">WARNING </parameter>
   </processor>
 
