@@ -11,7 +11,7 @@ fi
 # set up the environment
 export MARLIN_DLL=${MARLIN_DLL}../lib/libClicPerformance.so:
 export PYTHONPATH=${LCIO}/src/python:${ROOTSYS}/lib
-source $DD4HEP/bin/thisdd4hep.sh
+source $lcgeo_DIR/bin/thislcgeo.sh
  
 # find the detector model specified
 DETECTOR="$(find $ILCSOFT/lcgeo -name ${1}.xml)" 
@@ -19,12 +19,11 @@ echo -e "\nPicking up detector from: $DETECTOR"
 
 # generate 1000 muons in random directions
 echo "Generating particles"
-python lcio_particle_gun.py &> particle.log
+#python lcio_particle_gun.py &> particle.log
 
 # run geant4 with the detector model specified
 echo "Running GEANT4"
-python lcio_geant4.py $DETECTOR &> geant4.log
+ddsim --steeringFile clic_steer.py --inputFiles rawMuons.slcio -N 10 --compactFile $DETECTOR --outputFile simulatedMuons.slcio
 
 # run the CLIC reconstruction chain includin all tracking detectors
-Marlin clicReconstruction.xml  --global.LCIOInputFiles=simulatedMuons.slcio
-
+Marlin clicReconstruction.xml  --global.LCIOInputFiles=simulatedMuons.slcio --InitDD4hep.DD4hepXMLFile=$DETECTOR
