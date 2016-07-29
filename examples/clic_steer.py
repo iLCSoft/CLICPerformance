@@ -60,6 +60,9 @@ SIM.vertexSigma = [0.0, 0.0, 0.0, 0.0]
 ##    
 ################################################################################
 
+##  set the default tracker action 
+SIM.action.tracker = "Geant4TrackerWeightedAction" 
+
 ##  set the default calorimeter action 
 SIM.action.calo = "Geant4ScintillatorCalorimeterAction"
 

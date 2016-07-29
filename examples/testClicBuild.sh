@@ -23,7 +23,7 @@ echo "Generating particles"
 
 # run geant4 with the detector model specified
 echo "Running GEANT4"
-ddsim --steeringFile clic_steer.py --inputFiles rawMuons.slcio -N 10 --compactFile $DETECTOR --outputFile simulatedMuons.slcio
+ddsim --steeringFile clic_steer.py --inputFiles rawMuons.slcio -N 10 --compactFile $DETECTOR --outputFile simulatedMuons.slcio 
 
-# run the CLIC reconstruction chain includin all tracking detectors
-Marlin clicReconstruction.xml  --global.LCIOInputFiles=simulatedMuons.slcio --InitDD4hep.DD4hepXMLFile=$DETECTOR
+# run the CLIC reconstruction chain including all tracking detectors
+Marlin clicReconstruction.xml  --global.LCIOInputFiles=simulatedMuons.slcio --InitDD4hep.DD4hepXMLFile=$DETECTOR 
