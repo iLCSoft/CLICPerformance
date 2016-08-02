@@ -70,9 +70,6 @@ SIM.action.calo = "Geant4ScintillatorCalorimeterAction"
 ##         example: SIM.action.mapActions['tpc'] = "TPCSDAction" 
 SIM.action.mapActions = {}
 
-##  set the default tracker action 
-SIM.action.tracker = "Geant4TrackerAction"
-
 
 ################################################################################
 ## Configuration for the magnetic field (stepper) 
