@@ -16,7 +16,8 @@
 
     <!-- ========== tracking  ========== -->
     <processor name="MyTruthTrackFinder"/>
-    <!--	 <processor name="MyPatternRecognition"/>-->
+    <!-- <processor name="MyConformalTracking"/> -->
+    <!-- <processor name="MyExtrToTracker_InOut"/> -->
 
     <!-- === calorimeter digitization and pandora reco === -->
     <processor name="MyDDCaloDigi"/>
@@ -52,6 +53,7 @@
     <!--Name of the DD4hep compact xml file to load-->
     <parameter name="DD4hepXMLFile" type="string"> /afs/cern.ch/eng/clic/work/ilcsoft/HEAD-2015-12-02/lcgeo/HEAD/CLIC/compact/CLIC_o2_v04/CLIC_o2_v04.xml </parameter>
   </processor>
+
 
   <processor name="VXDBarrelDigitiser" type="DDPlanarDigiProcessor">
     <parameter name="SubDetectorName" type="string">Vertex </parameter>
@@ -194,8 +196,28 @@
   </processor>
 
   <!-- == Pattern recognition parameters == -->
-  <processor name="MyPatternRecognition" type="PatternRecognition">
-    <parameter name="TrackerHitCollectionNames" type="StringVec" lcioInType="TrackerHitPlane"> VXDTrackerHits VXDEndcapTrackerHits ITrackerHits OTrackerHits ITrackerEndcapHits OTrackerEndcapHits  </parameter>
+  <processor name="MyConformalTracking" type="ConformalTracking">
+    <parameter name="TrackerHitCollectionNames" type="StringVec" lcioInType="TrackerHitPlane"> VXDTrackerHits VXDEndcapTrackerHits </parameter>
+    <parameter name="RelationsNames" type="StringVec" lcioInType="TrackerHitPlane"> VXDTrackerHitRelations VXDEndcapTrackerHitRelations </parameter>
+    <parameter name="ThetaRange" type="double"> 0.025 </parameter>
+    <parameter name="MaxCellAngle" type="double"> 0.06 </parameter>
+    <parameter name="MaxDistance" type="double"> 0.02 </parameter>
+    <parameter name="MinClustersOnTrack" type="int"> 5 </parameter>
+    <parameter name="MaxChi2" type="double"> 1000 </parameter>
+    <parameter name="DebugPlots" type="bool"> true </parameter>
+  </processor>
+
+  <processor name="MyExtrToTracker_InOut" type="ExtrToTracker">
+    <!--perform a final refit of the extrapolated track-->
+    <parameter name="PerformFinalRefit" type="bool">false </parameter>
+    <!--Name of the input track collection-->
+    <parameter name="InputTrackCollectionName" type="string" lcioInType="Track"> CATracks </parameter>
+    <!--Name of the output track collection-->
+    <parameter name="OutputTrackCollectionName" type="string" lcioOutType="Track">ExtrapolatedTracks </parameter>
+    <!--Name of the MCParticle-Track Relations collection for output tracks-->
+    <parameter name="OutputTrackRelCollection" type="string" lcioOutType="LCRelation">ExtrapolatedTracksRelation </parameter>
+    <parameter name="Max_Chi2_Incr" type="double">10. </parameter>
+    <parameter name="Verbosity" type="string">ERROR </parameter>
   </processor>
 
   <!-- == Efficiency calculator parameters == -->
