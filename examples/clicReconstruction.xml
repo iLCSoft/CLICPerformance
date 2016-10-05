@@ -434,7 +434,7 @@
   </processor>
 
   <processor name="MyStatusmonitor" type="Statusmonitor">
-    <parameter name="howOften" type="int">100</parameter>
+    <parameter name="HowOften" type="int">100</parameter>
     <parameter name="Verbosity" type="string">MESSAGE </parameter>
   </processor>
 
