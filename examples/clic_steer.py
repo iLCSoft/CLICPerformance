@@ -6,7 +6,7 @@ SIM = DD4hepSimulation()
 SIM.compactFile = ""
 ## Lorentz boost for the crossing angle, in radian!
 SIM.crossingAngleBoost = 0.0
-SIM.enableDetailedShowerMode = False
+SIM.enableDetailedShowerMode = True
 SIM.enableG4GPS = False
 SIM.enableG4Gun = False
 SIM.enableGun = False
@@ -18,8 +18,6 @@ SIM.macroFile = ""
 SIM.numberOfEvents = 0
 ## Outputfile from the simulation,only lcio output is supported
 SIM.outputFile = "dummyOutput.slcio"
-## Physics list to use in simulation
-SIM.physicsList = None
 ## Verbosity use integers from 1(most) to 7(least) verbose
 ## or strings: VERBOSE, DEBUG, INFO, WARNING, ERROR, FATAL, ALWAYS
 SIM.printLevel = 3
@@ -190,7 +188,7 @@ SIM.part.keepAllParticles = False
 SIM.part.minDistToParentVertex = 2.2e-14
 
 ## MinimalKineticEnergy to store particles created in the tracking region
-SIM.part.minimalKineticEnergy = 1.0
+SIM.part.minimalKineticEnergy = 1.0*MeV
 
 ##  Printout at End of Tracking 
 SIM.part.printEndTracking = False
@@ -221,7 +219,7 @@ SIM.physics.pdgfile = None
 ##     Set printlevel to DEBUG to see a printout of all range cuts,
 ##     but this only works if range cut is not "None"
 ##     
-SIM.physics.rangecut = 0.7
+SIM.physics.rangecut = 0.7*mm
 
 
 ################################################################################
