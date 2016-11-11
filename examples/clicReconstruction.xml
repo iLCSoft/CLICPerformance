@@ -15,9 +15,10 @@
     <processor name="OuterEndcapPlanarDigiProcessor"/>
 
     <!-- ========== tracking  ========== -->
+    <!-- At the moment the name of the final track collection for the MyTruthTrackFinder and MyExtrToTracker processors is the same, so that users can use this example to run easily both the cheater track pattern recognition (still the default for many tasks) or the real one (under final tests) -->
     <processor name="MyTruthTrackFinder"/>
     <!-- <processor name="MyConformalTracking"/> -->
-    <!-- <processor name="MyExtrToTracker_InOut"/> -->
+    <!-- <processor name="MyExtrToTracker"/> -->
 
     <!-- === calorimeter digitization and pandora reco === -->
     <processor name="MyDDCaloDigi"/>
@@ -26,9 +27,9 @@
 
     <!-- ========== monitoring  ========== -->
     <processor name="MyClicEfficiencyCalculator"/>
-    <processor name="MyTrackChecker"/>
-
     <processor name="MyRecoMCTruthLinker"/>
+    <processor name="MyTrackChecker"/>
+    <Xprocessor name="MyHitResiduals"/> <!-- please uncomment the use of this processor only if needed -->
 
     <!-- ========== output  ========== -->
     <processor name="MyLCIOOutputProcessor"/>
@@ -38,7 +39,8 @@
 
   <global>
     <parameter name="LCIOInputFiles">
-      /afs/cern.ch/eng/clic/work/dd4hepEvents/CLIC_o2_v03/ttbar/500/DDSim_HEAD-2015-10-02_CLIC_o2_v03_ttbar_500GeV0_261015142318_0.slcio  </parameter>
+      /afs/cern.ch/work/e/eleogran/public/mu_sim/mu_validation_50kevents.slcio
+    </parameter>
     <!-- Limit the number of processed records (run+evt): -->
     <parameter name="MaxRecordNumber" value="-1" />
     <parameter name="SkipNEvents" value="0" />
@@ -51,7 +53,7 @@
   <processor name="InitDD4hep" type="InitializeDD4hep">
     <!--InitializeDD4hep reads a compact xml file and initializes the DD4hep::LCDD object-->
     <!--Name of the DD4hep compact xml file to load-->
-    <parameter name="DD4hepXMLFile" type="string"> /afs/cern.ch/eng/clic/work/ilcsoft/HEAD-2015-12-02/lcgeo/HEAD/CLIC/compact/CLIC_o2_v04/CLIC_o2_v04.xml </parameter>
+    <parameter name="DD4hepXMLFile" type="string"> /afs/cern.ch/user/s/simoniel/public/ForEmilia/CLIC_o2_v04/CLIC_o2_v04.xml </parameter>
   </processor>
 
 
@@ -179,12 +181,6 @@
     <parameter name="Verbosity" type="string">WARNING </parameter>
   </processor>
 
-  <!-- == Track checker parameters == -->
-  <processor name="MyTrackChecker" type="TrackChecker">
-    <!--Use default settings-->
-    <parameter name="OutputFileName" type="string"> TrackCheckerTestJets.root </parameter>
-    <parameter name="Verbosity" type="string">WARNING </parameter>
-  </processor>
 
 
   <!-- == TruthTrackFinder parameters == -->
@@ -196,36 +192,111 @@
   </processor>
 
   <!-- == Pattern recognition parameters == -->
+
   <processor name="MyConformalTracking" type="ConformalTracking">
-    <parameter name="TrackerHitCollectionNames" type="StringVec" lcioInType="TrackerHitPlane"> VXDTrackerHits VXDEndcapTrackerHits </parameter>
-    <parameter name="RelationsNames" type="StringVec" lcioInType="TrackerHitPlane"> VXDTrackerHitRelations VXDEndcapTrackerHitRelations </parameter>
-    <parameter name="ThetaRange" type="double"> 0.025 </parameter>
-    <parameter name="MaxCellAngle" type="double"> 0.06 </parameter>
-    <parameter name="MaxDistance" type="double"> 0.02 </parameter>
-    <parameter name="MinClustersOnTrack" type="int"> 5 </parameter>
-    <parameter name="MaxChi2" type="double"> 1000 </parameter>
-    <parameter name="DebugPlots" type="bool"> false </parameter>
+    <!--ConformalTracking constructs tracks using a combined conformal mapping and cellular automaton approach.-->
+
+    <!--Name of the TrackerHit input collections-->
+    <parameter name="TrackerHitCollectionNames" type="StringVec" lcioInType="TrackerHitPlane">VXDTrackerHits VXDEndcapTrackerHits ITrackerHits OTrackerHits ITrackerEndcapHits OTrackerEndcapHits  </parameter>
+    <!--Name of the TrackerHit relation collections-->
+    <parameter name="RelationsNames" type="StringVec" lcioInType="LCRelation">VXDTrackerHitRelations VXDEndcapTrackerHitRelations InnerTrackerBarrelHitsRelations OuterTrackerBarrelHitsRelations InnerTrackerEndcapHitsRelations OuterTrackerEndcapHitsRelations  </parameter>
+
+    <!--Cut on angle between two cells for cell to be valid-->
+    <parameter name="MaxCellAngle" type="double">0.06 </parameter>
+    <!--Maximum chi2/ndof for linear conformal tracks-->
+    <parameter name="MaxChi2" type="double">1000 </parameter>
+    <!--Maximum length of a cell (max. distance between two hits)-->
+    <parameter name="MaxDistance" type="double">0.02 </parameter>
+    <!--Minimum number of clusters to create a track-->
+    <parameter name="MinClustersOnTrack" type="int">5 </parameter>
+    <!--Angular range for initial cell seeding-->
+    <parameter name="ThetaRange" type="double">0.025 </parameter>
+
+    <!--Silicon track Collection Name-->
+    <parameter name="SiTrackCollectionName" type="string" lcioOutType="Track">CATracks </parameter>
+    <!--Name of the MCParticle input collection-->
+    <parameter name="MCParticleCollectionName" type="string" lcioInType="MCParticle">MCParticle </parameter>
+    <!--Decoding string used for Cell ID calculation-->
+    <parameter name="CellIDDecoderString" type="string">subdet:5,side:-2,layer:9,module:8,sensor:8 </parameter>  <!-- this needs to go away -->
+    <!--DebugHits-->
+    <parameter name="DebugHits" type="string" lcioOutType="TrackerHitPlane">DebugHits </parameter>
+    <!--Plots for debugging the tracking-->
+    <parameter name="DebugPlots" type="bool">false </parameter>
+    <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
+    <!--parameter name="Verbosity" type="string">DEBUG </parameter-->
   </processor>
 
-  <processor name="MyExtrToTracker_InOut" type="ExtrToTracker">
+
+
+
+  <processor name="MyExtrToTracker" type="ExtrToTracker">
+    <!--ExtrToTracker refits an input VXD track collection, and used IMarlinTrk tools to propagate it to the main tracker-->
+
+    <!--maximum allowable chi2 increment when moving from one site to another-->
+    <parameter name="Max_Chi2_Incr" type="double">10 </parameter>
+    <!--Name of the input track collection-->
+    <parameter name="InputTrackCollectionName" type="string" lcioInType="Track">CATracks </parameter>
+    <!--Name of the output track collection-->
+    <parameter name="OutputTrackCollectionName" type="string" lcioOutType="Track">SiTracks </parameter>
+    <!--vector of name of the digi hits collection - nned to be syncro with vecSubdetName!-->
+    <parameter name="vecDigiHits" type="StringVec" lcioInType="TrackerHitPlane">ITrackerHits OTrackerHits ITrackerEndcapHits OTrackerEndcapHits  </parameter>
+    <!--vector of names of all subdetector to exrapolate to-->
+    <parameter name="vecSubdetName" type="StringVec">InnerTrackerBarrel OuterTrackerBarrel InnerTrackerEndcap OuterTrackerEndcap  </parameter>
+    <!--Name of the output collection with the not used hits-->
+    <parameter name="OutputNotUsedHitCollectionName" type="string" lcioOutType="TrackerHitPlane">NotUsedHits </parameter>
     <!--perform a final refit of the extrapolated track-->
     <parameter name="PerformFinalRefit" type="bool">false </parameter>
-    <!--Name of the input track collection-->
-    <parameter name="InputTrackCollectionName" type="string" lcioInType="Track"> CATracks </parameter>
-    <!--Name of the output track collection-->
-    <parameter name="OutputTrackCollectionName" type="string" lcioOutType="Track">ExtrapolatedTracks </parameter>
-    <!--Name of the MCParticle-Track Relations collection for output tracks-->
-    <parameter name="OutputTrackRelCollection" type="string" lcioOutType="LCRelation">ExtrapolatedTracksRelation </parameter>
-    <parameter name="Max_Chi2_Incr" type="double">10. </parameter>
-    <parameter name="Verbosity" type="string">ERROR </parameter>
+    <!--Use Energy Loss in Fit-->
+    <parameter name="EnergyLossOn" type="bool">true </parameter>
+    <!--Use MultipleScattering in Fit-->
+    <parameter name="MultipleScatteringOn" type="bool">true </parameter>
+    <!--Smooth All Mesurement Sites in Fit-->
+    <parameter name="SmoothOn" type="bool">false </parameter>
+    <!--times d0(Z0) acceptable from track extrapolation point-->
+    <parameter name="SearchSigma" type="double">3 </parameter> <!-- not used but in doubt to use it, that's why it still exists -->
+    <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
+    <!--parameter name="Verbosity" type="string">DEBUG </parameter-->
   </processor>
 
-  <!-- == Efficiency calculator parameters == -->
+
+
   <processor name="MyClicEfficiencyCalculator" type="ClicEfficiencyCalculator">
-    <parameter name="TrackCollectionName" type="String" lcioInType="Track"> SiTracks </parameter>
-    <parameter name="TrackerHitCollectionNames" type="StringVec" lcioInType="TrackerHitPlane">VXDTrackerHits VXDEndcapTrackerHits ITrackerHits OTrackerHits ITrackerEndcapHits OTrackerEndcapHits </parameter>
-    <parameter name="TrackerHitRelCollectionNames" type="StringVec" lcioInType="LCRelation">VXDTrackerHitRelations VXDEndcapTrackerHitRelations InnerTrackerBarrelHitsRelations OuterTrackerBarrelHitsRelations InnerTrackerEndcapHitsRelations OuterTrackerEndcapHitsRelations </parameter>
-    <parameter name="Verbosity" type="string">WARNING </parameter>
+    <!--ClicEfficiencyCalculator calculates the tracking efficiency and makes some performance plots-->
+    <!--Track collection name-->
+    <parameter name="TrackCollectionName" type="string" lcioInType="Track">SiTracks </parameter>
+    <!--Name of the TrackerHit input collections-->
+    <parameter name="TrackerHitCollectionNames" type="StringVec" lcioInType="TrackerHitPlane"> VXDTrackerHits VXDEndcapTrackerHits ITrackerHits OTrackerHits ITrackerEndcapHits OTrackerEndcapHits  </parameter>
+    <!--Name of TrackerHit relation collections-->
+    <parameter name="TrackerHitRelCollectionNames" type="StringVec" lcioInType="LCRelation"> VXDTrackerHitRelations VXDEndcapTrackerHitRelations InnerTrackerBarrelHitsRelations OuterTrackerBarrelHitsRelations InnerTrackerEndcapHitsRelations OuterTrackerEndcapHitsRelations </parameter>
+    <!--Name of the MCParticle input collection-->
+    <parameter name="MCParticleCollectionName" type="string" lcioInType="MCParticle">MCParticle </parameter>
+    <!--Name of the output collection of the not reconstructed charged MCParticle-->
+    <parameter name="MCParticleNotReco" type="string" lcioOutType="MCParticle">MCParticleNotReco </parameter>
+    <!--If true additional plots (n of hits per subdetector per mc particle, mc theta, mc pt, info if the particle is decayed in the tracker) will be added to the Ntuple mctree-->
+    <parameter name="morePlots" type="bool">false </parameter>
+    <!--Set of cuts to define 'reconstractable' particles for eff computation. The options are: NHits, NHitsVXD, ILDLike-->
+    <parameter name="reconstructableDefinition" type="string">ILDLike </parameter>
+    <!--Detector element ID for the vertex Barrel-->
+    <parameter name="vertexBarrelID" type="int">1 </parameter>  <!-- obsolete -->
+    <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
+    <!--parameter name="Verbosity" type="string">DEBUG </parameter-->
+  </processor>
+
+
+  <processor name="MyTrackChecker" type="TrackChecker">
+    <!--TrackChecker plots pull distributions, track resolution parameters and reconstruction efficiencies-->
+    <!--Name of the MCParticle input collection-->
+    <parameter name="MCParticleCollectionName" type="string" lcioInType="MCParticle">MCParticle </parameter>
+    <!--Track collection name-->
+    <parameter name="TrackCollectionName" type="string" lcioInType="Track">SiTracks </parameter>
+    <!--Track relation collection name-->
+    <parameter name="TrackRelationCollectionName" type="string" lcioInType="LCRelation">SiTracksMCTruthLink </parameter>
+    <!--Name of the root tree-->
+    <parameter name="TreeName" type="string">checktree </parameter>
+    <!--Flag to fill only tree variables or also histogram version of pulls and residuals-->
+    <parameter name="UseOnlyTree" type="bool">true </parameter>  <!-- probably obsolete- to be checked -->
+    <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
+    <!--parameter name="Verbosity" type="string">DEBUG </parameter-->
   </processor>
 
 
@@ -239,23 +310,25 @@
     <parameter name="FileType" type="string" value="root "/>
   </processor>
 
-  <processor name="MyDiagnostics_Si" type="DiagnosticsCLIC">
-    <!-- <processor name="MyDiagnostics_Si" type="Diagnostics"> -->
-    <!--Name of the FullLDC track collection-->
-    <parameter name="MarlinTrkTracks" type="string" lcioInType="Track"> SiTracks </parameter>
-    <parameter name="MCTracksTruthLinkCollectionName" type="string" lcioInType="Track"> MCTruthSiTracksLink </parameter>
-    <parameter name="TracksMCTruthLinkCollectionName" type="string" lcioInType="Track"> SiTracksMCTruthLink </parameter>
-    <parameter name="MCParticleCollection" type="string" lcioInType="MCParticle"> MCParticle </parameter>
-    <!--Enables cuts to define the examined track sample-->
-    <parameter name="TrkEffOn" type="bool"> true </parameter>
-    <!--If we want to apply a cut on the minimum TPC hits-->
-    <parameter name="CutOnTPChits" type="int"> 10 </parameter>
-    <!--If we want to apply a cut on the minimum transverse momentum-->
-    <parameter name="CutOnPt" type="float"> 0.3 </parameter>
-    <parameter name="SimTrackerHitCollections" type="StringVec" lcioInType="SimTrackerHit"> VertexBarrelHits InnerTrackerBarrelHits  </parameter>
-    <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
-    <parameter name="Verbosity" type="string"> WARNING </parameter>
-  </processor>
+
+  <!----- OBSOLETE -->
+  <!-- <processor name="MyDiagnostics_Si" type="DiagnosticsCLIC"> -->
+  <!--   <\!-- <processor name="MyDiagnostics_Si" type="Diagnostics"> -\-> -->
+  <!--   <\!--Name of the FullLDC track collection-\-> -->
+  <!--   <parameter name="MarlinTrkTracks" type="string" lcioInType="Track"> SiTracks </parameter> -->
+  <!--   <parameter name="MCTracksTruthLinkCollectionName" type="string" lcioInType="Track"> MCTruthSiTracksLink </parameter> -->
+  <!--   <parameter name="TracksMCTruthLinkCollectionName" type="string" lcioInType="Track"> SiTracksMCTruthLink </parameter> -->
+  <!--   <parameter name="MCParticleCollection" type="string" lcioInType="MCParticle"> MCParticle </parameter> -->
+  <!--   <\!--Enables cuts to define the examined track sample-\-> -->
+  <!--   <parameter name="TrkEffOn" type="bool"> true </parameter> -->
+  <!--   <\!--If we want to apply a cut on the minimum TPC hits-\-> -->
+  <!--   <parameter name="CutOnTPChits" type="int"> 10 </parameter> -->
+  <!--   <\!--If we want to apply a cut on the minimum transverse momentum-\-> -->
+  <!--   <parameter name="CutOnPt" type="float"> 0.3 </parameter> -->
+  <!--   <parameter name="SimTrackerHitCollections" type="StringVec" lcioInType="SimTrackerHit"> VertexBarrelHits InnerTrackerBarrelHits  </parameter> -->
+  <!--   <\!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-\-> -->
+  <!--   <parameter name="Verbosity" type="string"> WARNING </parameter> -->
+  <!-- </processor> -->
 
 
 
@@ -621,11 +694,9 @@
       OuterTrackerEndcapCollection
     </parameter>
     <!--Name of the Tracks input collection-->
-    <parameter name="TrackCollection" type="string" lcioInType="Track">
-      SiTracks
-    </parameter>
+    <parameter name="TrackCollection" type="string" lcioInType="Track"> SiTracks </parameter>
     <!--Name of the trackMCTruthLink output collection - not created if empty()-->
-    <parameter name="TrackMCTruthLinkName" type="string" lcioOutType="LCRelation"> TrackMCTruthLink </parameter>
+    <parameter name="TrackMCTruthLinkName" type="string" lcioOutType="LCRelation"> SiTracksMCTruthLink </parameter>
     <!--Name of the lcrelation collections, that link the TrackerHits to their SimTrackerHits.-->
     <parameter name="TrackerHitsRelInputCollections" type="StringVec" lcioInType="LCRelation">
       VXDTrackerHitRelations
@@ -644,6 +715,29 @@
     <!--energy cut for daughters that are kept from KeepDaughtersPDG-->
     <parameter name="daughtersECutMeV" type="float"> 10 </parameter>
   </processor>
+
+
+
+  <processor name="MyHitResiduals" type="HitResiduals">
+    <!--HitResiduals plots te residual between the track fit and the hit in the local coordinate system u,v,w.-->
+    <!--Use Energy Loss in Fit-->
+    <parameter name="EnergyLossOn" type="bool">true </parameter>
+    <!--Maximum increment allowed for the chi2-->
+    <parameter name="MaxChi2Increment" type="double">1000 </parameter>
+    <!--Use MultipleScattering in Fit-->
+    <parameter name="MultipleScatteringOn" type="bool">true </parameter>
+    <!--Smooth All Mesurement Sites in Fit-->
+    <parameter name="SmoothOn" type="bool">false </parameter>
+    <!--Name of the input track collection-->
+    <parameter name="TrackCollectionName" type="string" lcioInType="Track">SiTracks </parameter>
+    <!--Name of the output root file-->
+    <parameter name="outFileName" type="string">residuals.root </parameter>
+    <!--Name of the tree-->
+    <parameter name="treeName" type="string">restree </parameter>
+    <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
+    <!--parameter name="Verbosity" type="string">DEBUG </parameter-->
+  </processor>
+
 
 
 </marlin>
