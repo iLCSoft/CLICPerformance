@@ -20,7 +20,8 @@ draw_purity = False
 
 list_files = [] #arguments: root file name, name of tree including path, name for legend (optional), color (optional)
 
-list_files.append(["histograms500GeV_ttbar.root", "OuterEndcapPlanarDigiProcessor/trktree", "CLIC_o2_v07", kRed])
+list_files.append(["histograms500GeV_o3_v07_fixed.root", "OuterEndcapPlanarDigiProcessor/trktree", "CLIC_o3_v07", kRed])
+list_files.append(["histograms500GeV_o2_v4_ttbar.root", "OuterEndcapPlanarDigiProcessor/trktree", "CLIC_o2_v04", kBlue])
 
 
 # list_files.append(["/Users/simoniel/workspace/files_root/tracking/HEAD-2016-05-20/merge/aida_test_2016-05-20_clic_o2_v04_mu-_5GeV.root", "MyRecoMCTruthLinker_Forward/perftree", "p = 5 GeV", kAzure+7])
@@ -107,7 +108,7 @@ list_purity_var.append(["mc_theta", 0.436, 1.57, 10 , not logx])
 
 #gStyle.SetOptStat(111111)
 #gStyle.SetOptFit(111111)
-gROOT.ProcessLine(".x ../macros/style/CLICdpSettingsScript.C")
+####gROOT.ProcessLine(".x ../macros/style/CLICdpSettingsScript.C")
 gStyle.SetOptStat(0000)
 gStyle.SetOptFit(0000)
 #gStyle.SetOptFit(1)
@@ -730,6 +731,8 @@ if draw_efficiency:
             name_hist_reconstructable = 'h_var_reconstructable_'+str(list_efficiency_var.index(var))
             h_var_reconstructed = TH1F(name_hist_reconstructed, name_hist_reconstructed, var[3] , array('d',var_edges))
             h_var_reconstructable = TH1F(name_hist_reconstructable, name_hist_reconstructable, var[3] , array('d',var_edges))
+            h_var_reconstructed.SetDirectory(0)
+            h_var_reconstructable.SetDirectory(0)
 
 
             #loop on tree
