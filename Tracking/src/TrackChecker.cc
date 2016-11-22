@@ -135,6 +135,8 @@ void TrackChecker::processRunHeader( LCRunHeader* run) {
 
 void TrackChecker::processEvent( LCEvent* evt ) {
 
+  //std::cout<< "---- event << " << m_eventNumber << std::endl;
+
   if( isFirstEvent() ) { 
     perftree = new TTree(m_treeName.c_str(),m_treeName.c_str());
 
@@ -234,6 +236,7 @@ void TrackChecker::processEvent( LCEvent* evt ) {
   int nTracks = trackCollection->getNumberOfElements();
   for(int itTrack=0;itTrack<nTracks;itTrack++){
 
+
     // Get the track
     Track* track = dynamic_cast<Track*>( trackCollection->getElementAt(itTrack) ) ;
     
@@ -265,7 +268,9 @@ void TrackChecker::processEvent( LCEvent* evt ) {
     double tLmcp = helix.getTanLambda() ;
 
 
+
     streamlog_out(MESSAGE) << " ---- reference point of track fit x,y,z =  " << track->getReferencePoint()[0] << " , " << track->getReferencePoint()[1] << " , " << track->getReferencePoint()[2] << std::endl;
+
 
 
     double d0track = track->getD0() ;

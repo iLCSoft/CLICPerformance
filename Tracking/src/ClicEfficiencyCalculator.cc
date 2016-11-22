@@ -39,6 +39,7 @@
 #include <AIDA/IHistogramFactory.h>
 
 #include <TLorentzVector.h>
+#include "TFile.h"
 #include "TTree.h"
 #include "LinkDef.h"
 
@@ -134,6 +135,32 @@ ClicEfficiencyCalculator::ClicEfficiencyCalculator() : Processor("ClicEfficiency
                             m_notRecoMCColName ,
                             std::string("MCParticleNotReco") ) ;
 
+
+
+  // registerProcessorParameter("outFileName",
+  //                            "Name of the output root file",
+  //                            _outFileName,
+  //                            std::string("out_eff.root")
+  //                            );
+
+  registerProcessorParameter("efficiencyTreeName",
+                             "Name of the efficiency tree",
+                             _effTreeName,
+                             std::string("trktree")
+                             );
+
+  registerProcessorParameter("purityTreeName",
+                             "Name of the purity tree",
+                             _purityTreeName,
+                             std::string("puritytree")
+                             );
+
+
+  registerProcessorParameter("mcTreeName",
+                             "Name of the efficiency tree",
+                             _mcTreeName,
+                             std::string("mctree")
+                             );
 	
 }
 
@@ -163,6 +190,89 @@ void ClicEfficiencyCalculator::init() {
 	
 
 
+  // _outRootFile = new TFile(_outFileName.c_str(),"RECREATE");
+  
+
+
+  // // Plots
+
+  // eff_vs_theta = new TCanvas("eff_vs_theta","Trk Eff vs Theta",800,800);
+  // g_eff_vs_theta = new TGraphAsymmErrors() ;
+
+  // // const int nbins_theta = 13;
+  // // double theta_edges[nbins_theta+1] = { 0.0, 10., 20., 30., 45., 60., 70, 87., 93., 110., 145., 160., 170., 180. } ;
+  // const int nbins_theta = 18;
+  // double theta_edges[nbins_theta+1] = { 0.0, 7., 15., 23., 30., 45., 60, 75, 88., 90., 92., 105., 120., 135., 150., 157., 165., 173., 180.} ;
+
+  // h_theta_reconstructed  = new TH1F( "h_theta_reconstructed", "Theta distributions of reconstructed tracks passing purity criteria", nbins_theta , theta_edges ) ;
+  // h_theta_reconstructable  = new TH1F( "h_theta_reconstructable", "Theta distribution of reconstructable tracks", nbins_theta , theta_edges ) ;
+
+
+
+  // eff_vs_pt = new TCanvas("eff_vs_pt","Trk Eff vs Pt",800,800);
+  // g_eff_vs_pt = new TGraphAsymmErrors() ;
+
+  // // const int nbins_pt = 12;
+  // // double pt_edges[nbins_pt+1] = { 0.01, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 500., 1000. } ;
+  // const int nbins_pt = 16;
+  // double pt_edges[nbins_pt+1] = { 0.01, 0.1, 0.2, 0.5, 1., 2., 4., 8., 10., 20., 40., 80., 100., 150., 200., 500., 1000. } ;
+
+  // h_pt_reconstructed  = new TH1F( "h_pt_reconstructed", "Pt distributions of reconstructed tracks passing purity criteria", nbins_pt , pt_edges ) ;
+  // h_pt_reconstructable  = new TH1F( "h_pt_reconstructable", "Pt distribution of reconstructable tracks", nbins_pt , pt_edges ) ;
+
+
+   
+  trktree = new TTree(_effTreeName.c_str(),_effTreeName.c_str());
+  int bufsize_trk = 32000; //default buffer size 32KB
+  trktree->Branch("vx_reconstructable", "std::vector<double >",&m_vec_vx_reconstructable,bufsize_trk,0); 
+  trktree->Branch("vy_reconstructable", "std::vector<double >",&m_vec_vy_reconstructable,bufsize_trk,0); 
+  trktree->Branch("vz_reconstructable", "std::vector<double >",&m_vec_vz_reconstructable,bufsize_trk,0); 
+  trktree->Branch("vr_reconstructable", "std::vector<double >",&m_vec_vr_reconstructable,bufsize_trk,0); 
+  trktree->Branch("pt_reconstructable", "std::vector<double >",&m_vec_pt_reconstructable,bufsize_trk,0); 
+  trktree->Branch("theta_reconstructable", "std::vector<double >",&m_vec_theta_reconstructable,bufsize_trk,0); 
+  trktree->Branch("is_reconstructed", "std::vector<bool >",&m_vec_is_reconstructed,bufsize_trk,0); 
+
+   
+  puritytree = new TTree(_purityTreeName.c_str(),_purityTreeName.c_str());
+  int bufsize_purity = 32000; //default buffer size 32KB
+  puritytree->Branch("trk_nhits_vtx", "std::vector<int >",&m_vec_nhits_vtx,bufsize_purity,0); 
+  puritytree->Branch("trk_nhits_trk", "std::vector<int >",&m_vec_nhits_trk,bufsize_purity,0); 
+  puritytree->Branch("trk_nhits", "std::vector<int >",&m_vec_nhits,bufsize_purity,0); 
+  puritytree->Branch("trk_purity", "std::vector<double >",&m_vec_purity,bufsize_purity,0); 
+  puritytree->Branch("mc_pdg", "std::vector<int >",&m_vec_pdg,bufsize_purity,0); 
+  puritytree->Branch("mc_theta", "std::vector<double >",&m_vec_theta,bufsize_purity,0); 
+  puritytree->Branch("mc_phi", "std::vector<double >",&m_vec_phi,bufsize_purity,0); 
+  puritytree->Branch("mc_p", "std::vector<double >",&m_vec_p,bufsize_purity,0); 
+
+
+
+  if (m_morePlots){
+    // Tree
+      
+    mctree = new TTree(_mcTreeName.c_str(),_mcTreeName.c_str());
+    int bufsize = 32000; //default buffer size 32KB
+
+    mctree->Branch("mcCat", "std::vector<int >",&m_mcCat,bufsize,0); //mc particle categorization: 0 is charge but not reconstructable, 1 is reconstructable but not reconstructed, 2 is reconstructed
+    mctree->Branch("mcTheta", "std::vector<double >",&m_mcTheta,bufsize,0); 
+    mctree->Branch("mcPt", "std::vector<double >",&m_mcPt,bufsize,0); 
+    //mctree->Branch("mcNHits", "std::vector<std::vector<int > >",&m_mcNHits,bufsize,0); 
+    mctree->Branch("mcNHitsTot", "std::vector<int >",&m_mcNHitsTot,bufsize,0); 
+    mctree->Branch("mcNHitsVXD", "std::vector<int >",&m_mcNHitsVXD,bufsize,0); 
+    mctree->Branch("mcIsDecayedInTracker", "std::vector<int >",&m_mcIsDecayedInTracker,bufsize,0); 
+
+    // not reconstructed tracks
+    mctree->Branch("mcNTrks", "std::vector<int >",&m_mcNTracks,bufsize,0); 
+    mctree->Branch("mcNTrkHits", "std::vector<int >",&m_mcNTrkHits,bufsize,0); 
+    mctree->Branch("mcThetaTrk", "std::vector<int >",&m_mcThetaTrk,bufsize,0); 
+    mctree->Branch("mcPtTrk", "std::vector<int >",&m_mcPtTrk,bufsize,0); 
+    mctree->Branch("mcPhiTrk", "std::vector<int >",&m_mcPhiTrk,bufsize,0); 
+    mctree->Branch("mcNTrksCone", "std::vector<int >",&m_mcNTracksCone,bufsize,0); 
+
+  }
+
+
+
+
 }
 
 
@@ -172,81 +282,8 @@ void ClicEfficiencyCalculator::processRunHeader( LCRunHeader* run) {
 
 void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
 
-  if( isFirstEvent() ) { 
-
-    // Plots
-
-    eff_vs_theta = new TCanvas("eff_vs_theta","Trk Eff vs Theta",800,800);
-    g_eff_vs_theta = new TGraphAsymmErrors() ;
-
-    // const int nbins_theta = 13;
-    // double theta_edges[nbins_theta+1] = { 0.0, 10., 20., 30., 45., 60., 70, 87., 93., 110., 145., 160., 170., 180. } ;
-    const int nbins_theta = 18;
-    double theta_edges[nbins_theta+1] = { 0.0, 7., 15., 23., 30., 45., 60, 75, 88., 90., 92., 105., 120., 135., 150., 157., 165., 173., 180.} ;
-
-    h_theta_reconstructed  = new TH1F( "h_theta_reconstructed", "Theta distributions of reconstructed tracks passing purity criteria", nbins_theta , theta_edges ) ;
-    h_theta_reconstructable  = new TH1F( "h_theta_reconstructable", "Theta distribution of reconstructable tracks", nbins_theta , theta_edges ) ;
-
-
-
-    eff_vs_pt = new TCanvas("eff_vs_pt","Trk Eff vs Pt",800,800);
-    g_eff_vs_pt = new TGraphAsymmErrors() ;
-
-    // const int nbins_pt = 12;
-    // double pt_edges[nbins_pt+1] = { 0.01, 0.1, 0.5, 1., 2., 5., 10., 20., 50., 100., 200., 500., 1000. } ;
-    const int nbins_pt = 16;
-    double pt_edges[nbins_pt+1] = { 0.01, 0.1, 0.2, 0.5, 1., 2., 4., 8., 10., 20., 40., 80., 100., 150., 200., 500., 1000. } ;
-
-    h_pt_reconstructed  = new TH1F( "h_pt_reconstructed", "Pt distributions of reconstructed tracks passing purity criteria", nbins_pt , pt_edges ) ;
-    h_pt_reconstructable  = new TH1F( "h_pt_reconstructable", "Pt distribution of reconstructable tracks", nbins_pt , pt_edges ) ;
-
-
-   
-    trktree = new TTree("trktree","trktree");
-    int bufsize_trk = 32000; //default buffer size 32KB
-    trktree->Branch("pt_reconstructable", "std::vector<double >",&m_vec_pt_reconstructable,bufsize_trk,0); 
-    trktree->Branch("theta_reconstructable", "std::vector<double >",&m_vec_theta_reconstructable,bufsize_trk,0); 
-    trktree->Branch("is_reconstructed", "std::vector<bool >",&m_vec_is_reconstructed,bufsize_trk,0); 
-
-   
-    puritytree = new TTree("puritytree","puritytree");
-    int bufsize_purity = 32000; //default buffer size 32KB
-    puritytree->Branch("trk_nhits_vtx", "std::vector<int >",&m_vec_nhits_vtx,bufsize_purity,0); 
-    puritytree->Branch("trk_nhits_trk", "std::vector<int >",&m_vec_nhits_trk,bufsize_purity,0); 
-    puritytree->Branch("trk_nhits", "std::vector<int >",&m_vec_nhits,bufsize_purity,0); 
-    puritytree->Branch("trk_purity", "std::vector<double >",&m_vec_purity,bufsize_purity,0); 
-    puritytree->Branch("mc_pdg", "std::vector<int >",&m_vec_pdg,bufsize_purity,0); 
-    puritytree->Branch("mc_theta", "std::vector<double >",&m_vec_theta,bufsize_purity,0); 
-    puritytree->Branch("mc_phi", "std::vector<double >",&m_vec_phi,bufsize_purity,0); 
-    puritytree->Branch("mc_p", "std::vector<double >",&m_vec_p,bufsize_purity,0); 
-
-
-
-    if (m_morePlots){
-      // Tree
-      
-      mctree = new TTree("mctree","mctree");
-      int bufsize = 32000; //default buffer size 32KB
-
-      mctree->Branch("mcCat", "std::vector<int >",&m_mcCat,bufsize,0); //mc particle categorization: 0 is charge but not reconstructable, 1 is reconstructable but not reconstructed, 2 is reconstructed
-      mctree->Branch("mcTheta", "std::vector<double >",&m_mcTheta,bufsize,0); 
-      mctree->Branch("mcPt", "std::vector<double >",&m_mcPt,bufsize,0); 
-      //mctree->Branch("mcNHits", "std::vector<std::vector<int > >",&m_mcNHits,bufsize,0); 
-      mctree->Branch("mcNHitsTot", "std::vector<int >",&m_mcNHitsTot,bufsize,0); 
-      mctree->Branch("mcNHitsVXD", "std::vector<int >",&m_mcNHitsVXD,bufsize,0); 
-      mctree->Branch("mcIsDecayedInTracker", "std::vector<int >",&m_mcIsDecayedInTracker,bufsize,0); 
-
-      // not reconstructed tracks
-      mctree->Branch("mcNTrks", "std::vector<int >",&m_mcNTracks,bufsize,0); 
-      mctree->Branch("mcNTrkHits", "std::vector<int >",&m_mcNTrkHits,bufsize,0); 
-      mctree->Branch("mcThetaTrk", "std::vector<int >",&m_mcThetaTrk,bufsize,0); 
-      mctree->Branch("mcPtTrk", "std::vector<int >",&m_mcPtTrk,bufsize,0); 
-      mctree->Branch("mcPhiTrk", "std::vector<int >",&m_mcPhiTrk,bufsize,0); 
-      mctree->Branch("mcNTrksCone", "std::vector<int >",&m_mcNTracksCone,bufsize,0); 
-
-    }
-
-  }
+  // if( isFirstEvent() ) { 
+  // }
 
   
 	std::cout<<"Processing event "<<m_eventNumber<<std::endl;
@@ -494,6 +531,10 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     tv_mcp.SetPxPyPzE(particle->getMomentum()[0],particle->getMomentum()[1],particle->getMomentum()[2],particle->getEnergy());
     double theta_mcp=tv_mcp.Theta()*180./M_PI;
     double pt_mcp=tv_mcp.Pt();
+    double vx=particle->getVertex()[0];
+    double vy=particle->getVertex()[1];
+    double vz=particle->getVertex()[2];
+    double vr=sqrt(pow(vx,2)+pow(vy,2));
 
     if (m_morePlots){
       double charge_mcp=fabs(particle->getCharge());
@@ -526,20 +567,25 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
 			// Assumption: if particle was reconstructed then it is reconstructable!
 			m_particles["all"]++; m_particles["reconstructable"]++; nReconstructable++;
 			m_reconstructedParticles["all"]++; nReconstructed++;
+      // std::cout<< "--- nReconstructed = " << nReconstructed << std::endl;
       isReco=true;
 			// Check if clones were produced (1 particle, more than 1 track)
 			if(particleTracks[particle] > 1) m_reconstructedParticles["clones"]+=(particleTracks[particle]-1);
 
-      //fill theta distribution for reconstructable mc particle (denominator of the eff) and for the reco one (numerator of the eff)
-      h_theta_reconstructable -> Fill(theta_mcp);
-      h_theta_reconstructed -> Fill(theta_mcp);
+      // //fill theta distribution for reconstructable mc particle (denominator of the eff) and for the reco one (numerator of the eff)
+      // h_theta_reconstructable -> Fill(theta_mcp);
+      // h_theta_reconstructed -> Fill(theta_mcp);
 
-      h_pt_reconstructable -> Fill(pt_mcp);
-      h_pt_reconstructed -> Fill(pt_mcp);
+      // h_pt_reconstructable -> Fill(pt_mcp);
+      // h_pt_reconstructed -> Fill(pt_mcp);
 
 
       //fill also vector for tree variable - it would allow to make plots with different binning directly offline 
 
+      m_vec_vx_reconstructable.push_back(vx);
+      m_vec_vy_reconstructable.push_back(vy);
+      m_vec_vz_reconstructable.push_back(vz);
+      m_vec_vr_reconstructable.push_back(vr);
       m_vec_pt_reconstructable.push_back(pt_mcp);
       m_vec_theta_reconstructable.push_back(theta_mcp);
       m_vec_is_reconstructed.push_back(true);
@@ -577,11 +623,15 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
 
     
 
-    //fill theta distribution for reconstructable mc particle (denominator of the eff)
-    h_theta_reconstructable -> Fill(theta_mcp);
+    // //fill theta distribution for reconstructable mc particle (denominator of the eff)
+    // h_theta_reconstructable -> Fill(theta_mcp);
 
-    h_pt_reconstructable -> Fill(pt_mcp);
+    // h_pt_reconstructable -> Fill(pt_mcp);
 
+    m_vec_vx_reconstructable.push_back(vx);
+    m_vec_vy_reconstructable.push_back(vy);
+    m_vec_vz_reconstructable.push_back(vz);
+    m_vec_vr_reconstructable.push_back(vr);
     m_vec_pt_reconstructable.push_back(pt_mcp);
     m_vec_theta_reconstructable.push_back(theta_mcp);
     m_vec_is_reconstructed.push_back(false);
@@ -665,37 +715,44 @@ void ClicEfficiencyCalculator::end(){
 	streamlog_out(MESSAGE)<<std::fixed<<std::setprecision(2)<<"Reconstructable particle efficiency: "<<100.*m_reconstructedParticles["all"]/m_particles["reconstructable"]<<" % ("<<std::setprecision(0)<<m_reconstructedParticles["all"]<<"/"<<m_particles["reconstructable"]<<")"<<std::endl;
 	
 
-  // Plots
+  // // Plots
 
-  eff_vs_theta->cd();
+  // eff_vs_theta->cd();
 
-  g_eff_vs_theta->Divide( h_theta_reconstructed , h_theta_reconstructable , "v" ) ;
-  g_eff_vs_theta->SetMarkerColor(kRed) ;
-  g_eff_vs_theta->SetLineColor(kRed) ;
-  g_eff_vs_theta->GetYaxis()->SetTitle( "#epsilon_{trk}" );
-  g_eff_vs_theta->GetXaxis()->SetTitle( "#theta [rad]" );
-  g_eff_vs_theta->Draw("AP");
-  g_eff_vs_theta->Write();
-  eff_vs_theta->Write();
+  // g_eff_vs_theta->Divide( h_theta_reconstructed , h_theta_reconstructable , "v" ) ;
+  // g_eff_vs_theta->SetMarkerColor(kRed) ;
+  // g_eff_vs_theta->SetLineColor(kRed) ;
+  // g_eff_vs_theta->GetYaxis()->SetTitle( "#epsilon_{trk}" );
+  // g_eff_vs_theta->GetXaxis()->SetTitle( "#theta [rad]" );
+  // g_eff_vs_theta->Draw("AP");
+  // g_eff_vs_theta->Write();
+  // eff_vs_theta->Write();
 
-  h_theta_reconstructed->Write();
-  h_theta_reconstructable->Write();
+  // h_theta_reconstructed->Write();
+  // h_theta_reconstructable->Write();
 
 
-  eff_vs_pt->cd();
-  gPad->SetLogx();
+  // eff_vs_pt->cd();
+  // gPad->SetLogx();
 
-  g_eff_vs_pt->Divide( h_pt_reconstructed , h_pt_reconstructable , "v" ) ;
-  g_eff_vs_pt->SetMarkerColor(kRed) ;
-  g_eff_vs_pt->SetLineColor(kRed) ;
-  g_eff_vs_pt->GetYaxis()->SetTitle( "#epsilon_{trk}" );
-  g_eff_vs_pt->GetXaxis()->SetTitle( "p_{T} [GeV]" );
-  g_eff_vs_pt->Draw("AP");
-  g_eff_vs_pt->Write();
-  eff_vs_pt->Write();
+  // g_eff_vs_pt->Divide( h_pt_reconstructed , h_pt_reconstructable , "v" ) ;
+  // g_eff_vs_pt->SetMarkerColor(kRed) ;
+  // g_eff_vs_pt->SetLineColor(kRed) ;
+  // g_eff_vs_pt->GetYaxis()->SetTitle( "#epsilon_{trk}" );
+  // g_eff_vs_pt->GetXaxis()->SetTitle( "p_{T} [GeV]" );
+  // g_eff_vs_pt->Draw("AP");
+  // g_eff_vs_pt->Write();
+  // eff_vs_pt->Write();
 
-  h_pt_reconstructed->Write();
-  h_pt_reconstructable->Write();
+  // h_pt_reconstructed->Write();
+  // h_pt_reconstructable->Write();
+
+  trktree->Write();
+  puritytree->Write();
+  if (m_morePlots) mctree->Write();
+  // _outRootFile->Write();
+  // _outRootFile->Close();
+
 
 
 }
@@ -921,6 +978,10 @@ void ClicEfficiencyCalculator::clearTreeVar(){
   m_mcNTracksCone.clear();
 
 
+  m_vec_vx_reconstructable.clear(); 
+  m_vec_vy_reconstructable.clear(); 
+  m_vec_vz_reconstructable.clear(); 
+  m_vec_vr_reconstructable.clear(); 
   m_vec_pt_reconstructable.clear(); 
   m_vec_theta_reconstructable.clear(); 
   m_vec_is_reconstructed.clear(); 

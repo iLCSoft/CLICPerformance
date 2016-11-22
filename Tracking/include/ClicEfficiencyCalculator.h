@@ -25,6 +25,7 @@
 
 
 class TTree;
+/* class TFile; */
 
 using namespace lcio ;
 using namespace marlin ;
@@ -76,6 +77,11 @@ protected:
 	std::string m_inputTrackRelationCollection;
 	std::string m_notRecoMCColName;
 	
+	/* std::string _outFileName; */
+	std::string _effTreeName;
+	std::string _purityTreeName;
+	std::string _mcTreeName;
+
 	// Run and event counters
 	int m_eventNumber ;
 	int m_runNumber ;
@@ -106,6 +112,10 @@ protected:
 	TH1F *h_pt_reconstructed ;
 	TH1F *h_pt_reconstructable ;
 
+
+	// Root file
+	/* TFile *_outRootFile; */
+
 	// Tree
 
 	TTree *mctree ;
@@ -125,8 +135,11 @@ protected:
 	std::vector<int > m_mcPhiTrk; 
 	std::vector<int > m_mcNTracksCone; 
 
-
 	TTree *trktree ;
+	std::vector<double > m_vec_vx_reconstructable; 
+	std::vector<double > m_vec_vy_reconstructable; 
+	std::vector<double > m_vec_vz_reconstructable; 
+	std::vector<double > m_vec_vr_reconstructable; 
 	std::vector<double > m_vec_pt_reconstructable; 
 	std::vector<double > m_vec_theta_reconstructable; 
 	std::vector<bool > m_vec_is_reconstructed; 
