@@ -20,12 +20,9 @@ draw_purity = False
 
 list_files = [] #arguments: root file name, name of tree including path, name for legend (optional), color (optional)
 
-list_files.append(["histograms500GeV_o3_v07_fixed.root", "OuterEndcapPlanarDigiProcessor/trktree", "CLIC_o3_v07", kRed])
-list_files.append(["histograms500GeV_o2_v4_ttbar.root", "OuterEndcapPlanarDigiProcessor/trktree", "CLIC_o2_v04", kBlue])
-
-
-# list_files.append(["/Users/simoniel/workspace/files_root/tracking/HEAD-2016-05-20/merge/aida_test_2016-05-20_clic_o2_v04_mu-_5GeV.root", "MyRecoMCTruthLinker_Forward/perftree", "p = 5 GeV", kAzure+7])
-# list_files.append(["/Users/simoniel/workspace/files_root/tracking/HEAD-2016-05-20/merge/aida_test_2016-05-20_clic_o2_v04_mu-_20GeV.root", "MyRecoMCTruthLinker_Forward/perftree", "p = 20 GeV", kOrange+7])
+list_files.append(["/afs/cern.ch/work/s/simoniel/program/run/tracking_fromILD/aida_clic_o2_v04_ttbar3_testMV.root", "VXDEPlanarDigiProcessor/trktree", "MV", kAzure+7])
+list_files.append(["/afs/cern.ch/work/s/simoniel/program/run/tracking_fromILD/aida_clic_o2_v04_ttbar3_testMV.root", "VXDEPlanarDigiProcessor/trktreeCT", "CT", kOrange+7])
+list_files.append(["/afs/cern.ch/work/s/simoniel/program/run/tracking_fromILD/aida_clic_o2_v04_ttbar3_testMV.root", "VXDEPlanarDigiProcessor/trktreeCTChi2", "CT chi2", kGreen+2])
 
 
 
@@ -108,7 +105,7 @@ list_purity_var.append(["mc_theta", 0.436, 1.57, 10 , not logx])
 
 #gStyle.SetOptStat(111111)
 #gStyle.SetOptFit(111111)
-####gROOT.ProcessLine(".x ../macros/style/CLICdpSettingsScript.C")
+##gROOT.ProcessLine(".x ../macros/style/CLICdpSettingsScript.C")
 gStyle.SetOptStat(0000)
 gStyle.SetOptFit(0000)
 #gStyle.SetOptFit(1)
@@ -753,7 +750,7 @@ if draw_efficiency:
                         pass_pt = event.pt_reconstructable[index] >= 0.1   
                     else:
                         pass_pt = True
-                    print '--pass_theta = ', pass_theta
+                    #print '--pass_theta = ', pass_theta
                     if (pass_theta and pass_pt):
                         h_var_reconstructable.Fill( element )
                         if event.is_reconstructed[index]:
@@ -783,9 +780,17 @@ if draw_efficiency:
             if list_files.index(file)==0:                    
                 g_eff.GetYaxis().SetTitle("#epsilon_{trk}")
                 if var[0].find('theta')>-1:
-                    g_eff.GetXaxis().SetTitle("#theta [rad]")
+                    g_eff.GetXaxis().SetTitle("#theta [deg]")
                 elif var[0].find('pt')>-1:
                     g_eff.GetXaxis().SetTitle("p_{T} [GeV]")
+                elif var[0].find('vr')>-1:
+                    g_eff.GetXaxis().SetTitle("r_{vertex} [mm]")
+                elif var[0].find('vz')>-1:
+                    g_eff.GetXaxis().SetTitle("z_{vertex} [mm]")
+                elif var[0].find('vx')>-1:
+                    g_eff.GetXaxis().SetTitle("x_{vertex} [mm]")
+                elif var[0].find('vy')>-1:
+                    g_eff.GetXaxis().SetTitle("y_{vertex} [mm]")
                 else:
                     g_eff.GetXaxis().SetTitle(var[0])
                 g_eff.Draw('AP')
