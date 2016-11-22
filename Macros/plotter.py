@@ -89,6 +89,8 @@ logx = True
 list_efficiency_var = [] # name of var, min value of var, max value of var, npoints in x, log/linear scale for x
 list_efficiency_var.append(["pt_reconstructable", 0.1, 1000., 25 , logx])
 list_efficiency_var.append(["theta_reconstructable", 25, 155, 25 , not logx])
+list_efficiency_var.append(["vr_reconstructable", 0, 50, 25 , not logx])
+list_efficiency_var.append(["vz_reconstructable", -50, 50, 50 , not logx])
 
 #parameter for fake rate plots
 
