@@ -24,7 +24,6 @@
 
 #include "fpcompare.h"
 
-#include "LinkDef.h"
 #include "TFile.h"
 #include "TTree.h"
 #include "TVector3.h"

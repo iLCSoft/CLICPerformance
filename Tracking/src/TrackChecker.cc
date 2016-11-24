@@ -1,6 +1,5 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 #include "TrackChecker.h"
-#include "LinkDef.h"
 
 #include "DDRec/API/IDDecoder.h"
 

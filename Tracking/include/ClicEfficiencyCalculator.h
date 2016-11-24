@@ -20,6 +20,7 @@
 #include <AIDA/AIDA.h>
 
 #include <TH1F.h>
+#include <TH2F.h>
 #include <TCanvas.h>
 #include <TGraphAsymmErrors.h>
 
@@ -70,18 +71,14 @@ public:
 protected:
 	
 	// Collection names for (in/out)put
-	std::vector<std::string> m_inputTrackerHitCollections ;
-	std::vector<std::string> m_inputTrackerHitRelationCollections ;
-	std::string m_inputParticleCollection ;
-	std::string m_inputTrackCollection ;
-	std::string m_inputTrackRelationCollection;
-	std::string m_notRecoMCColName;
+  std::vector<std::string> m_inputTrackerHitCollections ;
+  std::vector<std::string> m_inputTrackerHitRelationCollections ;
+  std::string m_inputParticleCollection ;
+  std::string m_inputTrackCollection ;
+  std::string m_inputTrackRelationCollection;
+  std::string m_outputEfficientMCParticleCollection;
+  std::string m_outputInefficientMCParticleCollection;
 	
-	/* std::string _outFileName; */
-	std::string _effTreeName;
-	std::string _purityTreeName;
-	std::string _mcTreeName;
-
 	// Run and event counters
 	int m_eventNumber ;
 	int m_runNumber ;
@@ -90,52 +87,38 @@ protected:
 	MarlinTrk::IMarlinTrkSystem* trackFactory;
 	
 	// Parameters
+  bool m_fullOutput;
 	double m_purity;
 	double m_magneticField;
+  std::string m_cuts;
+  std::string m_mcTreeName;
+  std::string m_purityTreeName;
+  std::string m_efficiencyTreeName;
 	std::map<std::string,double> m_particles;
 	std::map<std::string,double> m_reconstructedParticles;
-
-	int m_vertexBarrelID;
-	std::string m_cuts;
 	std::map<MCParticle*, std::vector<TrackerHit*> > particleHits;
-	bool m_morePlots;
 
-	// Plots 
+  // Histograms
+  TH2F* m_thetaPtMCParticle;
+  TH2F* m_thetaPtMCParticleReconstructed;
+  TH2F* m_thetaPtMCParticleEfficiency;
 
-	TCanvas *eff_vs_theta;
-	TGraphAsymmErrors *g_eff_vs_theta;
-	TH1F *h_theta_reconstructed ;
-	TH1F *h_theta_reconstructable ;
-
-	TCanvas *eff_vs_pt;
-	TGraphAsymmErrors *g_eff_vs_pt;
-	TH1F *h_pt_reconstructed ;
-	TH1F *h_pt_reconstructable ;
-
-
-	// Root file
-	/* TFile *_outRootFile; */
-
-	// Tree
-
-	TTree *mctree ;
+  // Trees
+	TTree *m_mctree ;
 	std::vector<int > m_mcCat;
 	std::vector<double > m_mcTheta;
 	std::vector<double > m_mcPt;
 	std::vector<int > m_mcIsDecayedInTracker;
-	//std::vector<std::vector<int > > m_mcNHits;
-	//std::vector<int > m_mcNHits_helper;
 	std::vector<int > m_mcNHitsTot;
 	std::vector<int > m_mcNHitsVXD;
-
-	std::vector<int > m_mcNTracks; 
+	std::vector<int > m_mcNTracks;
 	std::vector<int > m_mcNTrkHits; 
 	std::vector<int > m_mcThetaTrk; 
 	std::vector<int > m_mcPtTrk; 
 	std::vector<int > m_mcPhiTrk; 
 	std::vector<int > m_mcNTracksCone; 
 
-	TTree *trktree ;
+	TTree *m_trackTree ;
 	std::vector<double > m_vec_vx_reconstructable; 
 	std::vector<double > m_vec_vy_reconstructable; 
 	std::vector<double > m_vec_vz_reconstructable; 
@@ -144,9 +127,7 @@ protected:
 	std::vector<double > m_vec_theta_reconstructable; 
 	std::vector<bool > m_vec_is_reconstructed; 
 
-
-
-	TTree *puritytree ;
+	TTree *m_purityTree ;
 	std::vector<int > m_vec_nhits_vtx;
 	std::vector<int > m_vec_nhits_trk;
 	std::vector<int > m_vec_nhits;
@@ -155,9 +136,6 @@ protected:
 	std::vector<double > m_vec_theta;
 	std::vector<double > m_vec_phi;
 	std::vector<double > m_vec_p;
-
-
-
 
 } ;
 
