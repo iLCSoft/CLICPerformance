@@ -254,8 +254,8 @@ void TrackChecker::processEvent( LCEvent* evt ) {
     
     // Construct the true helical trajectory
     HelixClass helix ;
-    float pos[3]={particle->getVertex()[0],particle->getVertex()[1],particle->getVertex()[2]}; // Vertex position
-    float mom[3]={particle->getMomentum()[0],particle->getMomentum()[1],particle->getMomentum()[2]}; // Particle momentum
+    float pos[3]={static_cast<float>(particle->getVertex()[0]),static_cast<float>(particle->getVertex()[1]),static_cast<float>(particle->getVertex()[2])}; // Vertex position
+    float mom[3]={static_cast<float>(particle->getMomentum()[0]),static_cast<float>(particle->getMomentum()[1]),static_cast<float>(particle->getMomentum()[2])}; // Particle momentum
     float charge = particle->getCharge() ; // Particle charge
     helix.Initialize_VP(pos,mom,charge,m_magneticField) ; // Initialised helix track
 
