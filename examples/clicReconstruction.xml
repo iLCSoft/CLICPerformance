@@ -54,6 +54,7 @@
   <processor name="InitDD4hep" type="InitializeDD4hep">
     <!--InitializeDD4hep reads a compact xml file and initializes the DD4hep::LCDD object-->
     <!--Name of the DD4hep compact xml file to load-->
+    <parameter name="EncodingStringParameter"> GlobalTrackerReadoutID </parameter>
     <parameter name="DD4hepXMLFile" type="string"> /afs/cern.ch/user/s/simoniel/public/ForEmilia/CLIC_o2_v04/CLIC_o2_v04.xml </parameter>
   </processor>
 
