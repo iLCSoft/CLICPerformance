@@ -133,7 +133,13 @@ ClicEfficiencyCalculator::ClicEfficiencyCalculator() : Processor("ClicEfficiency
                              "If true additional plots (n of hits per subdetector per mc particle, mc theta, mc pt, info if the particle is decayed in the tracker) will be added to the Ntuple mctree",
                              m_fullOutput,
                              bool(true));
-  
+
+  // Simple ntuple (separate flag)
+  registerProcessorParameter( "simpleOutput",
+                             "A simplified tree can be output with the MC particle properties, including whether or not it was reconstructed",
+                             m_simpleOutput,
+                             bool(false));
+
   // Output collections - particles reconstructed and not reconstructed
   registerOutputCollection( LCIO::MCPARTICLE,
                            "EfficientMCParticleCollectionName",
@@ -231,6 +237,16 @@ void ClicEfficiencyCalculator::init() {
     m_mctree->Branch("mcPhiTrk", "std::vector<int >",&m_mcPhiTrk,bufsize,0);
     m_mctree->Branch("mcNTrksCone", "std::vector<int >",&m_mcNTracksCone,bufsize,0);
     
+  }
+  
+  if(m_simpleOutput){
+    m_simplifiedTree = new TTree("simplifiedEfficiencyTree","simplifiedEfficiencyTree");
+    m_simplifiedTree->Branch("m_type", &m_type, "m_type/D");
+    m_simplifiedTree->Branch("m_pt", &m_pt, "m_pt/D");
+    m_simplifiedTree->Branch("m_theta", &m_theta, "m_theta/D");
+    m_simplifiedTree->Branch("m_phi", &m_phi, "m_phi/D");
+    m_simplifiedTree->Branch("m_vertexR", &m_vertexR, "m_vertexR/D");
+    m_simplifiedTree->Branch("m_reconstructed", &m_reconstructed, "m_reconstructed/O");
   }
   
   // Set up histograms
@@ -463,6 +479,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     TLorentzVector particleVector;
     particleVector.SetPxPyPzE(particle->getMomentum()[0],particle->getMomentum()[1],particle->getMomentum()[2],particle->getEnergy());
     double mcTheta=particleVector.Theta()*180./M_PI;
+    double mcPhi=particleVector.Phi()*180./M_PI;
     double mcPt=particleVector.Pt();
     double mcVertexX=particle->getVertex()[0];
     double mcVertexY=particle->getVertex()[1];
@@ -497,11 +514,13 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
       m_particles["reconstructed"]++;
       m_thetaPtMCParticleReconstructed->Fill(mcTheta,mcPt);
       efficientParticleCollection->addElement(particle);
+      std::cout<<"Reconstructed particle with pt: "<<mcPt<<std::endl;
     }else{
       inefficientParticleCollection->addElement(particle);
-      std::cout<<"Failed to reconstruct particle with pt: "<<mcPt<<std::endl;
+      std::cout<<"Failed to reconstruct particle with pt: "<<mcPt<<" and pdg value "<<particle->getPDG()<<std::endl;
     }
-    
+    std::cout<<"- particle produced at r = "<<mcVertexR<<std::endl;
+
     // Store data for trees
     if (m_fullOutput) {
       m_vec_vx_reconstructable.push_back(mcVertexX);
@@ -558,6 +577,15 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
         m_mcNHitsTot.push_back(trackHits_helper.size());
       }
     }
+    if(m_simpleOutput){
+      m_type = particle->getPDG();
+      m_pt = mcPt;
+      m_theta = mcTheta;
+      m_phi = mcPhi;
+      m_vertexR = mcVertexR;
+      m_reconstructed = reconstructed;
+      m_simplifiedTree->Fill();
+    }
   }
   
   // Fill the output trees
@@ -596,6 +624,9 @@ void ClicEfficiencyCalculator::end(){
     m_mctree->Write();
     m_trackTree->Write();
     m_purityTree->Write();
+  }
+  if(m_simpleOutput){
+    m_simplifiedTree->Write();
   }
   
 }

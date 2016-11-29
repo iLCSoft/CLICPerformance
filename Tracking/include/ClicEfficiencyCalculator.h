@@ -88,6 +88,7 @@ protected:
 	
 	// Parameters
   bool m_fullOutput;
+  bool m_simpleOutput;
 	double m_purity;
 	double m_magneticField;
   std::string m_cuts;
@@ -136,6 +137,11 @@ protected:
 	std::vector<double > m_vec_theta;
 	std::vector<double > m_vec_phi;
 	std::vector<double > m_vec_p;
+  
+  TTree *m_simplifiedTree ;
+  double m_type, m_pt, m_theta, m_phi, m_vertexR;
+  bool m_reconstructed;
+
 
 } ;
 
