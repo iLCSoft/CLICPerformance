@@ -448,7 +448,7 @@
     <!--Digital Ecal-->
     <parameter name="IfDigitalEcal" type="int">0 </parameter>
     <!--Index of ECal Layers-->
-    <parameter name="ECALLayers" type="IntVec">17 100  </parameter>
+    <parameter name="ECALLayers" type="IntVec">41 100  </parameter>
     <!--default ECAL layer configuration (used if not found in gear file)-->
     <parameter name="ECAL_default_layerConfig" type="string">000000000000000 </parameter>
     <!--default number of virtual cells (used if not found in gear file)-->
@@ -457,13 +457,13 @@
     <!--calibration to convert ECAL deposited energy to MIPs-->
     <parameter name="CalibECALMIP" type="float">0.0001 </parameter>
     <!--Calibration coefficients for ECAL-->
-    <parameter name="CalibrECAL" type="FloatVec">40.3366 80.6732 </parameter>
+    <parameter name="CalibrECAL" type="FloatVec">35.7838654527 35.7838654527</parameter>
     <!--Threshold for ECAL Hits in GeV-->
     <parameter name="ECALThreshold" type="float">5e-05 </parameter>
     <!--Unit for ECAL Threshold. Can be "GeV", "MIP" or "px". MIP and px need properly set calibration constants-->
     <parameter name="ECALThresholdUnit" type="string">GeV </parameter>
     <!--Energy correction for ECAL endcap-->
-    <parameter name="ECALEndcapCorrectionFactor" type="float">1.025 </parameter>
+    <parameter name="ECALEndcapCorrectionFactor" type="float">1.070 </parameter>
     <!--Correct for ECAL gaps-->
     <parameter name="ECALGapCorrection" type="int">1 </parameter>
     <!--Factor applied to gap correction-->
@@ -536,18 +536,18 @@
     <!--calibration to convert HCAL deposited energy to MIPs-->
     <parameter name="CalibHCALMIP" type="float">0.0001 </parameter>
     <!--Calibration coefficients for Barrel HCAL-->
-    <parameter name="CalibrHCALBarrel" type="FloatVec">46.6171 </parameter>
+    <parameter name="CalibrHCALBarrel" type="FloatVec">43.6850409935</parameter>
     <!-- CalibrHcalBarrel Should be 38.995 for 17 mm -->
     <!--Calibration coefficients for EndCap HCAL-->
-    <parameter name="CalibrHCALEndcap" type="FloatVec">50.0706 </parameter>
+    <parameter name="CalibrHCALEndcap" type="FloatVec">47.5377068315</parameter>
     <!--Calibration coefficients for Other (Ring) HCAL-->
-    <parameter name="CalibrHCALOther" type="FloatVec">57.0109 </parameter>
+    <parameter name="CalibrHCALOther" type="FloatVec">52.3640395848</parameter>
     <!--Threshold for HCAL Hits in GeV-->
     <parameter name="HCALThreshold" type="FloatVec">0.00025  </parameter>
     <!--Unit for HCAL Threshold. Can be "GeV", "MIP" or "px". MIP and px need properly set calibration constants-->
     <parameter name="HCALThresholdUnit" type="string">GeV </parameter>
     <!--Energy correction for HCAL endcap-->
-    <parameter name="HCALEndcapCorrectionFactor" type="float">1.025 </parameter>
+    <parameter name="HCALEndcapCorrectionFactor" type="float">1.000 </parameter>
     <!--Correct for ECAL gaps-->
     <parameter name="HCALGapCorrection" type="int">1 </parameter>
     <!--Factor applied to module gap correction-->
@@ -618,16 +618,16 @@
     <parameter name="ClusterCollectionName" type="String">PandoraClusters</parameter>
     <parameter name="PFOCollectionName" type="String">PandoraPFOs</parameter>
     <!-- Calibration constants -->
-    <parameter name="ECalToMipCalibration" type="float">163.934</parameter>
-    <parameter name="HCalToMipCalibration" type="float">43.29</parameter>
+    <parameter name="ECalToMipCalibration" type="float">181.818 </parameter>
+    <parameter name="HCalToMipCalibration" type="float">46.5116</parameter>
     <parameter name="ECalMipThreshold" type="float">0.5</parameter>
     <parameter name="HCalMipThreshold" type="float">0.3</parameter>
-    <parameter name="ECalToEMGeVCalibration" type="float">1.0043</parameter>
-    <parameter name="HCalToEMGeVCalibration" type="float">1.0043</parameter>
-    <parameter name="ECalToHadGeVCalibrationBarrel" type="float">0.97499</parameter>
-    <parameter name="ECalToHadGeVCalibrationEndCap" type="float">0.97499</parameter>
-    <parameter name="HCalToHadGeVCalibration" type="float">1.04848</parameter>
-    <parameter name="MuonToMipCalibration" type="float">10.0</parameter>
+    <parameter name="ECalToEMGeVCalibration" type="float">1.02360205563</parameter>
+    <parameter name="HCalToEMGeVCalibration" type="float">1.02360205563</parameter>
+    <parameter name="ECalToHadGeVCalibrationBarrel" type="float">1.10010325952</parameter>
+    <parameter name="ECalToHadGeVCalibrationEndCap" type="float">1.10010325952</parameter>
+    <parameter name="HCalToHadGeVCalibration" type="float">1.1677112152</parameter>
+    <parameter name="MuonToMipCalibration" type="float">1000</parameter>
     <parameter name="DigitalMuonHits" type="int">0</parameter>
     <parameter name="MaxHCalHitHadronicEnergy" type="float">1</parameter> 
     <!--Whether to calculate track states manually, rather than copy stored fitter values-->
@@ -706,7 +706,7 @@
     <parameter name="MaxHitEnergyMUON" type="float">2.0</parameter>
     <!--MUON Collection Names-->
     <parameter name="MUONCollections" type="StringVec">
-      MuonBarrelCollection MuonEndCapCollection</parameter>
+      YokeBarrelCollection YokeEndcapCollection</parameter>
     <!--MUON Collection of real Hits-->
     <parameter name="MUONOutputCollection" type="string">MUON </parameter>
     <!--Threshold for MUON Hits in GeV-->
