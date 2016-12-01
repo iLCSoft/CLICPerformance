@@ -400,33 +400,16 @@
   </processor>
 
 
-  <!----- OBSOLETE -->
-  <!-- <processor name="MyDiagnostics_Si" type="DiagnosticsCLIC"> -->
-  <!--   <\!-- <processor name="MyDiagnostics_Si" type="Diagnostics"> -\-> -->
-  <!--   <\!--Name of the FullLDC track collection-\-> -->
-  <!--   <parameter name="MarlinTrkTracks" type="string" lcioInType="Track"> SiTracks </parameter> -->
-  <!--   <parameter name="MCTracksTruthLinkCollectionName" type="string" lcioInType="Track"> MCTruthSiTracksLink </parameter> -->
-  <!--   <parameter name="TracksMCTruthLinkCollectionName" type="string" lcioInType="Track"> SiTracksMCTruthLink </parameter> -->
-  <!--   <parameter name="MCParticleCollection" type="string" lcioInType="MCParticle"> MCParticle </parameter> -->
-  <!--   <\!--Enables cuts to define the examined track sample-\-> -->
-  <!--   <parameter name="TrkEffOn" type="bool"> true </parameter> -->
-  <!--   <\!--If we want to apply a cut on the minimum TPC hits-\-> -->
-  <!--   <parameter name="CutOnTPChits" type="int"> 10 </parameter> -->
-  <!--   <\!--If we want to apply a cut on the minimum transverse momentum-\-> -->
-  <!--   <parameter name="CutOnPt" type="float"> 0.3 </parameter> -->
-  <!--   <parameter name="SimTrackerHitCollections" type="StringVec" lcioInType="SimTrackerHit"> VertexBarrelHits InnerTrackerBarrelHits  </parameter> -->
-  <!--   <\!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-\-> -->
-  <!--   <parameter name="Verbosity" type="string"> WARNING </parameter> -->
-  <!-- </processor> -->
 
 
 
-
+  
   <processor name="MyDDCaloDigi" type="DDCaloDigi">
     <!--Performs simple digitization of sim calo hits...-->
 
     <!--Hit times histograms-->
     <parameter name="Histograms" type="int">0 </parameter>
+    <parameter name="RootFile" type="string">Digi_SiW.root</parameter>
     <!--CaloHit Relation Collection-->
     <parameter name="RelationOutputCollection" type="string" lcioOutType="LCRelation">RelationCaloHit </parameter>
     <!--energy required to create e-h pair in silicon (in eV)-->
