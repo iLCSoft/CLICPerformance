@@ -246,7 +246,9 @@ void ClicEfficiencyCalculator::init() {
     m_simplifiedTree->Branch("m_theta", &m_theta, "m_theta/D");
     m_simplifiedTree->Branch("m_phi", &m_phi, "m_phi/D");
     m_simplifiedTree->Branch("m_vertexR", &m_vertexR, "m_vertexR/D");
+    m_simplifiedTree->Branch("m_closeTracks", &m_closeTracks, "m_closeTracks/D");
     m_simplifiedTree->Branch("m_reconstructed", &m_reconstructed, "m_reconstructed/O");
+    m_simplifiedTree->Branch("m_eventNumber", &m_eventNumber, "m_eventNumber/I");
   }
   
   // Set up histograms
@@ -521,6 +523,21 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     }
     std::cout<<"- particle produced at r = "<<mcVertexR<<std::endl;
 
+    // Check for particles close to each other (needs cleaning up FIXME)
+    for(int j=0; j<nParticles; j++){
+      if (itParticle!=j){
+        MCParticle* particle2 = dynamic_cast<MCParticle*>( particleCollection->getElementAt(j) );
+        bool part2IsCharge = fabs(particle2->getCharge()) > 0.5;
+        bool part2IsStable = particle2->getGeneratorStatus() == 1 ;
+        if ( part2IsCharge && part2IsStable ) {
+          TLorentzVector particleVector2;
+          particleVector2.SetPxPyPzE(particle2->getMomentum()[0],particle2->getMomentum()[1],particle2->getMomentum()[2],particle2->getEnergy());
+          double DR = particleVector.DeltaR(particleVector2);
+          if (DR<0.4) nCloseTrk++;
+        }
+      }
+    }
+    
     // Store data for trees
     if (m_fullOutput) {
       m_vec_vx_reconstructable.push_back(mcVertexX);
@@ -537,21 +554,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
         m_mcCat.pop_back();
         m_mcCat.push_back(1);
       }
-      
-      // Check for particles close to each other (needs cleaning up FIXME)
-      for(int j=0; j<nParticles; j++){
-        if (itParticle!=j){
-          MCParticle* particle2 = dynamic_cast<MCParticle*>( particleCollection->getElementAt(j) );
-          bool part2IsCharge = fabs(particle2->getCharge()) > 0.5;
-          bool part2IsStable = particle2->getGeneratorStatus() == 1 ;
-          if ( part2IsCharge && part2IsStable ) {
-            TLorentzVector particleVector2;
-            particleVector2.SetPxPyPzE(particle2->getMomentum()[0],particle2->getMomentum()[1],particle2->getMomentum()[2],particle2->getEnergy());
-            double DR = particleVector.DeltaR(particleVector2);
-            if (DR<0.4) nCloseTrk++;
-          }
-        }
-      }
+  
       // Information for unreconstructed particles
       if (!reconstructed) {
         m_mcNTracks.push_back(nChargePart);
@@ -584,6 +587,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
       m_phi = mcPhi;
       m_vertexR = mcVertexR;
       m_reconstructed = reconstructed;
+      m_closeTracks = nCloseTrk;
       m_simplifiedTree->Fill();
     }
   }
@@ -674,7 +678,7 @@ bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::str
     
     // Only make tracks with 6 or more hits
     std::vector<TrackerHit*> trackHits = particleHits[particle];
-    if(trackHits.size() >= 5) return true;
+    if(trackHits.size() >= 4) return true;
     
   } else if (cut=="NHitsVXD") {
     

@@ -139,7 +139,7 @@ protected:
 	std::vector<double > m_vec_p;
   
   TTree *m_simplifiedTree ;
-  double m_type, m_pt, m_theta, m_phi, m_vertexR;
+  double m_type, m_pt, m_theta, m_phi, m_vertexR, m_closeTracks;
   bool m_reconstructed;
 
 
