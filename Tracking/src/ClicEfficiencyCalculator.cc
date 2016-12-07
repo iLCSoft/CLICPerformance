@@ -503,7 +503,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     m_particles["all"]++; // all particles
     
     // Is this particle reconstructable?
-    if (!isReconstructable(particle,m_cuts)) continue;
+    if (!isReconstructable(particle,m_cuts,m_encoder)) continue;
     m_particles["reconstructable"]++; // reconstructable particles
     nReconstructable++;
     m_thetaPtMCParticle->Fill(mcTheta,mcPt);
@@ -671,14 +671,15 @@ int ClicEfficiencyCalculator::getLayer(TrackerHit* hit, UTIL::BitField64 &encode
 
 
 
-bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::string cut){
+bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::string cut, UTIL::BitField64 &m_encoder){
   
   
   if (cut=="NHits") {
     
     // Only make tracks with 6 or more hits
     std::vector<TrackerHit*> trackHits = particleHits[particle];
-    if(trackHits.size() >= 4) return true;
+    int uniqueHits = getUniqueHits(trackHits,m_encoder);
+    if(uniqueHits >= 4) return true;
     
   } else if (cut=="NHitsVXD") {
     
@@ -833,6 +834,31 @@ bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::str
   
 }
 
+int ClicEfficiencyCalculator::getUniqueHits(std::vector<TrackerHit*> trackHits, UTIL::BitField64 &encoder){
+  
+  std::vector<int> uniqueIds;
+  
+  // Loop over each hit
+  for(int iHit=0;iHit<trackHits.size();iHit++){
+    
+    // Get the hit and the cell ID
+    TrackerHit* hit = trackHits[iHit];
+    const int celId = hit->getCellID0();
+    
+    // Get the subdetector information
+    encoder.setValue(celId) ;
+    int subdet = encoder[lcio::ILDCellID0::subdet];
+    int side = encoder[lcio::ILDCellID0::side];
+    int layer = encoder[lcio::ILDCellID0::layer];
+    
+    // Make a unique id
+    int id = ((subdet & 0xFF) << 16) + ((side & 0xFF) << 8) + (layer & 0xFF);
+    if( std::find(uniqueIds.begin(), uniqueIds.end(), id) == uniqueIds.end()) uniqueIds.push_back(id);
+  }
+  
+  return uniqueIds.size();
+  
+}
 
 
 void ClicEfficiencyCalculator::clearTreeVar(){

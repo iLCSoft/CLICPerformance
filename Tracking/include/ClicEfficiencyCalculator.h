@@ -62,8 +62,9 @@ public:
 	int getSubdetector(LCCollection*, UTIL::BitField64&);
 	int getSubdetector(TrackerHit*, UTIL::BitField64&);
 	int getLayer(TrackerHit*, UTIL::BitField64&);
+  int getUniqueHits(std::vector<TrackerHit*>, UTIL::BitField64&);
 
-	bool isReconstructable(MCParticle*& particle, std::string cut);
+	bool isReconstructable(MCParticle*& particle, std::string cut, UTIL::BitField64&);
 
 	void clearTreeVar();
 
