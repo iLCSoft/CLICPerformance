@@ -1,0 +1,316 @@
+<lccdd>
+    <define>
+      
+        <constant name="InnerTracker_Barrel_radius_0" value="127*mm"/>
+        <constant name="InnerTracker_Barrel_radius_1" value="340*mm"/>
+        <constant name="InnerTracker_Barrel_radius_2" value="554*mm"/>
+                
+        <constant name="InnerTracker_Barrel_half_length_0" value="482*mm"/>
+        <constant name="InnerTracker_Barrel_half_length_1" value="482*mm"/>
+        <constant name="InnerTracker_Barrel_half_length_2" value="692*mm"/>
+        
+        <constant name="InnerTracker_r_offset" value="83.197*mm"/>
+        <constant name="InnerTracker_z_offset" value="7.269*mm"/>
+    
+        
+        <constant name="InnerTracker_Endcap_z_0" value="524*mm"/>
+        <constant name="InnerTracker_Endcap_z_1" value="808*mm"/>
+        <constant name="InnerTracker_Endcap_z_2" value="1093*mm"/>
+        <constant name="InnerTracker_Endcap_z_3" value="1377*mm"/>
+        <constant name="InnerTracker_Endcap_z_4" value="1661*mm"/>
+        <constant name="InnerTracker_Endcap_z_5" value="1946*mm"/>
+        <constant name="InnerTracker_Endcap_z_6" value="2190*mm"/>
+
+
+        <constant name="InnerTracker_Endcap_radius_0" value="72*mm"/>
+        <constant name="InnerTracker_Endcap_radius_1" value="99*mm"/>
+        <constant name="InnerTracker_Endcap_radius_2" value="132*mm"/>
+        <constant name="InnerTracker_Endcap_radius_3" value="164*mm"/>
+        <constant name="InnerTracker_Endcap_radius_4" value="197*mm"/>
+        <constant name="InnerTracker_Endcap_radius_5" value="231*mm"/>
+        <constant name="InnerTracker_Endcap_radius_6" value="250*mm"/>
+        
+ 
+	<constant name="InnerTracker_Endcap_radius_01" value="404*mm"/>
+        <constant name="InnerTracker_Endcap_radius_11" value="552*mm"/>
+        <constant name="InnerTracker_Endcap_radius_21" value="554*mm"/>
+        <constant name="InnerTracker_Endcap_radius_31" value="542*mm"/>
+        <constant name="InnerTracker_Endcap_radius_41" value="545*mm"/>
+        <constant name="InnerTracker_Endcap_radius_51" value="547*mm"/>
+        <constant name="InnerTracker_Endcap_radius_61" value="536*mm"/>
+	
+	
+	<constant name="OuterTracker_Barrel_radius_0" value="819*mm"/>
+        <constant name="OuterTracker_Barrel_radius_1" value="1153*mm"/>
+        <constant name="OuterTracker_Barrel_radius_2" value="1486*mm"/>
+        
+        <constant name="OuterTracker_Barrel_half_length" value="1264*mm"/>
+        
+        <constant name="OuterTracker_Endcap_outer_radius" value="1430.2*mm"/>
+        <constant name="OuterTracker_Endcap_inner_radius" value="617.5*mm"/>
+        
+        <constant name="OuterTracker_Endcap_z_0" value="1310*mm"/>
+        <constant name="OuterTracker_Endcap_z_1" value="1617*mm"/>
+        <constant name="OuterTracker_Endcap_z_2" value="1883*mm"/>
+        <constant name="OuterTracker_Endcap_z_3" value="2190*mm"/>
+
+        <constant name="OuterTracker_Endcap_radius_0" value="617.5*mm"/>
+        <constant name="OuterTracker_Endcap_radius_1" value="888.4*mm"/>        
+        <constant name="OuterTracker_Endcap_radius_2" value="1189.4*mm"/>      
+	
+        
+    </define>
+    
+    
+    <comment>Tracking detectors</comment>
+    <detectors>
+        <detector name="InnerTrackers" type="DD4hep_SubdetectorAssembly" vis="ITVis">
+            
+            <shape type="BooleanShape" operation="Subtraction" material="Air" >
+                <shape type="BooleanShape" operation="Subtraction">
+                    <shape type="BooleanShape" operation="Subtraction">
+                        <shape type="BooleanShape" operation="Subtraction">
+                            <shape type="BooleanShape" operation="Subtraction">
+                                <shape type="BooleanShape" operation="Subtraction"  >
+                                    <shape type="Tube" rmin="CentralBeamPipe_rmax" rmax="InnerTracker_outer_radius" dz="InnerTracker_half_length+env_safety"/>
+                                    <shape type="Cone" rmin1="0" rmax1="CentralBeamPipe_rmax" rmin2="0" rmax2="ConeBeamPipe_rmax" z="(ConeBeamPipe_zmax-CentralBeamPipe_zmax)/2.0"/>
+                                    <position x="0" y="0" z="(ConeBeamPipe_zmax-CentralBeamPipe_zmax)/2.0 + CentralBeamPipe_zmax" />
+                                </shape>
+                                <shape type="Cone" rmin2="0" rmax2="CentralBeamPipe_rmax" rmin1="0" rmax1="ConeBeamPipe_rmax" z="(ConeBeamPipe_zmax-CentralBeamPipe_zmax)/2.0"/>
+                                <position x="0" y="0" z="-(ConeBeamPipe_zmax-CentralBeamPipe_zmax)/2.0 - CentralBeamPipe_zmax" />
+                            </shape>
+                            <shape type="Tube" rmin="0" rmax="ConeBeamPipe_rmax" dz="(InnerTracker_half_length-ConeBeamPipe_zmax)/2.0+env_safety"/>
+                            <position x="0" y="0" z="(InnerTracker_half_length-ConeBeamPipe_zmax)/2.0+ConeBeamPipe_zmax" />
+                        </shape>
+                        <shape type="Tube" rmin="0" rmax="ConeBeamPipe_rmax" dz="(InnerTracker_half_length-ConeBeamPipe_zmax)/2.0+env_safety"/>
+                        <position x="0" y="0" z="-(InnerTracker_half_length-ConeBeamPipe_zmax)/2.0-ConeBeamPipe_zmax" />
+                    </shape>
+                    <shape type="Tube" rmin="0" rmax="Vertex_outer_radius" dz="Vertex_half_length"/>
+                </shape>
+                <shape type="Tube" rmin="Vertex_inner_radius+0.3*cm" rmax="Vertex_outer_radius" dz="Vertex_half_length+0.5*cm"/>
+            </shape>
+            
+            
+            <comment>Outer Tracker Assembly</comment>
+            <composite name="InnerTrackerBarrel"/>
+            <composite name="InnerTrackerEndcap"/>
+        </detector>
+    </detectors>
+    
+    
+    <display>
+        <vis name="InnerTrackerLayerVis"   alpha="1.0" r="1.0" g="1.0" b="0.6" showDaughters="true" visible="true"/>
+        <vis name="InnerTrackerModuleVis"  alpha="0.1" r="0.0" g="1.0" b="0.6" showDaughters="false" visible="true"/>
+        <vis name="InnerTrackerForwardVis" alpha="1.0" r="0.8" g="0.1" b="0.1" showDaughters="false" visible="true"/>
+    </display>
+    
+    <!--  Definition of the readout segmentation/definition  -->
+    <readouts>
+        <readout name="InnerTrackerBarrelCollection">
+            <id>system:5,side:-2,layer:9,module:8,sensor:8,barrel:3</id>
+        </readout>
+        <readout name="InnerTrackerEndcapCollection">
+            <id>system:5,side:-2,layer:9,module:8,sensor:8,barrel:3</id>
+        </readout>
+    </readouts>
+    
+    <detectors>
+        <detector id="DetID_IT_Barrel" name="InnerTrackerBarrel" type="TrackerBarrel_o1_v01" readout="InnerTrackerBarrelCollection" region="SiTrackerBarrelRegion" limits="SiTrackerBarrelRegionLimitSet">
+            <envelope vis="OTVis">
+                <shape type="Assembly"/>
+            </envelope>
+            <comment>Silicon Outer Tracker Barrel</comment>
+            
+            <module name="SiTrackerModule_Layer0" vis="InnerTrackerModuleVis">
+                <module_envelope width="97.79*mm" length="97.79*mm" thickness="0.3*cm"/>
+                <module_component width="97.79*mm" length="97.79*mm" thickness="0.02*cm" material="PEEK" sensitive="false">
+                    <position z="-0.14*cm" />
+                </module_component>
+                <module_component width="97.79*mm" length="97.79*mm" thickness="0.016*cm" material="CarbonFiber_50D" sensitive="false">
+                    <position z="-0.122*cm" />
+                </module_component>
+                <module_component width="97.79*mm" length="97.79*mm" thickness="0.18*cm" material="Rohacell31_50D" sensitive="false">
+                    <position z="-0.024*cm" />
+                </module_component>
+                <module_component width="97.79*mm" length="97.79*mm" thickness="0.0175*cm" material="Epoxy" sensitive="false">
+                    <position z="0.07475*cm" />
+                </module_component>
+                <module_component width="97.79*mm" length="97.79*mm" thickness="0.016*cm" material="CarbonFiber_50D" sensitive="false">
+                    <position z="0.0915*cm" />
+                </module_component>
+                <module_component width="92.031*mm" length="92.031*mm" thickness="0.03*cm" material="Silicon" sensitive="true">
+                    <position z="0.1145*cm"/>
+                </module_component>
+                <module_component width="97.79*mm" length="97.79*mm" thickness="0.00048*cm" material="Silicon" sensitive="false">
+                    <position z="0.12974*cm"/>
+                </module_component>
+                <module_component width="97.79*mm" length="97.79*mm" thickness="0.0038*cm" material="Kapton" sensitive="false">
+                    <position z="0.1375*cm"/>
+                </module_component>
+                <module_component width="97.79*mm" length="97.79*mm" thickness="0.00038*cm" material="Copper" sensitive="false">
+                    <position z="0.146*cm"/>
+                </module_component>
+            </module>
+            <module name="SiTrackerModule_Layer1" vis="InnerTrackerModuleVis">
+                <module_envelope width="97.79*mm" length="97.79*mm" thickness="0.3*cm"/>
+                <module_component width="97.79*mm" length="97.79*mm" thickness="0.02*cm" material="PEEK" sensitive="false">
+                    <position z="-0.14*cm" />
+                </module_component>
+                <module_component width="97.79*mm" length="97.79*mm" thickness="0.016*cm" material="CarbonFiber_50D" sensitive="false">
+                    <position z="-0.122*cm" />
+                </module_component>
+                <module_component width="97.79*mm" length="97.79*mm" thickness="0.18*cm" material="Rohacell31_50D" sensitive="false">
+                    <position z="-0.024*cm" />
+                </module_component>
+                <module_component width="97.79*mm" length="97.79*mm" thickness="0.0175*cm" material="Epoxy" sensitive="false">
+                    <position z="0.07475*cm" />
+                </module_component>
+                <module_component width="97.79*mm" length="97.79*mm" thickness="0.016*cm" material="CarbonFiber_50D" sensitive="false">
+                    <position z="0.0915*cm" />
+                </module_component>
+                <module_component width="92.031*mm" length="92.031*mm" thickness="0.03*cm" material="Silicon" sensitive="true">
+                    <position z="0.1145*cm"/>
+                </module_component>
+                <module_component width="97.79*mm" length="97.79*mm" thickness="0.00048*cm" material="Silicon" sensitive="false">
+                    <position z="0.12974*cm"/>
+                </module_component>
+                <module_component width="97.79*mm" length="97.79*mm" thickness="0.0051*cm" material="Kapton" sensitive="false">
+                    <position z="0.1375*cm"/>
+                </module_component>
+                <module_component width="97.79*mm" length="97.79*mm" thickness="0.00052*cm" material="Copper" sensitive="false">
+                    <position z="0.146*cm"/>
+                </module_component>
+            </module>
+            <layer module="SiTrackerModule_Layer0" id="0" vis="InnerTrackerLayerVis">
+                <barrel_envelope inner_r="InnerTracker_Barrel_radius_0" outer_r="InnerTracker_Barrel_radius_0" z_length="InnerTracker_Barrel_half_length_0*2.0"/>
+                <rphi_layout phi_tilt="0.17506*rad" nphi="20" phi0="0." rc="InnerTracker_Barrel_radius_0" dr="0.0"/>
+                <z_layout dr="4.0*mm" z0="InnerTracker_Barrel_half_length_0-97.79*mm/2.0" nz="13"/>
+            </layer>
+            <layer module="SiTrackerModule_Layer1" id="1" vis="InnerTrackerLayerVis">
+                <barrel_envelope inner_r="InnerTracker_Barrel_radius_1" outer_r="InnerTracker_Barrel_radius_1" z_length="InnerTracker_Barrel_half_length_1*2.0"/>
+                <rphi_layout phi_tilt="0.12217*rad" nphi="38" phi0="0.087*rad" rc="InnerTracker_Barrel_radius_1" dr="0.0"/>
+                <z_layout dr="4.0*mm" z0="InnerTracker_Barrel_half_length_1-97.79*mm/2.0" nz="17"/>
+            </layer>
+             <layer module="SiTrackerModule_Layer1" id="2" vis="InnerTrackerLayerVis">
+                <barrel_envelope inner_r="InnerTracker_Barrel_radius_2" outer_r="InnerTracker_Barrel_radius_2" z_length="InnerTracker_Barrel_half_length_2*2.0"/>
+                <rphi_layout phi_tilt="0.12217*rad" nphi="38" phi0="0.087*rad" rc="InnerTracker_Barrel_radius_2" dr="0.0"/>
+                <z_layout dr="4.0*mm" z0="InnerTracker_Barrel_half_length_2-97.79*mm/2.0" nz="17"/>
+            </layer>
+	    
+             <layer module="SiTrackerModule_Layer1" id="3" vis="InnerTrackerLayerVis">
+                <barrel_envelope inner_r="OuterTracker_Barrel_radius_0" outer_r="OuterTracker_Barrel_radius_0" z_length="OuterTracker_Barrel_half_length*2.0"/>
+                <rphi_layout phi_tilt="0.12217*rad" nphi="38" phi0="0.087*rad" rc="OuterTracker_Barrel_radius_0" dr="0.0"/>
+                <z_layout dr="4.0*mm" z0="OuterTracker_Barrel_half_length-97.79*mm/2.0" nz="17"/>
+            </layer>
+	    <layer module="SiTrackerModule_Layer1" id="4" vis="InnerTrackerLayerVis">
+                <barrel_envelope inner_r="OuterTracker_Barrel_radius_1" outer_r="OuterTracker_Barrel_radius_1" z_length="OuterTracker_Barrel_half_length*2.0"/>
+                <rphi_layout phi_tilt="0.12217*rad" nphi="38" phi0="0.087*rad" rc="OuterTracker_Barrel_radius_1" dr="0.0"/>
+                <z_layout dr="4.0*mm" z0="OuterTracker_Barrel_half_length-97.79*mm/2.0" nz="17"/>
+            </layer>
+	    <layer module="SiTrackerModule_Layer1" id="5" vis="InnerTrackerLayerVis">
+                <barrel_envelope inner_r="OuterTracker_Barrel_radius_2" outer_r="OuterTracker_Barrel_radius_2" z_length="OuterTracker_Barrel_half_length*2.0"/>
+                <rphi_layout phi_tilt="0.12217*rad" nphi="38" phi0="0.087*rad" rc="OuterTracker_Barrel_radius_2" dr="0.0"/>
+                <z_layout dr="4.0*mm" z0="OuterTracker_Barrel_half_length-97.79*mm/2.0" nz="17"/>
+            </layer>
+ 
+ 
+	    
+	    
+            </detector>
+    </detectors>
+    
+    <detectors>
+        <detector id="DetID_IT_Endcap" name="InnerTrackerEndcap" type="TrackerEndcap_o1_v02" readout="InnerTrackerEndcapCollection" reflect="true">
+            <envelope vis="OTVis">
+                <shape type="Assembly"/>
+            </envelope>
+            <comment>Silicon Outer Tracker Endcaps</comment>
+            
+            <module name="Module0" vis="InnerTrackerModuleVis">
+		<trd x1="36.112*mm" x2="46.635*mm" z="(InnerTracker_Endcap_radius_01-InnerTracker_Endcap_radius_0)/2" />
+                <module_component thickness="0.00052*cm"   material="Copper" />
+            </module>
+            <module name="Module1" vis="InnerTrackerModuleVis">
+		<trd x1="36.112*mm" x2="46.635*mm" z="(InnerTracker_Endcap_radius_11-InnerTracker_Endcap_radius_1)/2" />
+                <module_component thickness="0.00052*cm"   material="Copper" />
+            </module>
+	    <module name="Module2" vis="InnerTrackerModuleVis">
+		<trd x1="36.112*mm" x2="46.635*mm" z="(InnerTracker_Endcap_radius_21-InnerTracker_Endcap_radius_2)/2" />
+                <module_component thickness="0.00052*cm"   material="Copper" />
+            </module>
+	    <module name="Module3" vis="InnerTrackerModuleVis">
+		<trd x1="36.112*mm" x2="46.635*mm" z="(InnerTracker_Endcap_radius_31-InnerTracker_Endcap_radius_3)/2" />
+                <module_component thickness="0.00052*cm"   material="Copper" />
+            </module>
+	    <module name="Module4" vis="InnerTrackerModuleVis">
+		<trd x1="36.112*mm" x2="46.635*mm" z="(InnerTracker_Endcap_radius_41-InnerTracker_Endcap_radius_4)/2" />
+                <module_component thickness="0.00052*cm"   material="Copper" />
+            </module>
+	    <module name="Module5" vis="InnerTrackerModuleVis">
+		<trd x1="36.112*mm" x2="46.635*mm" z="(InnerTracker_Endcap_radius_51-InnerTracker_Endcap_radius_5)/2" />
+                <module_component thickness="0.00052*cm"   material="Copper" />
+            </module>
+	    <module name="Module6" vis="InnerTrackerModuleVis">
+		<trd x1="36.112*mm" x2="46.635*mm" z="(InnerTracker_Endcap_radius_61-InnerTracker_Endcap_radius_5)/2" />
+                <module_component thickness="0.00052*cm"   material="Copper" />
+            </module>	    
+	    <module name="Module7" vis="InnerTrackerModuleVis">
+		<trd x1="36.112*mm" x2="46.635*mm" z="(OuterTracker_Endcap_outer_radius-OuterTracker_Endcap_inner_radius)/2" />
+                <module_component thickness="0.00052*cm"   material="Copper" />
+            </module>
+            
+            <layer id="0">
+                <ring r="(InnerTracker_Endcap_radius_01+InnerTracker_Endcap_radius_0)/2" zstart="InnerTracker_Endcap_z_0" nmodules="36" dz="1.75*mm" module="Module0" />
+            </layer>
+            <layer id="1">
+                <ring r="(InnerTracker_Endcap_radius_11+InnerTracker_Endcap_radius_1)/2" zstart="InnerTracker_Endcap_z_1" nmodules="36" dz="1.75*mm" module="Module1" />
+            </layer>
+	    <layer id="2">
+                <ring r="(InnerTracker_Endcap_radius_21+InnerTracker_Endcap_radius_2)/2" zstart="InnerTracker_Endcap_z_2" nmodules="36" dz="1.75*mm" module="Module2" />
+            </layer>
+            <layer id="3">
+                <ring r="(InnerTracker_Endcap_radius_31+InnerTracker_Endcap_radius_3)/2" zstart="InnerTracker_Endcap_z_3" nmodules="36" dz="1.75*mm" module="Module3" />
+            </layer>
+	    <layer id="4">
+                <ring r="(InnerTracker_Endcap_radius_41+InnerTracker_Endcap_radius_4)/2" zstart="InnerTracker_Endcap_z_4" nmodules="36" dz="1.75*mm" module="Module4" />
+            </layer>
+	    <layer id="5">
+                <ring r="(InnerTracker_Endcap_radius_51+InnerTracker_Endcap_radius_5)/2" zstart="InnerTracker_Endcap_z_5" nmodules="36" dz="1.75*mm" module="Module5" />
+            </layer>
+	    <layer id="6">
+                <ring r="(InnerTracker_Endcap_radius_61+InnerTracker_Endcap_radius_6)/2" zstart="InnerTracker_Endcap_z_6" nmodules="36" dz="1.75*mm" module="Module6" />
+            </layer>	    
+	    <layer id="7">
+                <ring r="(OuterTracker_Endcap_outer_radius+OuterTracker_Endcap_inner_radius)/2" zstart="OuterTracker_Endcap_z_0" nmodules="36" dz="1.75*mm" module="Module7" />
+            </layer>
+	    <layer id="8">
+                <ring r="(OuterTracker_Endcap_outer_radius+OuterTracker_Endcap_inner_radius)/2" zstart="OuterTracker_Endcap_z_1" nmodules="36" dz="1.75*mm" module="Module7" />
+            </layer>
+	    <layer id="9">
+                <ring r="(OuterTracker_Endcap_outer_radius+OuterTracker_Endcap_inner_radius)/2" zstart="OuterTracker_Endcap_z_2" nmodules="36" dz="1.75*mm" module="Module7" />
+            </layer>
+	    <layer id="10">
+                <ring r="(OuterTracker_Endcap_outer_radius+OuterTracker_Endcap_inner_radius)/2" zstart="OuterTracker_Endcap_z_3" nmodules="36" dz="1.75*mm" module="Module7" />
+            </layer>
+	    
+        </detector>
+    </detectors>
+    
+    
+    <plugins>
+        <plugin name="DD4hep_SiTrackerBarrelSurfacePlugin">
+            <argument value="InnerTrackerBarrel"/>
+            <argument value="dimension=2"/>
+        </plugin>
+        <plugin name="DD4hep_SiTrackerEndcapSurfacePlugin">
+            <argument value="InnerTrackerEndcap"/>
+            <argument value="dimension=2"/>
+        </plugin>
+    </plugins>
+    
+    
+    
+</lccdd>
+
+
+
