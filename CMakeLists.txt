@@ -105,6 +105,15 @@ AUX_SOURCE_DIRECTORY(./Tracking/src library_sources )
 ADD_SHARED_LIBRARY( ${PROJECT_NAME} ${library_sources} )
 INSTALL_SHARED_LIBRARY( ${PROJECT_NAME} DESTINATION lib )
 
+option(BUILD_TESTING "Enable and build tests" ON)
+if(BUILD_TESTING)
+  include(CTest)
+  enable_testing()
+  add_subdirectory(Tests)
+endif(BUILD_TESTING)
+
+
+
 # display some variables and write them to cache
 DISPLAY_STD_VARIABLES()
 
