@@ -122,10 +122,10 @@
     <parameter name="SubDetectorName" type="string"> InnerTrackers </parameter>
     <!--whether hits are 1D strip hits-->
     <parameter name="IsStrip" type="bool"> false </parameter>
-    <!--resolution in direction of v-->
-    <parameter name="ResolutionV" type="float"> 0.005 0.007 0.007 0.007 0.007 0.007 0.007</parameter>
     <!--resolution in direction of u-->
-    <parameter name="ResolutionU" type="float"> 0.005 0.3 0.3 0.3 0.3 0.3 0.3</parameter>
+    <parameter name="ResolutionU" type="float"> 0.005 0.007 0.007 0.007 0.007 0.007 0.007</parameter>
+    <!--resolution in direction of v-->
+    <parameter name="ResolutionV" type="float"> 0.005 0.3 0.3 0.3 0.3 0.3 0.3</parameter>
     <!--Name of the Input SimTrackerHit collection-->
     <parameter name="SimTrackHitCollectionName" type="string" lcioInType="SimTrackerHit"> InnerTrackerEndcapCollection </parameter>
     <!--Name of TrackerHit SimTrackHit relation collection-->
@@ -160,10 +160,10 @@
     <parameter name="SubDetectorName" type="string"> OuterTrackers </parameter>
     <!--whether hits are 1D strip hits-->
     <parameter name="IsStrip" type="bool"> false </parameter>
-    <!--resolution in direction of v-->
-    <parameter name="ResolutionV" type="float"> 0.007 0.007 0.007 0.007 0.007 </parameter>
     <!--resolution in direction of u-->
-    <parameter name="ResolutionU" type="float"> 3.0 3.0 3.0 3.0 3.0 </parameter>
+    <parameter name="ResolutionU" type="float"> 0.007 0.007 0.007 0.007 0.007 </parameter>
+    <!--resolution in direction of v-->
+    <parameter name="ResolutionV" type="float"> 3.0 3.0 3.0 3.0 3.0 </parameter>
     <!--Name of the Input SimTrackerHit collection-->
     <parameter name="SimTrackHitCollectionName" type="string" lcioInType="SimTrackerHit">OuterTrackerEndcapCollection </parameter>
     <!--Name of TrackerHit SimTrackHit relation collection-->
