@@ -187,6 +187,7 @@
 
   <!-- == TruthTrackFinder parameters == -->
   <processor name="MyTruthTrackFinder" type="TruthTrackFinder">
+    <parameter name="FitForward" type="bool">true</parameter>
     <!--Define input tracker hits and relations. NB. Order must be respected -->
     <parameter name="TrackerHitCollectionNames" type="StringVec" lcioInType="TrackerHitPlane">VXDTrackerHits ITrackerHits OTrackerHits VXDEndcapTrackerHits ITrackerEndcapHits OTrackerEndcapHits</parameter>
     <parameter name="SimTrackerHitRelCollectionNames" type="StringVec" lcioInType="LCRelation">VXDTrackerHitRelations InnerTrackerBarrelHitsRelations OuterTrackerBarrelHitsRelations VXDEndcapTrackerHitRelations InnerTrackerEndcapHitsRelations OuterTrackerEndcapHitsRelations </parameter>
