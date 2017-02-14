@@ -548,10 +548,11 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
       m_vec_theta_reconstructable.push_back(mcTheta);
       if(reconstructed){
         m_vec_is_reconstructed.push_back(true);
-        m_mcCat.pop_back();
+        // m_mcCat can be emtpy at this point, and it is not described anywhere what this number is
+        // m_mcCat.pop_back();
         m_mcCat.push_back(2);
       }else{
-        m_mcCat.pop_back();
+        // m_mcCat.pop_back();
         m_mcCat.push_back(1);
       }
   
