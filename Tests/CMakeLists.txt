@@ -15,4 +15,4 @@ ADD_TEST( NAME t_${test_name}
   ${CMAKE_SOURCE_DIR}/lib/libClicPerformance.so  Marlin --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v08/CLIC_o3_v08.xml --global.LCIOInputFiles=testCLIC_o3_v08.slcio clicReconstruction.xml
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/
   )
-SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\[ ERROR;Error" )
+SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error" )
