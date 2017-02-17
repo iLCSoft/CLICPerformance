@@ -28,7 +28,10 @@ public:
     virtual Processor*  newProcessor() { return new ShowerStudy ; }
     
     ShowerStudy() ;
-    
+
+    ShowerStudy(const ShowerStudy&) = delete;
+    ShowerStudy& operator=(const ShowerStudy&) = delete;
+
     // Initialisation - run at the beginning to start histograms, etc.
     virtual void init() ;
     
@@ -46,73 +49,74 @@ public:
         
 protected:
         
-    // Collection names for (in/out)put
-    std::string m_inputCalorimeterHitCollection ;
-    std::string m_inputMCParticleCollection ;
-    std::string m_inputLeakageCalorimeterHitCollection;
-    std::string m_rootFileName;
     
-    // Run and event counters
-    int m_eventNumber ;
-    int m_runNumber ;
+  // Call to get collections
+  void getCollection(LCCollection*&, std::string, LCEvent*);
+
+  // Collection names for (in/out)put
+  std::string m_inputCalorimeterHitCollection = "";
+  std::string m_inputMCParticleCollection = "";
+  std::string m_inputLeakageCalorimeterHitCollection = "";
+  std::string m_rootFileName = "";
     
-    // Call to get collections
-    void getCollection(LCCollection*&, std::string, LCEvent*);
+  // Run and event counters
+  int m_eventNumber = 0;
+  int m_runNumber = 0;
     
-    // Plots 
-    TH2F * m_showerHistLayers;
-    TH2F * m_showerHist;
-    TH2F * m_showerHistX0;
-    TProfile * m_leakageProfile;
+  // Plots
+  TH2F * m_showerHistLayers = NULL;
+  TH2F * m_showerHist = NULL;
+  TH2F * m_showerHistX0 = NULL;
+  TProfile * m_leakageProfile = NULL;
     
 
-    TH2F * m_raw_showerHistLayers;
-    TH2F * m_raw_showerHist;
-    TH2F * m_raw_showerHistX0;
+  TH2F * m_raw_showerHistLayers = NULL;
+  TH2F * m_raw_showerHist = NULL;
+  TH2F * m_raw_showerHistX0 = NULL;
 
-    TH2F * m_totalEnergyHist;
-    TTree * m_outputTree;
-    TFile * m_rootFile;
-    //Tree branch variables
+  TH2F * m_totalEnergyHist = NULL;
+  TTree * m_outputTree = NULL;
+  TFile * m_rootFile = NULL;
+  //Tree branch variables
     
-    float m_trueEnergy;
-    float m_totalEnergy;
-    float m_totalLeakEnergy;
+  float m_trueEnergy = 0.0;
+  float m_totalEnergy = 0.0;
+  float m_totalLeakEnergy = 0.0;
     
-    std::vector<float> * m_totalEnergyInLayerGroup;
+  std::vector<float> * m_totalEnergyInLayerGroup = NULL;
 
-    unsigned int m_nhits;
-    unsigned int m_leak_nhits;
+  unsigned int m_nhits = 0;
+  unsigned int m_leak_nhits = 0;
 
-    int m_layerThreshold;
+  int m_layerThreshold = 0;
 
-    std::vector<float> * m_hitEnergies;
-    std::vector<float> * m_raw_hitEnergies;
+  std::vector<float> * m_hitEnergies = NULL;
+  std::vector<float> * m_raw_hitEnergies = NULL;
 
-    std::vector<float> * m_hit_x;
-    std::vector<float> * m_hit_y;
-    std::vector<float> * m_hit_z;
+  std::vector<float> * m_hit_x = NULL;
+  std::vector<float> * m_hit_y = NULL;
+  std::vector<float> * m_hit_z = NULL;
 
-    std::vector<int> * m_hitLayers;
-    std::vector<float> * m_hitLayerThicknesses;
-    std::vector<float> * m_hitLayerRadiationLengths;
-    std::vector<float> * m_hitLayerIntRadiationLengths;
-    std::vector<float> * m_hitLayerDistances;
-    std::vector<float> * m_hitLayerSensitiveThicknesses;
+  std::vector<int> * m_hitLayers = NULL;
+  std::vector<float> * m_hitLayerThicknesses = NULL;
+  std::vector<float> * m_hitLayerRadiationLengths = NULL;
+  std::vector<float> * m_hitLayerIntRadiationLengths = NULL;
+  std::vector<float> * m_hitLayerDistances = NULL;
+  std::vector<float> * m_hitLayerSensitiveThicknesses = NULL;
 
 
-    std::vector<float> * m_leak_hitEnergies;
-    std::vector<float> * m_leak_hit_x;
-    std::vector<float> * m_leak_hit_y;
-    std::vector<float> * m_leak_hit_z;
+  std::vector<float> * m_leak_hitEnergies = NULL;
+  std::vector<float> * m_leak_hit_x = NULL;
+  std::vector<float> * m_leak_hit_y = NULL;
+  std::vector<float> * m_leak_hit_z = NULL;
 
-    std::vector<int> * m_leak_hitLayers;
-    std::vector<float> * m_leak_hitLayerThicknesses;
-    std::vector<float> * m_leak_hitLayerRadiationLengths;
-    std::vector<float> * m_leak_hitLayerIntRadiationLengths;
-    std::vector<float> * m_leak_hitLayerDistances;
-    std::vector<float> * m_leak_raw_hitEnergies;
-    std::vector<float> * m_leak_hitLayerSensitiveThicknesses;
+  std::vector<int> * m_leak_hitLayers = NULL;
+  std::vector<float> * m_leak_hitLayerThicknesses = NULL;
+  std::vector<float> * m_leak_hitLayerRadiationLengths = NULL;
+  std::vector<float> * m_leak_hitLayerIntRadiationLengths = NULL;
+  std::vector<float> * m_leak_hitLayerDistances = NULL;
+  std::vector<float> * m_leak_raw_hitEnergies = NULL;
+  std::vector<float> * m_leak_hitLayerSensitiveThicknesses = NULL;
 
 
 } ;

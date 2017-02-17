@@ -128,7 +128,7 @@ void TrackChecker::init() {
 }
 
 
-void TrackChecker::processRunHeader( LCRunHeader* run) {
+void TrackChecker::processRunHeader( LCRunHeader* ) {
 	++m_runNumber ;
 }
 
@@ -376,7 +376,7 @@ void TrackChecker::processEvent( LCEvent* evt ) {
 
 
 
-void TrackChecker::check( LCEvent * evt ) {
+void TrackChecker::check( LCEvent * ) {
 	// nothing to check here - could be used to fill checkplots in reconstruction processor
 }
 

@@ -168,14 +168,14 @@ void HitResiduals::init() {
 }
 
 
-void HitResiduals::processRunHeader( LCRunHeader* run) { 
+void HitResiduals::processRunHeader( LCRunHeader* ) {
 
     _nRun++ ;
 } 
 
 
 
-void HitResiduals::processEvent( LCEvent * evt ) { 
+void HitResiduals::processEvent( LCEvent * evt ) {
 
 
   // this gets called for every event 
@@ -217,7 +217,7 @@ void HitResiduals::processEvent( LCEvent * evt ) {
       	marlin_trk->addHit(*it);	
       }//end loop on hits
       //int init_status = FitInit2(track, marlin_trk);          
-      int init_status = FitInitFromLCIOTrackState(track, marlin_trk);          
+      /* int init_status = */ FitInitFromLCIOTrackState(track, marlin_trk);
       //int fit_status = marlin_trk->fit(); 
       //streamlog_out(DEBUG2) << "fit status (good = 0) = " << fit_status << std::endl;
 
@@ -323,7 +323,7 @@ void HitResiduals::processEvent( LCEvent * evt ) {
 
 
 
-void HitResiduals::check( LCEvent * evt ) { 
+void HitResiduals::check( LCEvent * ) {
     // nothing to check here - could be used to fill checkplots in reconstruction processor
 }
 

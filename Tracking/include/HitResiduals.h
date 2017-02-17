@@ -35,6 +35,9 @@ class HitResiduals : public Processor {
   
   
   HitResiduals() ;
+
+  HitResiduals(const HitResiduals&) = delete;
+  HitResiduals& operator=(const HitResiduals&) = delete;
   
   /** Called at the begin of the job before anything is read.
    * Use to initialize the processor, e.g. book histograms.
@@ -67,29 +70,29 @@ class HitResiduals : public Processor {
 
   /** Input collection name.
    */
-  std::string _inputTrkColName;
+  std::string _inputTrkColName = "";
 
-  std::string _outFileName;
-  std::string _treeName;
+  std::string _outFileName = "";
+  std::string _treeName = "";
 
-  TFile* _out;
-  TTree* _tree;
+  TFile* _out = NULL;
+  TTree* _tree = NULL;
 
-  int _nRun;
-  int _nEvt;
+  int _nRun = 0;
+  int _nEvt = 0;
 
-  std::vector<double > _resU;
-  std::vector<double > _resV;
-  std::vector<int > _subdet;
-  std::vector<int > _layer;
+  std::vector<double > _resU = {};
+  std::vector<double > _resV = {};
+  std::vector<int > _subdet = {};
+  std::vector<int > _layer = {};
 
-  MarlinTrk::IMarlinTrkSystem* _trksystem;
-  SurfaceMap _surfMap;
-  bool _MSOn;
-  bool _ElossOn;
-  bool _SmoothOn;
-  double _Max_Chi2_Incr;
-  double _bField;
+  MarlinTrk::IMarlinTrkSystem* _trksystem = NULL;
+  SurfaceMap _surfMap = {};
+  bool _MSOn = true;
+  bool _ElossOn = true;
+  bool _SmoothOn = false;
+  double _Max_Chi2_Incr = 0.0;
+  double _bField = 0.0;
 
 } ;
 
