@@ -260,7 +260,7 @@ void ClicEfficiencyCalculator::init() {
 }
 
 
-void ClicEfficiencyCalculator::processRunHeader( LCRunHeader* run) {
+void ClicEfficiencyCalculator::processRunHeader( LCRunHeader* ) {
   ++m_runNumber ;
 }
 
@@ -610,7 +610,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
   
 }
 
-void ClicEfficiencyCalculator::check( LCEvent * evt ) {
+void ClicEfficiencyCalculator::check( LCEvent *  ) {
   // nothing to check here - could be used to fill checkplots in reconstruction processor
 }
 
@@ -840,7 +840,7 @@ int ClicEfficiencyCalculator::getUniqueHits(std::vector<TrackerHit*> trackHits, 
   std::vector<int> uniqueIds;
   
   // Loop over each hit
-  for(int iHit=0;iHit<trackHits.size();iHit++){
+  for(size_t iHit=0;iHit<trackHits.size();iHit++){
     
     // Get the hit and the cell ID
     TrackerHit* hit = trackHits[iHit];

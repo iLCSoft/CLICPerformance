@@ -188,7 +188,7 @@ void ShowerStudy::init() {
 }
 
 
-void ShowerStudy::processRunHeader( LCRunHeader* run) {
+void ShowerStudy::processRunHeader( LCRunHeader* ) {
 	++m_runNumber ;
 }
 
@@ -454,7 +454,7 @@ void ShowerStudy::getCollection(LCCollection* &collection, std::string collectio
   return;
 }
 
-void ShowerStudy::check(LCEvent* evt){
+void ShowerStudy::check(LCEvent* ){
 }
 
 void ShowerStudy::end(){

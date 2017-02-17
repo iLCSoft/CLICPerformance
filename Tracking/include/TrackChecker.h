@@ -29,7 +29,10 @@ class TrackChecker : public Processor {
   virtual Processor*  newProcessor() { return new TrackChecker ; }
 	
   TrackChecker() ;
-	
+
+  TrackChecker(const TrackChecker&) = delete;
+  TrackChecker& operator=(const TrackChecker&) = delete;
+
   // Initialisation - run at the beginning to start histograms, etc.
   virtual void init() ;
 	
@@ -61,85 +64,85 @@ class TrackChecker : public Processor {
  protected:
 	
   // Collection names for (in/out)put
-  std::string m_inputTrackCollection ;
-  std::string m_inputTrackRelationCollection ;
-  std::string m_inputParticleCollection ;
+  std::string m_inputTrackCollection = "";
+  std::string m_inputTrackRelationCollection = "";
+  std::string m_inputParticleCollection = "" ;
  	
   // Run and event counters
-  int m_eventNumber ;
-  int m_runNumber ;
+  int m_eventNumber = 0;
+  int m_runNumber = 0;
   
   // Magnetic field
-  float m_magneticField;
+  float m_magneticField = 0;
 	
   //Flags
-  bool m_useOnlyTree;
+  bool m_useOnlyTree = false;
 
   // Output histograms
 
-  TCanvas* pulls;
-  TCanvas* res;
+  TCanvas* pulls = NULL;
+  TCanvas* res = NULL;
 
-  TH1F* m_omegaPull;
-  TH1F* m_phiPull;
-  TH1F* m_tanLambdaPull;
-  TH1F* m_d0Pull;
-  TH1F* m_z0Pull;
+  TH1F* m_omegaPull = NULL;
+  TH1F* m_phiPull = NULL;
+  TH1F* m_tanLambdaPull = NULL;
+  TH1F* m_d0Pull = NULL;
+  TH1F* m_z0Pull = NULL;
 
-  TH1F* m_omegaResidual;
-  TH1F* m_phiResidual;
-  TH1F* m_tanLambdaResidual;
-  TH1F* m_d0Residual;
-  TH1F* m_z0Residual;
+  TH1F* m_omegaResidual = NULL;
+  TH1F* m_phiResidual = NULL;
+  TH1F* m_tanLambdaResidual = NULL;
+  TH1F* m_d0Residual = NULL;
+  TH1F* m_z0Residual = NULL;
   
-  TH1F* m_omegaMCParticle;
-  TH1F* m_phiMCParticle;
-  TH1F* m_tanLambdaMCParticle;
-  TH1F* m_d0MCParticle;
-  TH1F* m_z0MCParticle;
+  TH1F* m_omegaMCParticle = NULL;
+  TH1F* m_phiMCParticle = NULL;
+  TH1F* m_tanLambdaMCParticle = NULL;
+  TH1F* m_d0MCParticle = NULL;
+  TH1F* m_z0MCParticle = NULL;
 
-  TH1F* m_omegaTrack;
-  TH1F* m_phiTrack;
-  TH1F* m_tanLambdaTrack;
-  TH1F* m_d0Track;
-  TH1F* m_z0Track;
+  TH1F* m_omegaTrack = NULL;
+  TH1F* m_phiTrack = NULL;
+  TH1F* m_tanLambdaTrack = NULL;
+  TH1F* m_d0Track = NULL;
+  TH1F* m_z0Track = NULL;
   
-  TH1F* m_trackChi2;
+  TH1F* m_trackChi2 = NULL;
   
 
-  std::string m_treeName;
+  std::string m_treeName = "";
 
-  TTree *perftree ;
+  TTree *perftree = NULL;
 
-  std::vector<double > truePt;
-  std::vector<double > trueTheta;
-  std::vector<double > truePhi;
-  std::vector<double > trueD0;
-  std::vector<double > trueZ0;
-  std::vector<double > trueP;
+  std::vector<double > truePt = {};
+  std::vector<double > trueTheta = {};
+  std::vector<double > truePhi = {};
+  std::vector<double > trueD0 = {};
+  std::vector<double > trueZ0 = {};
+  std::vector<double > trueP = {};
 
-  std::vector<double > recoPt;
-  std::vector<double > recoTheta;
-  std::vector<double > recoPhi;
-  std::vector<double > recoD0;
-  std::vector<double > recoZ0;
-  std::vector<double > recoP;
+  std::vector<double > recoPt = {};
+  std::vector<double > recoTheta = {};
+  std::vector<double > recoPhi = {};
+  std::vector<double > recoD0 = {};
+  std::vector<double > recoZ0 = {};
+  std::vector<double > recoP = {};
 
-  std::vector<int > recoNhits;
-  std::vector<double > recoChi2OverNDF;
-  std::vector<double > recoMinDist;
+  std::vector<int > recoNhits = {};
+  std::vector<double > recoChi2OverNDF = {};
+  std::vector<double > recoMinDist = {};
 
-  std::vector<double > pullOmega;
-  std::vector<double > pullPhi;
-  std::vector<double > pullTanLambda;
-  std::vector<double > pullD0;
-  std::vector<double > pullZ0;
+  std::vector<double > pullOmega = {};
+  std::vector<double > pullPhi = {};
+  std::vector<double > pullTanLambda = {};
+  std::vector<double > pullD0 = {};
+  std::vector<double > pullZ0 = {};
 
-  std::vector<double > resOmega;
-  std::vector<double > resPhi;
-  std::vector<double > resTanLambda;
-  std::vector<double > resD0;
-  std::vector<double > resZ0;
+  std::vector<double > resOmega = {};
+  std::vector<double > resPhi = {};
+  std::vector<double > resTanLambda = {};
+  std::vector<double > resD0 = {};
+  std::vector<double > resZ0 = {};
 
 
 

@@ -39,7 +39,9 @@ public:
 	virtual Processor*  newProcessor() { return new ClicEfficiencyCalculator ; }
 	
 	ClicEfficiencyCalculator() ;
-	
+	ClicEfficiencyCalculator(const ClicEfficiencyCalculator&) = delete;
+	ClicEfficiencyCalculator& operator=(const ClicEfficiencyCalculator&) = delete;
+
 	// Initialisation - run at the beginning to start histograms, etc.
 	virtual void init() ;
 	
@@ -71,77 +73,77 @@ public:
 	
 protected:
 	
-	// Collection names for (in/out)put
-  std::vector<std::string> m_inputTrackerHitCollections ;
-  std::vector<std::string> m_inputTrackerHitRelationCollections ;
-  std::string m_inputParticleCollection ;
-  std::string m_inputTrackCollection ;
-  std::string m_inputTrackRelationCollection;
-  std::string m_outputEfficientMCParticleCollection;
-  std::string m_outputInefficientMCParticleCollection;
+  // Collection names for (in/out)put
+  std::vector<std::string> m_inputTrackerHitCollections = {};
+  std::vector<std::string> m_inputTrackerHitRelationCollections = {};
+  std::string m_inputParticleCollection = "";
+  std::string m_inputTrackCollection = "";
+  std::string m_inputTrackRelationCollection = "";
+  std::string m_outputEfficientMCParticleCollection = "";
+  std::string m_outputInefficientMCParticleCollection = "";
 	
-	// Run and event counters
-	int m_eventNumber ;
-	int m_runNumber ;
+  // Run and event counters
+  int m_eventNumber = 0;
+  int m_runNumber = 0;
 	
-	// Track fit factory
-	MarlinTrk::IMarlinTrkSystem* trackFactory;
+  // Track fit factory
+  MarlinTrk::IMarlinTrkSystem* trackFactory = NULL;
 	
-	// Parameters
-  bool m_fullOutput;
-  bool m_simpleOutput;
-	double m_purity;
-	double m_magneticField;
-  std::string m_cuts;
-  std::string m_mcTreeName;
-  std::string m_purityTreeName;
-  std::string m_efficiencyTreeName;
-	std::map<std::string,double> m_particles;
-	std::map<std::string,double> m_reconstructedParticles;
-	std::map<MCParticle*, std::vector<TrackerHit*> > particleHits;
+  // Parameters
+  bool m_fullOutput = false;
+  bool m_simpleOutput = false;
+  double m_purity = 0.0;
+  double m_magneticField = 0.0;
+  std::string m_cuts = "";
+  std::string m_mcTreeName = "";
+  std::string m_purityTreeName = "";
+  std::string m_efficiencyTreeName = "";
+  std::map<std::string,double> m_particles = {};
+  std::map<std::string,double> m_reconstructedParticles = {};
+  std::map<MCParticle*, std::vector<TrackerHit*> > particleHits = {};
 
   // Histograms
-  TH2F* m_thetaPtMCParticle;
-  TH2F* m_thetaPtMCParticleReconstructed;
-  TH2F* m_thetaPtMCParticleEfficiency;
+  TH2F* m_thetaPtMCParticle = NULL;
+  TH2F* m_thetaPtMCParticleReconstructed = NULL;
+  TH2F* m_thetaPtMCParticleEfficiency = NULL;
 
   // Trees
-	TTree *m_mctree ;
-	std::vector<int > m_mcCat;
-	std::vector<double > m_mcTheta;
-	std::vector<double > m_mcPt;
-	std::vector<int > m_mcIsDecayedInTracker;
-	std::vector<int > m_mcNHitsTot;
-	std::vector<int > m_mcNHitsVXD;
-	std::vector<int > m_mcNTracks;
-	std::vector<int > m_mcNTrkHits; 
-	std::vector<int > m_mcThetaTrk; 
-	std::vector<int > m_mcPtTrk; 
-	std::vector<int > m_mcPhiTrk; 
-	std::vector<int > m_mcNTracksCone; 
+  TTree *m_mctree = NULL;
+  std::vector<int > m_mcCat = {};
+  std::vector<double > m_mcTheta = {};
+  std::vector<double > m_mcPt = {};
+  std::vector<int > m_mcIsDecayedInTracker = {};
+  std::vector<int > m_mcNHitsTot = {};
+  std::vector<int > m_mcNHitsVXD = {};
+  std::vector<int > m_mcNTracks = {};
+  std::vector<int > m_mcNTrkHits = {};
+  std::vector<int > m_mcThetaTrk = {};
+  std::vector<int > m_mcPtTrk = {};
+  std::vector<int > m_mcPhiTrk = {};
+  std::vector<int > m_mcNTracksCone = {};
 
-	TTree *m_trackTree ;
-	std::vector<double > m_vec_vx_reconstructable; 
-	std::vector<double > m_vec_vy_reconstructable; 
-	std::vector<double > m_vec_vz_reconstructable; 
-	std::vector<double > m_vec_vr_reconstructable; 
-	std::vector<double > m_vec_pt_reconstructable; 
-	std::vector<double > m_vec_theta_reconstructable; 
-	std::vector<bool > m_vec_is_reconstructed; 
+  TTree *m_trackTree = NULL;
+  std::vector<double > m_vec_vx_reconstructable = {};
+  std::vector<double > m_vec_vy_reconstructable = {};
+  std::vector<double > m_vec_vz_reconstructable = {};
+  std::vector<double > m_vec_vr_reconstructable = {};
+  std::vector<double > m_vec_pt_reconstructable = {};
+  std::vector<double > m_vec_theta_reconstructable = {};
+  std::vector<bool > m_vec_is_reconstructed = {};
 
-	TTree *m_purityTree ;
-	std::vector<int > m_vec_nhits_vtx;
-	std::vector<int > m_vec_nhits_trk;
-	std::vector<int > m_vec_nhits;
-	std::vector<double > m_vec_purity;
-	std::vector<int > m_vec_pdg;
-	std::vector<double > m_vec_theta;
-	std::vector<double > m_vec_phi;
-	std::vector<double > m_vec_p;
+  TTree *m_purityTree = NULL;
+  std::vector<int > m_vec_nhits_vtx = {};
+  std::vector<int > m_vec_nhits_trk = {};
+  std::vector<int > m_vec_nhits = {};
+  std::vector<double > m_vec_purity = {};
+  std::vector<int > m_vec_pdg = {};
+  std::vector<double > m_vec_theta = {};
+  std::vector<double > m_vec_phi = {};
+  std::vector<double > m_vec_p = {};
   
-  TTree *m_simplifiedTree ;
-  double m_type, m_pt, m_theta, m_phi, m_vertexR, m_closeTracks;
-  bool m_reconstructed;
+  TTree *m_simplifiedTree = NULL;
+  double m_type = 0.0, m_pt = 0.0, m_theta = 0.0, m_phi = 0.0, m_vertexR = 0.0, m_closeTracks = 0.0;
+  bool m_reconstructed = false;
 
 
 } ;
