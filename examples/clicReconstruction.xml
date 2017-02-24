@@ -220,7 +220,7 @@
     <!--Name of the MCParticle input collection-->
     <parameter name="MCParticleCollectionName" type="string" lcioInType="MCParticle">MCParticle </parameter>
     <!--Decoding string used for Cell ID calculation-->
-    <parameter name="CellIDDecoderString" type="string">subdet:5,side:-2,layer:9,module:8,sensor:8 </parameter>  <!-- this needs to go away -->
+    <parameter name="CellIDDecoderString" type="string">subdet:5,side:-2,layer:6,module:11,sensor:8 </parameter>  <!-- this needs to go away !!!-->
     <!--DebugHits-->
     <parameter name="DebugHits" type="string" lcioOutType="TrackerHitPlane">DebugHits </parameter>
     <!--Plots for debugging the tracking-->
