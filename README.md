@@ -1,23 +1,18 @@
-# ClicPerformance
+# CLICPerformance
+[![Build Status](https://travis-ci.org/iLCSoft/CLICPerformance.svg?branch=master)](https://travis-ci.org/iLCSoft/CLICPerformance)
 
 Package containing processors and configurations to determine the performance of the CLIC detector model
 
+CLICPerformance is distributed under the [GPLv3 License](http://www.gnu.org/licenses/gpl-3.0.en.html)
 
-[![Build Status](https://travis-ci.org/iLCSoft/CLICPerformance.svg?branch=master)](https://travis-ci.org/iLCSoft/CLICPerformance)
-
-# Release Notes
+[![License](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
 
-## v01-00
+## License and Copyright
+Copyright (C), CLICPerformance Authors
 
- 
-*  General:                     At present the package contains only processors for the Tracking systems. Further dedicated
-                                folders for Calorimetry performance etc. should be added in future. The configuration folder
-                                contains steering files for the reconstruction in Marlin, and a test script (testClicBuild.sh)
-                                which allows a fast check of new relseases/geometries etc.
+CLICPerformance is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
-*  ClicEfficiencyCalculator:    Processor to calculate the tracking efficiency. Only the input hit collections are considered,
-                                allowing the efficiency to be restricted to the given subdetectors.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
-*  TrackChecker:                Processor to evaluate the pull and residual distributions of the track fitting. 
-
+You should have received a copy of the GNU General Public License long with this program.  If not, see <http://www.gnu.org/licenses/>.
