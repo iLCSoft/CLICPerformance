@@ -11,7 +11,7 @@
 #include "MarlinTrk/IMarlinTrack.h"
 
 #include <UTIL/BitField64.h>
-#include <UTIL/ILDConf.h>
+#include <UTIL/LCTrackerConf.h>
 
 #include "DD4hep/LCDD.h"
 #include "DD4hep/DD4hepUnits.h"
@@ -192,8 +192,8 @@ void HitResiduals::processEvent( LCEvent * evt ) {
 
 
 
-  UTIL::BitField64 cellid_decoder( lcio::ILDCellID0::encoder_string ) ; 	    
-  UTIL::BitField64 encoder( lcio::ILDCellID0::encoder_string ) ; 	    
+  UTIL::BitField64 cellid_decoder( lcio::LCTrackerCellID::encoding_string() ) ; 	    
+  UTIL::BitField64 encoder( lcio::LCTrackerCellID::encoding_string() ) ; 	    
   encoder.reset() ;  // reset to 0
   int layerID = encoder.lowWord() ;  
   int elementID = 0 ;    
@@ -233,8 +233,8 @@ void HitResiduals::processEvent( LCEvent * evt ) {
 	streamlog_out(DEBUG1) << "layer = " << layer << std::endl;
 	streamlog_out(DEBUG1) << "subdet = " << subdet << std::endl;
 
-	encoder[lcio::ILDCellID0::subdet] = subdet;
-	encoder[lcio::ILDCellID0::layer]  = layer;   
+	encoder[lcio::LCTrackerCellID::subdet()] = subdet;
+	encoder[lcio::LCTrackerCellID::layer()]  = layer;   
 	layerID = encoder.lowWord();  
 	streamlog_out(DEBUG1) << "layerID = " << layerID << std::endl;
 

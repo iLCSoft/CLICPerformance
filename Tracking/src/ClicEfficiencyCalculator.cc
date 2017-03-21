@@ -20,7 +20,7 @@
 #include <IMPL/TrackImpl.h>
 
 #include <UTIL/CellIDEncoder.h>
-#include <UTIL/ILDConf.h>
+#include <UTIL/LCTrackerConf.h>
 #include <UTIL/BitSet32.h>
 #include <UTIL/LCRelationNavigator.h>
 
@@ -273,7 +273,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
   // First pick up all of the collections that will be used - tracks, MCparticles, hits from relevent subdetectors - and their relations
   
   // Initialise CELLID encoder to get the subdetector ID from a hit
-  UTIL::BitField64 m_encoder( lcio::ILDCellID0::encoder_string ) ;
+  UTIL::BitField64 m_encoder( lcio::LCTrackerCellID::encoding_string() ) ;
   std::vector<int> m_collections;
   
   // Get the collection of tracks
@@ -651,7 +651,7 @@ int ClicEfficiencyCalculator::getSubdetector(LCCollection* collection, UTIL::Bit
   TrackerHitPlane* hit = dynamic_cast<TrackerHitPlane*>( collection->getElementAt(0) ) ;
   const int celId = hit->getCellID0() ;
   encoder.setValue(celId) ;
-  int subdet = encoder[lcio::ILDCellID0::subdet];
+  int subdet = encoder[lcio::LCTrackerCellID::subdet()];
   return subdet;
 }
 
@@ -659,14 +659,14 @@ int ClicEfficiencyCalculator::getSubdetector(LCCollection* collection, UTIL::Bit
 int ClicEfficiencyCalculator::getSubdetector(TrackerHit* hit, UTIL::BitField64 &encoder){
   const int celId = hit->getCellID0() ;
   encoder.setValue(celId) ;
-  int subdet = encoder[lcio::ILDCellID0::subdet];
+  int subdet = encoder[lcio::LCTrackerCellID::subdet()];
   return subdet;
 }
 
 int ClicEfficiencyCalculator::getLayer(TrackerHit* hit, UTIL::BitField64 &encoder){
   const int celId = hit->getCellID0() ;
   encoder.setValue(celId) ;
-  int layer = encoder[lcio::ILDCellID0::layer];
+  int layer = encoder[lcio::LCTrackerCellID::layer()];
   return layer;
 }
 
@@ -687,7 +687,7 @@ bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::str
     // Only make tracks with 4 or more hits in the vertex detector
     std::vector<TrackerHit*> trackHits = particleHits[particle];
     int nVXDHits = 0;
-    UTIL::BitField64 encoder( lcio::ILDCellID0::encoder_string ) ;
+    UTIL::BitField64 encoder( lcio::LCTrackerCellID::encoding_string() ) ;
     for (size_t ihit=0; ihit<trackHits.size(); ihit++){
       int subdetector = getSubdetector(trackHits.at(ihit), encoder);
       if (subdetector==1 || subdetector==2) nVXDHits++;
@@ -734,7 +734,7 @@ bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::str
     //if(trackHits.size() >= 6) passNHits = true;
     
     // int nVXDHits = 0;
-    // UTIL::BitField64 encoder( lcio::ILDCellID0::encoder_string ) ;
+    // UTIL::BitField64 encoder( lcio::LCTrackerCellID::encoding_string() ) ;
     // for (size_t ihit=0; ihit<trackHits.size(); ihit++){
     //   int subdetector = getSubdetector(trackHits.at(ihit), encoder);
     //   if (subdetector == m_vertexBarrelID) nVXDHits++;
@@ -784,7 +784,7 @@ bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::str
     if(trackHits.size() >= 4) passNHits = true;
     
     int nVXDHits = 0;
-    UTIL::BitField64 encoder( lcio::ILDCellID0::encoder_string ) ;
+    UTIL::BitField64 encoder( lcio::LCTrackerCellID::encoding_string() ) ;
     std::vector<int > vec_hit_subdet;
     std::vector<int > vec_hit_layer;
     for (size_t ihit=0; ihit<trackHits.size(); ihit++){
@@ -848,9 +848,9 @@ int ClicEfficiencyCalculator::getUniqueHits(std::vector<TrackerHit*> trackHits, 
     
     // Get the subdetector information
     encoder.setValue(celId) ;
-    int subdet = encoder[lcio::ILDCellID0::subdet];
-    int side = encoder[lcio::ILDCellID0::side];
-    int layer = encoder[lcio::ILDCellID0::layer];
+    int subdet = encoder[lcio::LCTrackerCellID::subdet()];
+    int side = encoder[lcio::LCTrackerCellID::side()];
+    int layer = encoder[lcio::LCTrackerCellID::layer()];
     
     // Make a unique id
     int id = ((subdet & 0xFF) << 16) + ((side & 0xFF) << 8) + (layer & 0xFF);
