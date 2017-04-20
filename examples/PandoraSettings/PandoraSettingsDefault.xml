@@ -41,6 +41,9 @@
             <MaxLayersToTrackLikeHit>0</MaxLayersToTrackLikeHit>
             <TrackPathWidth>0</TrackPathWidth>
         </algorithm>
+	<MinClusterOccupiedLayers>5</MinClusterOccupiedLayers>
+	<MinClusterLayerSpan>5</MinClusterLayerSpan>
+
         <!-- Input lists -->
         <InputTrackListName>Tracks</InputTrackListName>
         <InputCaloHitListName>CaloHits</InputCaloHitListName>
