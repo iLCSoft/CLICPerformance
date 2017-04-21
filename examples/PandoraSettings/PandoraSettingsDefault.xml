@@ -6,12 +6,18 @@
     <ShouldDisplayAlgorithmInfo>false</ShouldDisplayAlgorithmInfo>
     <ShouldCollapseMCParticlesToPfoTarget>true</ShouldCollapseMCParticlesToPfoTarget>
 
-    <!-- PLUGIN SETTINGS -->
+    <!-- PLUGIN REGISTRATION -->
     <HadronicEnergyCorrectionPlugins>CleanClusters ScaleHotHadrons</HadronicEnergyCorrectionPlugins>
     <EmShowerPlugin>LCEmShowerId</EmShowerPlugin>
     <PhotonPlugin>LCPhotonId</PhotonPlugin>
     <ElectronPlugin>LCElectronId</ElectronPlugin>
     <MuonPlugin>LCMuonId</MuonPlugin>
+
+    <!-- PLUGIN SETTINGS -->
+    <LCMuonId>
+        <MinMuonTrackSegmentHitsCut>5</MinMuonTrackSegmentHitsCut>
+        <MuonRmsCut>15.625</MuonRmsCut>
+    </LCMuonId>
 
     <!-- ALGORITHM SETTINGS -->
 
@@ -41,9 +47,9 @@
             <MaxLayersToTrackLikeHit>0</MaxLayersToTrackLikeHit>
             <TrackPathWidth>0</TrackPathWidth>
         </algorithm>
-	<MinClusterOccupiedLayers>5</MinClusterOccupiedLayers>
-	<MinClusterLayerSpan>5</MinClusterLayerSpan>
-
+        <MinClusterOccupiedLayers>5</MinClusterOccupiedLayers>
+        <MinClusterLayerSpan>5</MinClusterLayerSpan>
+        <MaxClusterCaloHits>30</MaxClusterCaloHits>
         <!-- Input lists -->
         <InputTrackListName>Tracks</InputTrackListName>
         <InputCaloHitListName>CaloHits</InputCaloHitListName>
@@ -394,6 +400,8 @@
     <algorithm type = "MuonClusterAssociation">
         <TargetClusterListName>PrimaryClusters</TargetClusterListName>
         <MuonClusterListName>MuonRemovedYokeClusters</MuonClusterListName>
+        <MinHitsInMuonCluster>3</MinHitsInMuonCluster>
+        <CoilCorrectionMinInnerRadius>3483</CoilCorrectionMinInnerRadius>
     </algorithm>
 
     <!-- Photon recovery -->
