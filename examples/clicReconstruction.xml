@@ -204,25 +204,20 @@
     <!--Name of the TrackerHit relation collections-->
     <parameter name="RelationsNames" type="StringVec" lcioInType="LCRelation">VXDTrackerHitRelations VXDEndcapTrackerHitRelations InnerTrackerBarrelHitsRelations OuterTrackerBarrelHitsRelations InnerTrackerEndcapHitsRelations OuterTrackerEndcapHitsRelations  </parameter>
 
-    <!--Cut on angle between two cells for cell to be valid-->
-    <parameter name="MaxCellAngle" type="double">0.06 </parameter>
-    <!--Maximum chi2/ndof for linear conformal tracks-->
-    <parameter name="MaxChi2" type="double">1000 </parameter>
-    <!--Maximum length of a cell (max. distance between two hits)-->
-    <parameter name="MaxDistance" type="double">0.02 </parameter>
-    <!--Minimum number of clusters to create a track-->
-    <parameter name="MinClustersOnTrack" type="int">5 </parameter>
-    <!--Angular range for initial cell seeding-->
-    <parameter name="ThetaRange" type="double">0.025 </parameter>
+    <!--Cut values for the pattern recognition -->
+    <parameter name="ThetaRange" type="double"> 0.03 </parameter>
+    <parameter name="MaxCellAngle" type="double"> 0.005 </parameter>
+    <parameter name="MaxCellAngleRZ" type="double"> 0.005 </parameter>
+    <parameter name="MaxDistance" type="double"> 0.02 </parameter>
+    <parameter name="MinClustersOnTrack" type="int"> 4 </parameter>
+    <parameter name="MaxChi2" type="double"> 10 </parameter>
+    <parameter name="DebugPlots" type="bool"> true </parameter>
+    <parameter name="trackPurity" type="double">0.7 </parameter>
 
     <!--Silicon track Collection Name-->
     <parameter name="SiTrackCollectionName" type="string" lcioOutType="Track">CATracks </parameter>
     <!--Name of the MCParticle input collection-->
     <parameter name="MCParticleCollectionName" type="string" lcioInType="MCParticle">MCParticle </parameter>
-    <!--Decoding string used for Cell ID calculation-->
-    <parameter name="CellIDDecoderString" type="string">subdet:5,side:-2,layer:6,module:11,sensor:8 </parameter>  <!-- this needs to go away !!!-->
-    <!--DebugHits-->
-    <parameter name="DebugHits" type="string" lcioOutType="TrackerHitPlane">DebugHits </parameter>
     <!--Plots for debugging the tracking-->
     <parameter name="DebugPlots" type="bool">false </parameter>
     <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
