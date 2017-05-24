@@ -685,7 +685,7 @@
   <processor name="MyDDSimpleMuonDigi" type="DDSimpleMuonDigi">
     <!--Performs simple digitization of sim calo hits...-->
     <!--Calibration coefficients for MUON-->
-    <parameter name="CalibrMUON" type="FloatVec">19493.2</parameter>
+    <parameter name="CalibrMUON" type="FloatVec">70.1</parameter>
     <!-- maximum hit energy for a MUON hit -->
     <parameter name="MaxHitEnergyMUON" type="float">2.0</parameter>
     <!--MUON Collection Names-->
