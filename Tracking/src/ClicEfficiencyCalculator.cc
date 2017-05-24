@@ -248,6 +248,8 @@ void ClicEfficiencyCalculator::init() {
     m_simplifiedTree->Branch("m_vertexR", &m_vertexR, "m_vertexR/D");
     m_simplifiedTree->Branch("m_closeTracks", &m_closeTracks, "m_closeTracks/D");
     m_simplifiedTree->Branch("m_reconstructed", &m_reconstructed, "m_reconstructed/O");
+    m_simplifiedTree->Branch("m_nHits", &m_nHits, "m_nHits/I");
+    m_simplifiedTree->Branch("m_nHitsMC", &m_nHitsMC, "m_nHitsMC/I");
     m_simplifiedTree->Branch("m_eventNumber", &m_eventNumber, "m_eventNumber/I");
   }
   
@@ -326,6 +328,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
   }
   
   std::map<MCParticle*,int> particleTracks;
+  std::map<MCParticle*,int> particleTrackHits;
   
   /*
    Look at all tracks that were reconstructed and calculate their purity. This can be used to point to all
@@ -420,6 +423,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     
     // Now have a track which is associated to a particle
     particleTracks[associatedParticle]++;
+    if(particleTrackHits.count(associatedParticle) == 0 || nHits > particleTrackHits[associatedParticle]) particleTrackHits[associatedParticle] = nHits;
     
   }
   
@@ -507,7 +511,10 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     m_particles["reconstructable"]++; // reconstructable particles
     nReconstructable++;
     m_thetaPtMCParticle->Fill(mcTheta,mcPt);
-    
+    std::vector<TrackerHit*> trackHits = particleHits[particle];
+    int uniqueHits = getUniqueHits(trackHits,m_encoder);
+    int nHitsOnTrack(0);
+
     // Check if it was reconstructed
     bool reconstructed=false;
     if(particleTracks.count(particle)){
@@ -588,6 +595,8 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
       m_phi = mcPhi;
       m_vertexR = mcVertexR;
       m_reconstructed = reconstructed;
+      m_nHits = particleTrackHits[particle];
+      m_nHitsMC = uniqueHits;
       m_closeTracks = nCloseTrk;
       m_simplifiedTree->Fill();
     }
