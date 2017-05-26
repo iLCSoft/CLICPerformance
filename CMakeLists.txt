@@ -97,12 +97,12 @@ ENDIF()
 #ADD_DEFINITIONS( "-Wno-long-long" )
 
 # include directories
-INCLUDE_DIRECTORIES( ./Calorimetry/include ./Tracking/include )
-#INSTALL_DIRECTORY( ./include DESTINATION . FILES_MATCHING PATTERN "*.h" )
+INCLUDE_DIRECTORIES( ./Calorimetry/include ./Tracking/include source/Conditions/include )
 
 # add library
 AUX_SOURCE_DIRECTORY(./Calorimetry/src library_sources )
 AUX_SOURCE_DIRECTORY(./Tracking/src library_sources )
+AUX_SOURCE_DIRECTORY(./source/Conditions/src library_sources )
 ADD_SHARED_LIBRARY( ${PROJECT_NAME} ${library_sources} )
 INSTALL_SHARED_LIBRARY( ${PROJECT_NAME} DESTINATION lib )
 
