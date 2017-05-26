@@ -5,6 +5,11 @@
     <!-- ========== setup  ========== -->
     <processor name="MyAIDAProcessor"/>
     <processor name="InitDD4hep"/>
+    <processor name="Config" />
+
+    <if condition="Config.Overlay3TeV">
+      <processor name="Overlay3TeV"/>
+    </if>
 
     <!-- ========== digitisation  ========== -->
     <processor name="VXDBarrelDigitiser"/>
@@ -16,10 +21,14 @@
 
     <!-- ========== tracking  ========== -->
     <!-- At the moment the name of the final track collection for the MyTruthTrackFinder and MyExtrToTracker processors is the same, so that users can use this example to run easily both the cheater track pattern recognition (still the default for many tasks) or the real one (under final tests) -->
-    <processor name="MyTruthTrackFinder"/>
-    <!-- <processor name="MyDDCellsAutomatonMV"/>  --> <!-- alternative to the ConformalTracking, but only in the vertex barrel region! -->
-    <!-- <processor name="MyConformalTracking"/> -->
-    <!-- <processor name="MyExtrToTracker"/> -->
+    <if condition="Config.TruthTracking">
+      <processor name="MyTruthTrackFinder"/>
+    </if>
+
+    <if condition="Config.ConformalTracking">
+      <processor name="MyConformalTracking"/>
+      <processor name="MyExtrToTracker"/>
+    </if>
 
     <!-- === calorimeter digitization and pandora reco === -->
     <processor name="MyDDCaloDigi"/>
@@ -62,6 +71,12 @@
     </parameter>
   </processor>
 
+  <processor name="Config" type="CLICRecoConfig" >
+    <!--Which option to use for overlay: False, 3TeV, 380GeV. Then use, e.g., Config.Overlay3TeV in the condition-->
+    <parameter name="Overlay" type="string">False </parameter>
+    <!--Which option to use for tracking: Truth, Conformal-->
+    <parameter name="Tracking" type="string">Truth </parameter>
+  </processor>
 
   <processor name="Overlay3TeV" type="OverlayTimingGeneric">
     <!--Processor to overlay events from the background taking the timing of the subdetectors into account-->
