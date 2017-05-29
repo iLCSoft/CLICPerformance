@@ -9,10 +9,27 @@ ADD_TEST( NAME t_${test_name}
   )
 SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;ERROR;Error" )
 
-SET( test_name "test_CLIC_o3_v11_reco" )
+SET( test_name "test_CLIC_o3_v11_reco_truth" )
 ADD_TEST( NAME t_${test_name}
   COMMAND ${CMAKE_SOURCE_DIR}/Tests/bin/MarlinTests.sh
-  ${CMAKE_SOURCE_DIR}/lib/libClicPerformance.so  Marlin --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v11/CLIC_o3_v11.xml --global.LCIOInputFiles=testCLIC_o3_v11.slcio clicReconstruction.xml
+  ${CMAKE_SOURCE_DIR}/lib/libClicPerformance.so  Marlin --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v11/CLIC_o3_v11.xml --global.LCIOInputFiles=testCLIC_o3_v11.slcio clicReconstruction.xml --Config.Tracking=Truth
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/
+  )
+SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error" )
+
+
+SET( test_name "test_CLIC_o3_v11_reco_conformal" )
+ADD_TEST( NAME t_${test_name}
+  COMMAND ${CMAKE_SOURCE_DIR}/Tests/bin/MarlinTests.sh
+  ${CMAKE_SOURCE_DIR}/lib/libClicPerformance.so  Marlin --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v11/CLIC_o3_v11.xml --global.LCIOInputFiles=testCLIC_o3_v11.slcio clicReconstruction.xml --Config.Tracking=Conformal
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/
+  )
+SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error" )
+
+SET( test_name "test_CLIC_o3_v11_reco_overlay" )
+ADD_TEST( NAME t_${test_name}
+  COMMAND ${CMAKE_SOURCE_DIR}/Tests/bin/MarlinTests.sh
+  ${CMAKE_SOURCE_DIR}/lib/libClicPerformance.so  Marlin --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v11/CLIC_o3_v11.xml --global.LCIOInputFiles=testCLIC_o3_v11.slcio clicReconstruction.xml --Config.Overlay=3TeV --Overlay3TeV.BackgroundFileNames=testCLIC_o3_v11.slcio
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/
   )
 SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error" )
