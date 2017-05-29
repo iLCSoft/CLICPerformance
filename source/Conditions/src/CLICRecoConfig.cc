@@ -71,6 +71,11 @@ void CLICRecoConfig::init() {
 
 void CLICRecoConfig::processRunHeader( LCRunHeader* ){}
 
+void CLICRecoConfig::processEvent( LCEvent* ) {
+  modifyEvent( nullptr );
+}
+
+
 void CLICRecoConfig::modifyEvent( LCEvent* ) {
   streamlog_out(MESSAGE) << "Running Config" << std::endl;
 

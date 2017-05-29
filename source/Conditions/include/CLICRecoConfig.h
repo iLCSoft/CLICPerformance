@@ -23,6 +23,7 @@ public:
 
   // Run over each event - the main algorithm
   virtual void modifyEvent( LCEvent* evt ) ;
+  virtual void processEvent( LCEvent* evt ) ;
 
   // Run at the end of each event
   virtual void check( LCEvent* evt ) ;
