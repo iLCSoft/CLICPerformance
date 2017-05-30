@@ -57,9 +57,68 @@
     <!--InitializeDD4hep reads a compact xml file and initializes the DD4hep::LCDD object-->
     <!--Name of the DD4hep compact xml file to load-->
     <parameter name="EncodingStringParameter"> GlobalTrackerReadoutID </parameter>
-    <parameter name="DD4hepXMLFile" type="string"> /afs/cern.ch/user/s/simoniel/public/ForEmilia/CLIC_o2_v04/CLIC_o2_v04.xml </parameter>
+    <parameter name="DD4hepXMLFile" type="string">
+      /cvmfs/clicdp.cern.ch/iLCSoft/builds/nightly/x86_64-slc6-gcc62-opt/lcgeo/HEAD/CLIC/compact/CLIC_o3_v11/CLIC_o3_v11.xml
+    </parameter>
   </processor>
 
+
+  <processor name="Overlay3TeV" type="OverlayTimingGeneric">
+    <!--Processor to overlay events from the background taking the timing of the subdetectors into account-->
+    <!--Name of the lcio input file(s) with background - assume one file per bunch crossing.-->
+    <parameter name="BackgroundFileNames" type="StringVec">
+      gghad_01.slcio
+      gghad_02.slcio
+    </parameter>
+    <!--The MC Particle Collection Name-->
+    <parameter name="MCParticleCollectionName" type="string">MCParticle </parameter>
+    <!--The output MC Particle Collection Name for the physics event-->
+    <parameter name="MCPhysicsParticleCollectionName" type="string"> MCPhysicsParticles </parameter>
+    <!--Time difference between bunches in the bunch train in ns-->
+    <parameter name="Delta_t" type="float" value="0.5"/>
+    <!--Number of bunches in a bunch train-->
+    <parameter name="NBunchtrain" type="int" value="60"/>
+    <!--Number of Background events to overlay - either fixed or Poisson mean-->
+    <parameter name="NumberBackground" type="float" value="3.2"/>
+    <!--Number of the Bunch crossing of the physics event-->
+    <parameter name="PhysicsBX" type="int" value="10"/>
+    <!--Draw random number of Events to overlay from Poisson distribution with  mean value NumberBackground-->
+    <parameter name="Poisson_random_NOverlay" type="bool" value="true"/>
+    <!--Place the physics event at an random position in the train - overrides PhysicsBX-->
+    <parameter name="RandomBx" type="bool" value="false"/>
+    <!--random seed - default 42-->
+    <parameter name="RandomSeed" type="int" value="42"/>
+    <!--[mm/ns] (float) - default 5.0e-2 (5cm/us)-->
+    <parameter name="TPCDriftvelocity" type="float" value="0.05"/>
+
+    <parameter name="Collection_IntegrationTimes" type="StringVec" >
+      VertexBarrelCollection        10
+      VertexEndcapCollection        10
+
+      InnerTrackerBarrelCollection  10
+      InnerTrackerEndcapCollection  10
+
+      OuterTrackerBarrelCollection  10
+      OuterTrackerEndcapCollection  10
+
+      ECalBarrelCollection          10
+      ECalEndcapCollection          10
+      ECalPlugCollection            10
+
+      HCalBarrelCollection          10
+      HCalEndcapCollection          10
+      HCalRingCollection            10
+
+      YokeBarrelCollection          10
+      YokeEndcapCollection          10
+
+      LumiCalCollection             10
+      BeamCalCollection             10
+    </parameter>
+
+    <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
+    <!--parameter name="Verbosity" type="string" value=""/-->
+  </processor>
 
   <processor name="VXDBarrelDigitiser" type="DDPlanarDigiProcessor">
     <parameter name="SubDetectorName" type="string">Vertex </parameter>
