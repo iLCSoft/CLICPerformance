@@ -555,7 +555,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
       m_vec_theta_reconstructable.push_back(mcTheta);
       if(reconstructed){
         m_vec_is_reconstructed.push_back(true);
-        // m_mcCat can be emtpy at this point, and it is not described anywhere what this number is
+        // m_mcCat can be emtpy at this point
         // m_mcCat.pop_back();
         m_mcCat.push_back(2);
       }else{
@@ -563,14 +563,15 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
         m_mcCat.push_back(1);
       }
   
-      // Information for unreconstructed particles
-      if (!reconstructed) {
-        m_mcNTracks.push_back(nChargePart);
-        m_mcNTrkHits.push_back(m_mcNHitsTot.back());
-        m_mcThetaTrk.push_back(m_mcTheta.back());
-        m_mcPtTrk.push_back(m_mcPt.back());
-        m_mcNTracksCone.push_back(nCloseTrk);
-      }
+      // // information for unreconstructed particles
+      // if (!reconstructed) {
+      //   m_mcNTracks.push_back(nChargePart);
+      //   m_mcNTrkHits.push_back(m_mcNHitsTot.back());
+      //   m_mcThetaTrk.push_back(m_mcTheta.back());
+      //   m_mcPtTrk.push_back(m_mcPt.back());
+      //   m_mcNTracksCone.push_back(nCloseTrk);
+      // }
+
       // Only look at charged stable particles. Some descriptive comment should be added
       if (mcCharge>0.5 && particle->getGeneratorStatus()==1){
         nChargePart++;
@@ -874,7 +875,6 @@ int ClicEfficiencyCalculator::getUniqueHits(std::vector<TrackerHit*> trackHits, 
 void ClicEfficiencyCalculator::clearTreeVar(){
   
   m_mcCat.clear();
-  m_mcTheta.clear();
   m_mcPt.clear();
   m_mcTheta.clear();
   m_mcIsDecayedInTracker.clear();
