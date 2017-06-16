@@ -85,6 +85,7 @@ class HitResiduals : public Processor {
   std::vector<double > _resV = {};
   std::vector<int > _subdet = {};
   std::vector<int > _layer = {};
+  std::vector<int > _side = {};
 
   MarlinTrk::IMarlinTrkSystem* _trksystem = NULL;
   SurfaceMap _surfMap = {};
