@@ -133,7 +133,7 @@ void HitResiduals::init() {
   _tree->Branch("resV", "std::vector<double >",&_resV,bufsize,0);
   _tree->Branch("subdet", "std::vector<int >",&_subdet,bufsize,0);
   _tree->Branch("layer", "std::vector<int >",&_layer,bufsize,0);
- 
+  _tree->Branch("side", "std::vector<int >",&_side,bufsize,0);
 
 
   //lcdd and bfield
@@ -189,7 +189,7 @@ void HitResiduals::processEvent( LCEvent * evt ) {
   _resV.clear();
   _subdet.clear();
   _layer.clear();
-
+  _side.clear();
 
 
   UTIL::BitField64 cellid_decoder( lcio::LCTrackerCellID::encoding_string() ) ; 	    
@@ -229,12 +229,16 @@ void HitResiduals::processEvent( LCEvent * evt ) {
 	streamlog_out(DEBUG1) << "id = " << id << std::endl;
 
 	int layer = cellid_decoder["layer"].value();
-	int subdet = cellid_decoder["subdet"].value();
+	int subdet = cellid_decoder["system"].value();
+	int side = cellid_decoder["side"].value();
 	streamlog_out(DEBUG1) << "layer = " << layer << std::endl;
 	streamlog_out(DEBUG1) << "subdet = " << subdet << std::endl;
+	streamlog_out(DEBUG1) << "side = " << side << std::endl;
 
 	encoder[lcio::LCTrackerCellID::subdet()] = subdet;
-	encoder[lcio::LCTrackerCellID::layer()]  = layer;   
+	encoder[lcio::LCTrackerCellID::layer()] = layer; 
+	encoder[lcio::LCTrackerCellID::side()] = side;
+
 	layerID = encoder.lowWord();  
 	streamlog_out(DEBUG1) << "layerID = " << layerID << std::endl;
 
@@ -275,6 +279,7 @@ void HitResiduals::processEvent( LCEvent * evt ) {
 	  _resV.push_back(resV);
 	  _subdet.push_back(subdet);
 	  _layer.push_back(layer);
+	  _side.push_back(side);
 
  	} else streamlog_out(DEBUG4) << "FAIL" << std::endl;
      
