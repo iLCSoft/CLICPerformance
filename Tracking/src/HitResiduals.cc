@@ -13,9 +13,10 @@
 #include <UTIL/BitField64.h>
 #include <UTIL/LCTrackerConf.h>
 
-#include "DD4hep/LCDD.h"
-#include "DD4hep/DD4hepUnits.h"
+#include <marlinutil/GeometryUtil.h>
 
+#include "DD4hep/Detector.h"
+#include "DD4hep/DD4hepUnits.h"
 
 // ----- include for verbosity dependend logging ---------
 #include "marlin/VerbosityLevels.h"
@@ -138,17 +139,13 @@ void HitResiduals::init() {
 
   //lcdd and bfield
 
-  DD4hep::Geometry::LCDD& lcdd = DD4hep::Geometry::LCDD::getInstance();
-
-  const double pos[3]={0,0,0}; 
-  double bFieldVec[3]={0,0,0}; 
-  lcdd.field().magneticField(pos,bFieldVec); // get the magnetic field vector from DD4hep
-  _bField = bFieldVec[2]/dd4hep::tesla; // z component at (0,0,0)
+  dd4hep::Detector& theDetector = dd4hep::Detector::getInstance();
+  _bField = MarlinUtil::getBzAtOrigin();
 
 
   //trksystem for marlin track
 
-  _trksystem =  MarlinTrk::Factory::createMarlinTrkSystem( "DDKalTest" , marlin::Global::GEAR , "" ) ;
+  _trksystem =  MarlinTrk::Factory::createMarlinTrkSystem( "DDKalTest" , nullptr , "" ) ;
   
   if( _trksystem == 0 ) throw EVENT::Exception( std::string("  Cannot initialize MarlinTrkSystem of Type: ") + std::string("DDKalTest") );
   
@@ -160,7 +157,7 @@ void HitResiduals::init() {
 
   //surface map 
 
-  SurfaceManager& surfMan = *lcdd.extension< SurfaceManager >() ;
+  SurfaceManager& surfMan = *theDetector.extension< SurfaceManager >() ;
   // const SurfaceMap& _surfMap = *surfMan.map( "world" ) ;
   _surfMap = *surfMan.map( "world" ) ;
 
@@ -224,7 +221,7 @@ void HitResiduals::processEvent( LCEvent * evt ) {
 
       for( EVENT::TrackerHitVec::iterator it = trkHits.begin(); it != trkHits.end(); ++it ){
 
-	DD4hep::long64 id = (*it)->getCellID0() ;
+	dd4hep::long64 id = (*it)->getCellID0() ;
 	cellid_decoder.setValue( id ) ;
 	streamlog_out(DEBUG1) << "id = " << id << std::endl;
 
@@ -258,14 +255,14 @@ void HitResiduals::processEvent( LCEvent * evt ) {
 	  SurfaceMap::const_iterator si = _surfMap.find(id);
 	  ISurface* surf = (si != _surfMap.end() ?  si->second  : 0);
 
-	  DDSurfaces::Vector3D fit_global(pivot[0],pivot[1],pivot[2]);                                   
-	  DDSurfaces::Vector2D fit_local = surf->globalToLocal( dd4hep::mm * fit_global );  
+	  dd4hep::rec::Vector3D fit_global(pivot[0],pivot[1],pivot[2]);
+	  dd4hep::rec::Vector2D fit_local = surf->globalToLocal( dd4hep::mm * fit_global );
 	
 	  double fitU = fit_local[0];
 	  double fitV = fit_local[1];
 
-	  DDSurfaces::Vector3D hit_global(hit_pos[0],hit_pos[1],hit_pos[2]);
-	  DDSurfaces::Vector2D hit_local = surf->globalToLocal( dd4hep::mm * hit_global );  
+	  dd4hep::rec::Vector3D hit_global(hit_pos[0],hit_pos[1],hit_pos[2]);
+	  dd4hep::rec::Vector2D hit_local = surf->globalToLocal( dd4hep::mm * hit_global );
 	
 	  double hitU = hit_local[0];
 	  double hitV = hit_local[1];	

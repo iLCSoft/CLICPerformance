@@ -6,11 +6,13 @@
 #include <EVENT/CalorimeterHit.h>
 #include <EVENT/SimCalorimeterHit.h>
 
-#include "DD4hep/LCDD.h"
+#include "DD4hep/Detector.h"
 #include "DD4hep/DD4hepUnits.h"
 #include "DD4hep/DetType.h"
 #include "DDRec/DetectorData.h"
 #include "DD4hep/DetectorSelector.h"
+
+#include <marlinutil/GeometryUtil.h>
 
 #include "UTIL/LCRelationNavigator.h"
 
@@ -19,33 +21,7 @@
 using namespace lcio ;
 using namespace marlin ;
 
-DD4hep::DDRec::LayeredCalorimeterData * getExtension(unsigned int includeFlag, unsigned int excludeFlag=0) {
-  
-  
-  DD4hep::DDRec::LayeredCalorimeterData * theExtension = 0;
-  
-  DD4hep::Geometry::LCDD & lcdd = DD4hep::Geometry::LCDD::getInstance();
-  const std::vector< DD4hep::Geometry::DetElement>& theDetectors = DD4hep::Geometry::DetectorSelector(lcdd).detectors(  includeFlag, excludeFlag ) ;
-  
-  
-  streamlog_out( DEBUG2 ) << " getExtension :  includeFlag: " << DD4hep::DetType( includeFlag ) << " excludeFlag: " << DD4hep::DetType( excludeFlag ) 
-			  << "  found : " << theDetectors.size() << "  - first det: " << theDetectors.at(0).name() << std::endl ;
-  
-  if( theDetectors.size()  != 1 ){
-    
-    std::stringstream es ;
-    es << " getExtension: selection is not unique (or empty)  includeFlag: " << DD4hep::DetType( includeFlag ) << " excludeFlag: " << DD4hep::DetType( excludeFlag ) 
-       << " --- found detectors : " ;
-    for( unsigned i=0, N= theDetectors.size(); i<N ; ++i ){
-      es << theDetectors.at(i).name() << ", " ; 
-    }
-    throw std::runtime_error( es.str() ) ;
-  }
-  
-  theExtension = theDetectors.at(0).extension<DD4hep::DDRec::LayeredCalorimeterData>();
-  
-  return theExtension;
-}
+using dd4hep::DetType;
 
 ShowerStudy aShowerStudy;
 
@@ -232,11 +208,12 @@ void ShowerStudy::processEvent( LCEvent* evt ) {
     m_leak_hitLayerSensitiveThicknesses->clear();
 
     //Get ECal Barrel extension by type, ignore plugs and rings 
-    const DD4hep::DDRec::LayeredCalorimeterData * eCalBarrelExtension= getExtension( ( DD4hep::DetType::CALORIMETER | DD4hep::DetType::ELECTROMAGNETIC | DD4hep::DetType::BARREL), 
-										     ( DD4hep::DetType::AUXILIARY  |  DD4hep::DetType::FORWARD ) );
+    const dd4hep::rec::LayeredCalorimeterData * eCalBarrelExtension =
+      MarlinUtil::getLayeredCalorimeterData( ( DetType::CALORIMETER | DetType::ELECTROMAGNETIC | DetType::BARREL),
+                                             ( DetType::AUXILIARY | DetType::FORWARD ) );
 
     
-    const std::vector<DD4hep::DDRec::LayeredCalorimeterStruct::Layer> & layers = eCalBarrelExtension->layers;
+    const std::vector<dd4hep::rec::LayeredCalorimeterStruct::Layer> & layers = eCalBarrelExtension->layers;
     
     LCCollection * mcColl =0;
     getCollection(mcColl,m_inputMCParticleCollection,evt);
@@ -369,11 +346,12 @@ void ShowerStudy::processEvent( LCEvent* evt ) {
     
     
     //Get HCal Barrel extension by type, ignore plugs and rings 
-    const DD4hep::DDRec::LayeredCalorimeterData * hCalBarrelExtension= getExtension( ( DD4hep::DetType::CALORIMETER | DD4hep::DetType::HADRONIC| DD4hep::DetType::BARREL), 
-										     ( DD4hep::DetType::AUXILIARY  |  DD4hep::DetType::FORWARD ) );
+    const dd4hep::rec::LayeredCalorimeterData * hCalBarrelExtension =
+      MarlinUtil::getLayeredCalorimeterData( ( DetType::CALORIMETER | DetType::HADRONIC| DetType::BARREL),
+                                             ( DetType::AUXILIARY | DetType::FORWARD ) );
 
     
-    const std::vector<DD4hep::DDRec::LayeredCalorimeterStruct::Layer> & leak_layers = hCalBarrelExtension->layers;
+    const std::vector<dd4hep::rec::LayeredCalorimeterStruct::Layer> & leak_layers = hCalBarrelExtension->layers;
     double totalLeakEnergy=0.;
     for(int i=0; i< caloColl->getNumberOfElements(); i++){ 
 	CalorimeterHit* hit = dynamic_cast<CalorimeterHit*>( caloColl->getElementAt(i) ) ;

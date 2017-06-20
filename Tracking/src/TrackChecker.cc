@@ -27,9 +27,7 @@
 #include <UTIL/BitSet32.h>
 #include <UTIL/LCRelationNavigator.h>
 
-#include "DD4hep/LCDD.h"
-#include "DD4hep/DD4hepUnits.h"
-#include "DDRec/SurfaceManager.h"
+#include <marlinutil/GeometryUtil.h>
 
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_randist.h>
@@ -115,11 +113,7 @@ void TrackChecker::init() {
 	m_eventNumber = 0 ;
   
   // Get the magnetic field
-  DD4hep::Geometry::LCDD& lcdd = DD4hep::Geometry::LCDD::getInstance();
-  const double position[3]={0,0,0}; // position to calculate magnetic field at (the origin in this case)
-  double magneticFieldVector[3]={0,0,0}; // initialise object to hold magnetic field
-  lcdd.field().magneticField(position,magneticFieldVector); // get the magnetic field vector from DD4hep
-  m_magneticField = magneticFieldVector[2]/dd4hep::tesla; // z component at (0,0,0)
+  m_magneticField = MarlinUtil::getBzAtOrigin();
 
 	// Register this process
 	Global::EVENTSEEDER->registerProcessor(this);
