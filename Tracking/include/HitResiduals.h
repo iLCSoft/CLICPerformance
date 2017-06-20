@@ -13,6 +13,9 @@
 
 #include <string>
 
+using dd4hep::rec::SurfaceMap;
+using dd4hep::rec::SurfaceManager;
+using dd4hep::rec::ISurface;
 
 using namespace lcio ;
 using namespace marlin ;
@@ -20,8 +23,6 @@ namespace MarlinTrk{
   class IMarlinTrkSystem ;
 }
 using namespace MarlinTrk ;
-using namespace DD4hep::DDRec;
-
 
 
 class TFile;
