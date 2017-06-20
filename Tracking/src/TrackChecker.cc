@@ -55,7 +55,6 @@
 using namespace lcio ;
 using namespace marlin ;
 using namespace std ;
-using namespace DD4hep ;
 using namespace AIDA ;
 
 TrackChecker aTrackChecker;
