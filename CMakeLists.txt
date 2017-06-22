@@ -78,6 +78,8 @@ FOREACH( pkg Marlin MarlinUtil GSL AIDA )
 	ENDIF()
 ENDFOREACH()
 
+OPTION( VALGRIND "Set to location of valgrind" "/cvmfs/sft.cern.ch/lcg/releases/LCG_88/valgrind/3.11.0/x86_64-centos7-gcc62-opt/bin/valgrind" )
+OPTION( VALGRIND_LIB "Set to location of lib[64]/valgrind" "/cvmfs/sft.cern.ch/lcg/releases/LCG_88/valgrind/3.11.0/x86_64-centos7-gcc62-opt/lib/valgrind" )
 
 
 ### DOCUMENTATION ###########################################################
