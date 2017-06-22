@@ -1,0 +1,6 @@
+## suppress uninitialised value in, e.g., TMatrixH https://sft.its.cern.ch/jira/browse/ROOT-8484
+{
+  TObject::operator=(const TObject&) uses uninitialized value in IsOnHeap()
+  Memcheck:Cond
+  fun:_ZN7TObjectaSERKS_
+}
