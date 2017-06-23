@@ -288,7 +288,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
   // Make objects to hold all of the tracker hit and relation collections
   std::map<int,LCCollection*> trackerHitCollections;
   std::map<int,LCCollection*> trackerHitRelationCollections;
-  std::map<int,LCRelationNavigator*> relations;
+  std::map<int,std::shared_ptr<LCRelationNavigator> > relations;
   std::map<int,bool> activeDetectors;
   
   // Loop over each input collection and get the data
@@ -306,7 +306,8 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     getCollection(trackerHitRelationCollection, m_inputTrackerHitRelationCollections[collection], evt);
     
     // Create the relations navigator
-    LCRelationNavigator* relation = new LCRelationNavigator( trackerHitRelationCollection );
+    std::shared_ptr<LCRelationNavigator> relation =
+      std::make_shared<LCRelationNavigator>( LCRelationNavigator( trackerHitRelationCollection ) );
     
     // Get the subdetector for this set of collections
     int subdetector = getSubdetector(trackerHitCollection,m_encoder);
