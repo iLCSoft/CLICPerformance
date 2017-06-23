@@ -300,6 +300,7 @@ void HitResiduals::processEvent( LCEvent * evt ) {
 
       }//end loop on hits
 
+      delete marlin_trk;
 
     }//end loop on tracks
   }
