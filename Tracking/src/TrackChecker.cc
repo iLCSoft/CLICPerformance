@@ -34,6 +34,7 @@
 
 #include "marlin/ProcessorEventSeeder.h"
 #include "marlin/Global.h"
+#include "marlin/AIDAProcessor.h"
 
 #include "CLHEP/Vector/TwoVector.h"
 
@@ -116,8 +117,73 @@ void TrackChecker::init() {
 
 	// Register this process
 	Global::EVENTSEEDER->registerProcessor(this);
-  
 
+  // Initialise histograms
+  AIDAProcessor::histogramFactory(this);
+
+  perftree = new TTree(m_treeName.c_str(),m_treeName.c_str());
+
+  int bufsize = 32000; //default buffer size 32KB
+
+  perftree->Branch("truePt","std::vector<double >",&truePt,bufsize,0) ;
+  perftree->Branch("trueTheta","std::vector<double >",&trueTheta,bufsize,0) ;
+  perftree->Branch("truePhi","std::vector<double >",&truePhi,bufsize,0) ;
+  perftree->Branch("trueD0","std::vector<double >",&trueD0,bufsize,0) ;
+  perftree->Branch("trueZ0","std::vector<double >",&trueZ0,bufsize,0) ;
+  perftree->Branch("trueP","std::vector<double >",&trueP,bufsize,0) ;
+
+  perftree->Branch("recoPt","std::vector<double >",&recoPt,bufsize,0) ;
+  perftree->Branch("recoTheta","std::vector<double >",&recoTheta,bufsize,0) ;
+  perftree->Branch("recoPhi","std::vector<double >",&recoPhi,bufsize,0) ;
+  perftree->Branch("recoD0","std::vector<double >",&recoD0,bufsize,0) ;
+  perftree->Branch("recoZ0","std::vector<double >",&recoZ0,bufsize,0) ;
+  perftree->Branch("recoP","std::vector<double >",&recoP,bufsize,0) ;
+
+  perftree->Branch("recoNhits","std::vector<int >",&recoNhits,bufsize,0) ;
+  perftree->Branch("recoChi2OverNDF","std::vector<double >",&recoChi2OverNDF,bufsize,0) ;
+  perftree->Branch("recoMinDist","std::vector<double >",&recoMinDist,bufsize,0) ;
+
+  //   if(m_useOnlyTree) {
+  perftree->Branch("pullOmega","std::vector<double >",&pullOmega,bufsize,0) ;
+  perftree->Branch("pullPhi","std::vector<double >",&pullPhi,bufsize,0) ;
+  perftree->Branch("pullTanLambda","std::vector<double >",&pullTanLambda,bufsize,0) ;
+  perftree->Branch("pullD0","std::vector<double >",&pullD0,bufsize,0) ;
+  perftree->Branch("pullZ0","std::vector<double >",&pullZ0,bufsize,0) ;
+
+  perftree->Branch("resOmega","std::vector<double >",&resOmega,bufsize,0) ;
+  perftree->Branch("resPhi","std::vector<double >",&resPhi,bufsize,0) ;
+  perftree->Branch("resTanLambda","std::vector<double >",&resTanLambda,bufsize,0) ;
+  perftree->Branch("resD0","std::vector<double >",&resD0,bufsize,0) ;
+  perftree->Branch("resZ0","std::vector<double >",&resZ0,bufsize,0) ;
+  //    } else {
+  // Create output histograms
+  m_omegaPull = new TH1F("OmegaPullPlot","OmegaPullPlot",200,-10,10);
+  m_phiPull = new TH1F("PhiPullPlot","PhiPullPlot",200,-10,10);
+  m_tanLambdaPull = new TH1F("TanLambdaPullPlot","TanLambdaPullPlot",200,-10,10);
+  m_d0Pull = new TH1F("D0PullPlot","D0PullPlot",200,-10,10);
+  m_z0Pull = new TH1F("Z0PullPlot","Z0PullPlot",200,-10,10);
+
+  m_omegaMCParticle = new TH1F("OmegaMCParticle","OmegaMCParticle",200,-10,10);
+  m_phiMCParticle = new TH1F("PhiMCParticle","PhiMCParticle",200,-10,10);
+  m_tanLambdaMCParticle = new TH1F("TanLambdaMCParticle","TanLambdaMCParticle",200,-10,10);
+  m_d0MCParticle = new TH1F("D0MCParticle","D0MCParticle",200,-10,10);
+  m_z0MCParticle = new TH1F("Z0MCParticle","Z0MCParticle",200,-10,10);
+
+  m_omegaTrack = new TH1F("OmegaTrack","OmegaTrack",200,-10,10);
+  m_phiTrack = new TH1F("PhiTrack","PhiTrack",200,-10,10);
+  m_tanLambdaTrack = new TH1F("TanLambdaTrack","TanLambdaTrack",200,-10,10);
+  m_d0Track = new TH1F("D0Track","D0Track",200,-10,10);
+  m_z0Track = new TH1F("Z0Track","Z0Track",200,-10,10);
+
+  m_trackChi2 = new TH1F("TrackChi2","TrackChi2",500,0,10);
+
+  m_omegaResidual = new TH1F("omegaResidual","omegaResidual",200,-0.001,0.001);
+  m_phiResidual = new TH1F("phiResidual","phiResidual",100,-0.005,0.005);
+  m_tanLambdaResidual = new TH1F("tanLambdaResidual","tanLambdaResidual",100,-0.005,0.005);
+  m_d0Residual = new TH1F("d0Residual","d0Residual",200,-0.1,0.1);
+  m_z0Residual = new TH1F("z0Residual","z0Residual",200,-0.1,0.1);
+
+  //    }
 }
 
 
@@ -128,73 +194,6 @@ void TrackChecker::processRunHeader( LCRunHeader* ) {
 void TrackChecker::processEvent( LCEvent* evt ) {
 
   //std::cout<< "---- event << " << m_eventNumber << std::endl;
-
-  if( isFirstEvent() ) { 
-    perftree = new TTree(m_treeName.c_str(),m_treeName.c_str());
-
-    int bufsize = 32000; //default buffer size 32KB
-          
-    perftree->Branch("truePt","std::vector<double >",&truePt,bufsize,0) ;
-    perftree->Branch("trueTheta","std::vector<double >",&trueTheta,bufsize,0) ;
-    perftree->Branch("truePhi","std::vector<double >",&truePhi,bufsize,0) ;
-    perftree->Branch("trueD0","std::vector<double >",&trueD0,bufsize,0) ;
-    perftree->Branch("trueZ0","std::vector<double >",&trueZ0,bufsize,0) ;
-    perftree->Branch("trueP","std::vector<double >",&trueP,bufsize,0) ;
-
-    perftree->Branch("recoPt","std::vector<double >",&recoPt,bufsize,0) ;
-    perftree->Branch("recoTheta","std::vector<double >",&recoTheta,bufsize,0) ;
-    perftree->Branch("recoPhi","std::vector<double >",&recoPhi,bufsize,0) ;
-    perftree->Branch("recoD0","std::vector<double >",&recoD0,bufsize,0) ;
-    perftree->Branch("recoZ0","std::vector<double >",&recoZ0,bufsize,0) ;
-    perftree->Branch("recoP","std::vector<double >",&recoP,bufsize,0) ;
-
-    perftree->Branch("recoNhits","std::vector<int >",&recoNhits,bufsize,0) ;
-    perftree->Branch("recoChi2OverNDF","std::vector<double >",&recoChi2OverNDF,bufsize,0) ;
-    perftree->Branch("recoMinDist","std::vector<double >",&recoMinDist,bufsize,0) ;
-
-    //   if(m_useOnlyTree) {
-      perftree->Branch("pullOmega","std::vector<double >",&pullOmega,bufsize,0) ;
-      perftree->Branch("pullPhi","std::vector<double >",&pullPhi,bufsize,0) ;
-      perftree->Branch("pullTanLambda","std::vector<double >",&pullTanLambda,bufsize,0) ;
-      perftree->Branch("pullD0","std::vector<double >",&pullD0,bufsize,0) ;
-      perftree->Branch("pullZ0","std::vector<double >",&pullZ0,bufsize,0) ;
-
-      perftree->Branch("resOmega","std::vector<double >",&resOmega,bufsize,0) ;
-      perftree->Branch("resPhi","std::vector<double >",&resPhi,bufsize,0) ;
-      perftree->Branch("resTanLambda","std::vector<double >",&resTanLambda,bufsize,0) ;
-      perftree->Branch("resD0","std::vector<double >",&resD0,bufsize,0) ;
-      perftree->Branch("resZ0","std::vector<double >",&resZ0,bufsize,0) ;
-      //    } else {
-      // Create output histograms
-      m_omegaPull = new TH1F("OmegaPullPlot","OmegaPullPlot",200,-10,10);
-      m_phiPull = new TH1F("PhiPullPlot","PhiPullPlot",200,-10,10);
-      m_tanLambdaPull = new TH1F("TanLambdaPullPlot","TanLambdaPullPlot",200,-10,10);
-      m_d0Pull = new TH1F("D0PullPlot","D0PullPlot",200,-10,10);
-      m_z0Pull = new TH1F("Z0PullPlot","Z0PullPlot",200,-10,10);
-  
-      m_omegaMCParticle = new TH1F("OmegaMCParticle","OmegaMCParticle",200,-10,10);
-      m_phiMCParticle = new TH1F("PhiMCParticle","PhiMCParticle",200,-10,10);
-      m_tanLambdaMCParticle = new TH1F("TanLambdaMCParticle","TanLambdaMCParticle",200,-10,10);
-      m_d0MCParticle = new TH1F("D0MCParticle","D0MCParticle",200,-10,10);
-      m_z0MCParticle = new TH1F("Z0MCParticle","Z0MCParticle",200,-10,10);
-  
-      m_omegaTrack = new TH1F("OmegaTrack","OmegaTrack",200,-10,10);
-      m_phiTrack = new TH1F("PhiTrack","PhiTrack",200,-10,10);
-      m_tanLambdaTrack = new TH1F("TanLambdaTrack","TanLambdaTrack",200,-10,10);
-      m_d0Track = new TH1F("D0Track","D0Track",200,-10,10);
-      m_z0Track = new TH1F("Z0Track","Z0Track",200,-10,10);
-  
-      m_trackChi2 = new TH1F("TrackChi2","TrackChi2",500,0,10);
-
-      m_omegaResidual = new TH1F("omegaResidual","omegaResidual",200,-0.001,0.001);
-      m_phiResidual = new TH1F("phiResidual","phiResidual",100,-0.005,0.005);
-      m_tanLambdaResidual = new TH1F("tanLambdaResidual","tanLambdaResidual",100,-0.005,0.005);
-      m_d0Residual = new TH1F("d0Residual","d0Residual",200,-0.1,0.1);
-      m_z0Residual = new TH1F("z0Residual","z0Residual",200,-0.1,0.1);
-      //    }
-
-  }//end is first event
-
 
   clearEventVariables();
 
