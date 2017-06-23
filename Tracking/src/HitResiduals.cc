@@ -225,9 +225,9 @@ void HitResiduals::processEvent( LCEvent * evt ) {
 	cellid_decoder.setValue( id ) ;
 	streamlog_out(DEBUG1) << "id = " << id << std::endl;
 
-	int layer = cellid_decoder["layer"].value();
-	int subdet = cellid_decoder["system"].value();
-	int side = cellid_decoder["side"].value();
+	int layer = cellid_decoder[lcio::LCTrackerCellID::layer()].value();
+	int subdet = cellid_decoder[lcio::LCTrackerCellID::subdet()].value();
+	int side = cellid_decoder[lcio::LCTrackerCellID::side()].value();
 	streamlog_out(DEBUG1) << "layer = " << layer << std::endl;
 	streamlog_out(DEBUG1) << "subdet = " << subdet << std::endl;
 	streamlog_out(DEBUG1) << "side = " << side << std::endl;
