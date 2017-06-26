@@ -76,7 +76,6 @@ class HitResiduals : public Processor {
   std::string _outFileName = "";
   std::string _treeName = "";
 
-  TFile* _out = NULL;
   TTree* _tree = NULL;
 
   int _nRun = 0;
