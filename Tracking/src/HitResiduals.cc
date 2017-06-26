@@ -124,7 +124,8 @@ void HitResiduals::init() {
 
   //tree
 
-  _out = new TFile(_outFileName.c_str(),"RECREATE");
+  AIDAProcessor::histogramFactory(this);
+
   _tree = new TTree(_treeName.c_str(),_treeName.c_str());
   int bufsize = 32000; //default buffer size 32KB
 
@@ -180,14 +181,6 @@ void HitResiduals::processEvent( LCEvent * evt ) {
 
 
   streamlog_out(DEBUG2) << "----- _nEvt = " << _nEvt << std::endl;
-
-  //clear vectors
-  _resU.clear();
-  _resV.clear();
-  _subdet.clear();
-  _layer.clear();
-  _side.clear();
-
 
   UTIL::BitField64 cellid_decoder( lcio::LCTrackerCellID::encoding_string() ) ; 	    
   UTIL::BitField64 encoder( lcio::LCTrackerCellID::encoding_string() ) ; 	    
@@ -314,6 +307,12 @@ void HitResiduals::processEvent( LCEvent * evt ) {
 
   _tree->Fill();
 
+  //clear vectors
+  _resU.clear();
+  _resV.clear();
+  _subdet.clear();
+  _layer.clear();
+  _side.clear();
 
   streamlog_out(DEBUG) << "   processing event: " << evt->getEventNumber() 
 		       << "   in run:  " << evt->getRunNumber() << std::endl ;
@@ -334,9 +333,6 @@ void HitResiduals::check( LCEvent * ) {
 void HitResiduals::end(){ 
 
   _tree->Write();
-  _out->Write();
-  _out->Close();
-
   std::cout << "HitResiduals::end()  " << name() 
     	    << " processed " << _nEvt << " events in " << _nRun << " runs "
     	    << std::endl ;
