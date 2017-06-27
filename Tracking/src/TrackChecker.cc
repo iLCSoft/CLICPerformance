@@ -367,6 +367,10 @@ void TrackChecker::end(){
   //  if (!m_useOnlyTree) {
 
 
+  TF1 gaus = TF1("fitgaus", [](double* x, double* p){ return p[0]*TMath::Gaus(x[0], p[1], p[2], false);},-10, 10, 3);
+  gaus.SetParameter(0, 10);
+  gaus.SetParameter(1, 0);
+  gaus.SetParameter(2, 1);
 
     m_omegaPull->Write();
     m_phiPull->Write();
@@ -378,24 +382,24 @@ void TrackChecker::end(){
     pulls->Divide(3,2);
     pulls->cd(1);
     m_omegaPull->Draw();
-    m_omegaPull->Fit("gaus","");
     gStyle->SetOptFit(1111);
+    m_omegaPull->Fit(&gaus,"");
     pulls->cd(2);
     m_phiPull->Draw();
-    m_phiPull->Fit("gaus","");
     gStyle->SetOptFit(1111);
+    m_phiPull->Fit(&gaus,"");
     pulls->cd(3);
     m_tanLambdaPull->Draw();
-    m_tanLambdaPull->Fit("gaus","");
     gStyle->SetOptFit(1111);
+    m_tanLambdaPull->Fit(&gaus,"");
     pulls->cd(4);
     m_d0Pull->Draw();
-    m_d0Pull->Fit("gaus","");
     gStyle->SetOptFit(1111);
+    m_d0Pull->Fit(&gaus,"");
     pulls->cd(5);
     m_z0Pull->Draw();
-    m_z0Pull->Fit("gaus","");
     gStyle->SetOptFit(1111);
+    m_z0Pull->Fit(&gaus,"");
     pulls->Write();
 
     res = new TCanvas("res","Residuals of the track parameters",800,800);
