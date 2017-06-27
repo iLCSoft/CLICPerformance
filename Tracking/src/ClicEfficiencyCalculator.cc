@@ -2,53 +2,27 @@
 #include "ClicEfficiencyCalculator.h"
 #include "DDRec/API/IDDecoder.h"
 
-#include "MarlinTrk/MarlinTrkUtils.h"
-#include "MarlinTrk/HelixTrack.h"
-#include "MarlinTrk/HelixFit.h"
-#include "MarlinTrk/IMarlinTrack.h"
-#include "MarlinTrk/Factory.h"
-#include "MarlinTrk/MarlinTrkDiagnostics.h"
-#include "MarlinTrk/IMarlinTrkSystem.h"
 #include "marlin/AIDAProcessor.h"
 
-#include <UTIL/CellIDDecoder.h>
 #include <EVENT/LCCollection.h>
+#include <EVENT/SimTrackerHit.h>
+
 #include <IMPL/LCCollectionVec.h>
 #include <IMPL/LCRelationImpl.h>
-#include <EVENT/SimTrackerHit.h>
-#include <IMPL/TrackerHitPlaneImpl.h>
 #include <IMPL/TrackImpl.h>
+#include <IMPL/TrackerHitPlaneImpl.h>
 
-#include <UTIL/CellIDEncoder.h>
+#include <UTIL/CellIDDecoder.h>
 #include <UTIL/LCTrackerConf.h>
-#include <UTIL/BitSet32.h>
 #include <UTIL/LCRelationNavigator.h>
 
 #include <marlinutil/GeometryUtil.h>
-
-#include <gsl/gsl_rng.h>
-#include <gsl/gsl_randist.h>
-
-#include "marlin/ProcessorEventSeeder.h"
-#include "marlin/Global.h"
-
-#include "CLHEP/Vector/TwoVector.h"
 
 #include <AIDA/IAnalysisFactory.h>
 #include <AIDA/IHistogramFactory.h>
 
 #include <TLorentzVector.h>
-#include "TFile.h"
-#include "TTree.h"
-
-#include <cmath>
-#include <algorithm>
-#include <sstream>
-#include <iostream>
-#include <climits>
-#include <cfloat>
-#include "sys/types.h"
-#include "sys/sysinfo.h"
+#include <TTree.h>
 
 
 using namespace lcio ;
@@ -184,8 +158,6 @@ void ClicEfficiencyCalculator::init() {
   // Initialise histograms
   AIDAProcessor::histogramFactory(this);
 
-  // Register this process
-  Global::EVENTSEEDER->registerProcessor(this);
   
   // Set up trees if ntuple output enabled
   if(m_fullOutput){
