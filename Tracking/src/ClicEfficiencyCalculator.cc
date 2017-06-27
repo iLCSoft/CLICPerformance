@@ -233,9 +233,7 @@ void ClicEfficiencyCalculator::processRunHeader( LCRunHeader* ) {
 
 void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
   
-  // Clean the trees
   std::cout<<"Processing event "<<m_eventNumber<<std::endl;
-  clearTreeVar();
   
   // First pick up all of the collections that will be used - tracks, MCparticles, hits from relevent subdetectors - and their relations
   
@@ -399,10 +397,6 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
    map, with the key a pointer to the MC particle. We can then loop over each
    MC particle at the end and get all of the hits, before making a track.
    */
-  
-  // Make the container
-  //std::map<MCParticle*, std::vector<TrackerHit*> > particleHits;
-  particleHits.clear();
   
   // Loop over all input collections
   for(unsigned int itCollection=0; itCollection<m_collections.size();itCollection++){
@@ -584,7 +578,10 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
   // Increment the event number
   std::cout<<"For this event reconstructed "<<100.*(double)nReconstructed/(double)nReconstructable<<" % ("<<nReconstructed<<"/"<<nReconstructable<<")"<<std::endl;
   m_eventNumber++ ;
-  
+
+  // Clean the trees
+  clearTreeVar();
+
 }
 
 void ClicEfficiencyCalculator::check( LCEvent *  ) {
@@ -872,6 +869,8 @@ void ClicEfficiencyCalculator::clearTreeVar(){
   m_vec_phi.clear();
   m_vec_p.clear();
   
+  particleHits.clear();
+
 }  
 
 
