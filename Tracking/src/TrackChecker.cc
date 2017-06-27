@@ -4,15 +4,7 @@
 #include "DDRec/API/IDDecoder.h"
 
 #include <marlinutil/HelixClass.h>
-#include "MarlinTrk/MarlinTrkUtils.h"
 #include "MarlinTrk/HelixTrack.h"
-#include "MarlinTrk/HelixFit.h"
-#include "MarlinTrk/HelixFit.h"
-#include "MarlinTrk/IMarlinTrack.h"
-#include "MarlinTrk/Factory.h"
-#include "MarlinTrk/MarlinTrkDiagnostics.h"
-#include "MarlinTrk/IMarlinTrkSystem.h"
-
 
 #include <EVENT/LCCollection.h>
 #include <IMPL/LCCollectionVec.h>
@@ -22,24 +14,19 @@
 #include <EVENT/MCParticle.h>
 #include <IMPL/TrackImpl.h>
 
-#include <UTIL/CellIDEncoder.h>
-#include <UTIL/LCTrackerConf.h>
-#include <UTIL/BitSet32.h>
 #include <UTIL/LCRelationNavigator.h>
 
 #include <marlinutil/GeometryUtil.h>
 
-#include <gsl/gsl_rng.h>
-#include <gsl/gsl_randist.h>
-
-#include "marlin/ProcessorEventSeeder.h"
-#include "marlin/Global.h"
 #include "marlin/AIDAProcessor.h"
 
-#include "CLHEP/Vector/TwoVector.h"
-
-#include <AIDA/IAnalysisFactory.h>
-#include <AIDA/IHistogramFactory.h>
+#include <TCanvas.h>
+#include <TF1.h>
+#include <TFile.h>
+#include <TH1F.h>
+#include <TStyle.h>
+#include <TTree.h>
+#include <TMath.h>
 
 #include <cmath>
 #include <algorithm>
@@ -47,11 +34,6 @@
 #include <iostream>
 #include <climits>
 #include <cfloat>
-#include "TH1F.h"
-#include "TCanvas.h"
-#include "TFile.h"
-#include "TStyle.h"
-#include "TTree.h"
 
 using namespace lcio ;
 using namespace marlin ;
@@ -114,9 +96,6 @@ void TrackChecker::init() {
   
   // Get the magnetic field
   m_magneticField = MarlinUtil::getBzAtOrigin();
-
-	// Register this process
-	Global::EVENTSEEDER->registerProcessor(this);
 
   // Initialise histograms
   AIDAProcessor::histogramFactory(this);
