@@ -306,7 +306,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
   for(int itTrack=0;itTrack<nTracks;itTrack++){
     
     // Get the track
-    Track* track = dynamic_cast<Track*>( trackCollection->getElementAt(itTrack) ) ;
+    Track* track = static_cast<Track*>( trackCollection->getElementAt(itTrack) ) ;
     
     // Get the hits
     const TrackerHitVec& hitVector = track->getTrackerHits();
@@ -326,7 +326,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     int nHits = hitVector.size();
     for(int itHit=0;itHit<nHits;itHit++){
       // Get the tracker hit
-      TrackerHitPlane* hit = dynamic_cast<TrackerHitPlane*>(hitVector.at(itHit));
+      TrackerHitPlane* hit = static_cast<TrackerHitPlane*>(hitVector.at(itHit));
       // Get the subdetector number
       int subdetector = getSubdetector(hit,m_encoder);
       // Check if this subdetector is to be included in the efficiency calculation
@@ -337,7 +337,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
       // Get the simulated hit
       const LCObjectVec& simHitVector = relations[subdetector]->getRelatedToObjects( hit );
       // Take the first hit only (this should be changed? Yes - loop over all related simHits and add an entry for each mcparticle so that this hit is in each fit)
-      SimTrackerHit* simHit = dynamic_cast<SimTrackerHit*>(simHitVector.at(0));
+      SimTrackerHit* simHit = static_cast<SimTrackerHit*>(simHitVector.at(0));
       // Get the particle belonging to that hit
       MCParticle* particle = simHit->getMCParticle();
       // Check if this particle already has hits on this track
@@ -409,13 +409,13 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     for(int itHit=0;itHit<nHits;itHit++){
       
       // Get the hit
-      TrackerHitPlane* hit = dynamic_cast<TrackerHitPlane*>( trackerHitCollections[collection]->getElementAt(itHit) ) ;
+      TrackerHitPlane* hit = static_cast<TrackerHitPlane*>( trackerHitCollections[collection]->getElementAt(itHit) ) ;
       
       // Get the related simulated hit(s)
       const LCObjectVec& simHitVector = relations[collection]->getRelatedToObjects( hit );
       
       // Take the first hit only (this should be changed? Yes - loop over all related simHits and add an entry for each mcparticle so that this hit is in each fit)
-      SimTrackerHit* simHit = dynamic_cast<SimTrackerHit*>(simHitVector.at(0));
+      SimTrackerHit* simHit = static_cast<SimTrackerHit*>(simHitVector.at(0));
       
       // Get the particle belonging to that hit
       MCParticle* particle = simHit->getMCParticle();
@@ -439,7 +439,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     
     // Get the particle
     nCloseTrk=0;
-    MCParticle* particle = dynamic_cast<MCParticle*>( particleCollection->getElementAt(itParticle) ) ;
+    MCParticle* particle = static_cast<MCParticle*>( particleCollection->getElementAt(itParticle) ) ;
     
     // Calculate the particle properties
     TLorentzVector particleVector;
@@ -493,7 +493,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     // Check for particles close to each other (needs cleaning up FIXME)
     for(int j=0; j<nParticles; j++){
       if (itParticle!=j){
-        MCParticle* particle2 = dynamic_cast<MCParticle*>( particleCollection->getElementAt(j) );
+        MCParticle* particle2 = static_cast<MCParticle*>( particleCollection->getElementAt(j) );
         bool part2IsCharge = fabs(particle2->getCharge()) > 0.5;
         bool part2IsStable = particle2->getGeneratorStatus() == 1 ;
         if ( part2IsCharge && part2IsStable ) {
@@ -622,7 +622,7 @@ void ClicEfficiencyCalculator::getCollection(LCCollection* &collection, std::str
 }
 
 int ClicEfficiencyCalculator::getSubdetector(LCCollection* collection, UTIL::BitField64 &encoder){
-  TrackerHitPlane* hit = dynamic_cast<TrackerHitPlane*>( collection->getElementAt(0) ) ;
+  TrackerHitPlane* hit = static_cast<TrackerHitPlane*>( collection->getElementAt(0) ) ;
   const int celId = hit->getCellID0() ;
   encoder.setValue(celId) ;
   int subdet = encoder[lcio::LCTrackerCellID::subdet()];
