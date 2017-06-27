@@ -473,7 +473,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     m_thetaPtMCParticle->Fill(mcTheta,mcPt);
     std::vector<TrackerHit*> trackHits = particleHits[particle];
     int uniqueHits = getUniqueHits(trackHits,m_encoder);
-    int nHitsOnTrack(0);
+    //int nHitsOnTrack(0);
 
     // Check if it was reconstructed
     bool reconstructed=false;
@@ -676,18 +676,19 @@ bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::str
     //(a.t.m. no same cut on reco pT/theta but no bias because in that case also the mc particle is kept)
     
     //add condition for decay outside vertex/tracker?
-    bool isCharge = false;
+    //bool isCharge = false;
     bool isStable = false;
     bool passPt = false;
     bool passTheta = false;
     bool passNHits = false;
-    bool passIP = false;
-    bool passEndPoint = false;
+    //bool passIP = false;
+    //bool passEndPoint = false;
     // bool isOverlay = particle->isOverlay();
     // if (isOverlay) std::cout<<"----- ehi there are overlay particles in this mc collection"<<std::endl;
-    
-    double charge = fabs(particle->getCharge());
-    if (charge>0.5) isCharge = true;
+
+    // //isCharge Cut
+    // double charge = fabs(particle->getCharge());
+    // if (charge>0.5) isCharge = true;
     //else std::cout<<"----- mc not charged"<<std::endl;
     int genStatus = particle->getGeneratorStatus();
     //int nDaughters = particle->getDaughters().size();
@@ -715,13 +716,17 @@ bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::str
     // }
     // if (nVXDHits >= 4) return true;
     
-    double dist = sqrt( pow(particle->getVertex()[0],2) + pow(particle->getVertex()[1],2) );
-    if (dist<100.) passIP = true;
+    // //passIP Cut
+    // double dist = sqrt( pow(particle->getVertex()[0],2) + pow(particle->getVertex()[1],2) );
+    // if (dist<100.) passIP = true;
+
     //else std::cout<<"----- mc has dist from IP > 100mm"<<std::endl;
     //if (dist<30.) passIP = true;
-    
-    double e = sqrt( pow(particle->getEndpoint()[0],2) + pow(particle->getEndpoint()[1],2) );
-    if (e==0. || e>40.) passEndPoint=true;
+
+    // //passEndpoint Cut
+    // double e = sqrt( pow(particle->getEndpoint()[0],2) + pow(particle->getEndpoint()[1],2) );
+    // if (e==0. || e>40.) passEndPoint=true;
+
     //else std::cout<<"----- mc has endpoint < 40mm"<<std::endl;
     
     
