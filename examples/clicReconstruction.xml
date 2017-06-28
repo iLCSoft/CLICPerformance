@@ -287,15 +287,13 @@
     <parameter name="MaxDistance" type="double"> 0.02 </parameter>
     <parameter name="MinClustersOnTrack" type="int"> 4 </parameter>
     <parameter name="MaxChi2" type="double"> 10 </parameter>
-    <parameter name="DebugPlots" type="bool"> true </parameter>
+    <parameter name="DebugPlots" type="bool"> false </parameter>
     <parameter name="trackPurity" type="double">0.7 </parameter>
 
     <!--Silicon track Collection Name-->
     <parameter name="SiTrackCollectionName" type="string" lcioOutType="Track">CATracks </parameter>
     <!--Name of the MCParticle input collection-->
     <parameter name="MCParticleCollectionName" type="string" lcioInType="MCParticle">MCParticle </parameter>
-    <!--Plots for debugging the tracking-->
-    <parameter name="DebugPlots" type="bool">false </parameter>
     <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
     <!--parameter name="Verbosity" type="string">DEBUG </parameter-->
   </processor>
