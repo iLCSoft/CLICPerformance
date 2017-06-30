@@ -368,10 +368,18 @@ void TrackChecker::end(){
 
   AIDAProcessor::histogramFactory(this);
 
-  TF1 gaus = TF1("fitgaus", [](double* x, double* p){ return p[0]*TMath::Gaus(x[0], p[1], p[2], false);},-10, 10, 3);
+  TF1 gaus = TF1("fitgaus", [](double* x, double* p){ return p[0]*TMath::Gaus(x[0], p[1], p[2], true);},-10, 10, 3);
   gaus.SetParameter(0, 10);
   gaus.SetParameter(1, 0);
   gaus.SetParameter(2, 1);
+
+  gaus.SetParError(0, 1);
+  gaus.SetParError(1, 0.1);
+  gaus.SetParError(2, 0.1);
+
+  gaus.SetParName(0, "N");
+  gaus.SetParName(1, "#mu");
+  gaus.SetParName(2, "#sigma");
 
  
     pulls = new TCanvas("pulls","Pulls of the track parameters",800,800);
