@@ -366,17 +366,13 @@ void TrackChecker::end(){
 
   //  if (!m_useOnlyTree) {
 
+  AIDAProcessor::histogramFactory(this);
 
   TF1 gaus = TF1("fitgaus", [](double* x, double* p){ return p[0]*TMath::Gaus(x[0], p[1], p[2], false);},-10, 10, 3);
   gaus.SetParameter(0, 10);
   gaus.SetParameter(1, 0);
   gaus.SetParameter(2, 1);
 
-    m_omegaPull->Write();
-    m_phiPull->Write();
-    m_tanLambdaPull->Write();
-    m_d0Pull->Write();
-    m_z0Pull->Write();
  
     pulls = new TCanvas("pulls","Pulls of the track parameters",800,800);
     pulls->Divide(3,2);
@@ -415,23 +411,6 @@ void TrackChecker::end(){
     res->cd(5);
     m_z0Residual->Draw();
     res->Write();
-
-    m_omegaMCParticle->Write();
-    m_phiMCParticle->Write();
-    m_tanLambdaMCParticle->Write(); 
-    m_d0MCParticle->Write();
-    m_z0MCParticle->Write();
-  
-    m_omegaTrack->Write();
-    m_phiTrack->Write();
-    m_tanLambdaTrack->Write();
-    m_d0Track->Write();
-    m_z0Track->Write();
-  
-    m_trackChi2->Write();
-    //  }
-
-  perftree->Write();
 
 }
 
