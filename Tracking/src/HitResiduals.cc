@@ -332,7 +332,6 @@ void HitResiduals::check( LCEvent * ) {
 
 void HitResiduals::end(){ 
 
-  _tree->Write();
   std::cout << "HitResiduals::end()  " << name() 
     	    << " processed " << _nEvt << " events in " << _nRun << " runs "
     	    << std::endl ;

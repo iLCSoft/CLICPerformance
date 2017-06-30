@@ -598,15 +598,6 @@ void ClicEfficiencyCalculator::end(){
   // Calculate efficiency results
   streamlog_out(MESSAGE)<<std::fixed<<std::setprecision(2)<<"Reconstructable particle efficiency: "<<100.*m_particles["reconstructed"]/m_particles["reconstructable"]<<" % ("<<std::setprecision(0)<<m_particles["reconstructed"]<<"/"<<m_particles["reconstructable"]<<")"<<std::endl;
   
-  // Write out the trees
-  if (m_fullOutput){
-    m_mctree->Write();
-    m_trackTree->Write();
-    m_purityTree->Write();
-  }
-  if(m_simpleOutput){
-    m_simplifiedTree->Write();
-  }
   
 }
 
