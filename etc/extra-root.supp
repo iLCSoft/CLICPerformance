@@ -134,14 +134,6 @@
 }
 
 {
-   clang::Parser::ParseDeclarationSpecifiers
-   Memcheck:Leak
-   match-leak-kinds: reachable
-   ...
-   fun:_ZN5clang6Parser26ParseDeclarationSpecifiers*
-}
-
-{
    TListOfDataMembers::FindObject
    Memcheck:Leak
    match-leak-kinds: reachable
@@ -158,11 +150,11 @@
 }
 
 {
-   clang::Parser::Parse*
+   clang::Parser::*
    Memcheck:Leak
    match-leak-kinds: reachable
    ...
-   fun:_ZN5clang6Parser*Parse*
+   fun:_ZN5clang6Parser*
 }
 
 {
@@ -227,4 +219,155 @@
    match-leak-kinds: reachable
    ...
    fun:_ZN5clang4Sema*
+}
+
+{
+   TUnixSystem statics
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:__static_initialization_and_destruction_0
+   fun:_GLOBAL__sub_I_TUnixSystem.cxx
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+}
+
+{
+   stdc++
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:pool
+   fun:__static_initialization_and_destruction_0
+   fun:_GLOBAL__sub_I_eh_alloc.cc
+   obj:*libstdc++.so.*
+   obj:*libstdc++.so.*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+}
+
+{
+   llvm::orc
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN4llvm3orc*
+}
+
+{
+   TEve geoMangeur (sic)
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:init_geo_mangeur
+   fun:__static_initialization_and_destruction_0
+   fun:_GLOBAL__sub_I_TEveGeoShape.cxx
+   obj:*libEve.so
+   ...
+}
+
+
+
+{
+   dlopen stuff
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:calloc
+   fun:_dl_new_object
+   fun:_dl_map_object_from_fd
+   fun:_dl_map_object
+   fun:openaux
+   fun:_dl_catch_error
+   fun:_dl_map_object_deps
+   fun:dl_open_worker
+   fun:_dl_catch_error
+   fun:_dl_open
+   fun:dlopen_doit
+   fun:_dl_catch_error
+}
+
+{
+   TClass:CallShowMembers
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZNK6TClass15CallShowMembersEPKvR16TMemberInspectorb
+}
+
+{
+   TClass::TClass
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN6TClassC1*
+}
+
+{
+   clang::Preprocessor*
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN5clang12Preprocessor*
+}
+
+{
+   ItaniumRecordLayoutBuilder
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:*Itanium*
+}
+
+{
+   TCling::InspectMembers
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN6TCling14InspectMembers*
+}
+
+
+{
+   TBufferFile::Write*
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN11TBufferFile*Write*
+}
+
+{
+   TListOfDataMembers*
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN18TListOfDataMembers*
+}
+
+{
+   TROOT statics
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_GLOBAL__sub_I_TROOT.cxx
+   ...
+}
+
+
+{
+   ROOT Class statics
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN4ROOTL25GenerateInitInstanceLocal*
+   fun:__static_initialization_and_destruction_0
+   fun:_GLOBAL__sub_I_*.cxx
+   ...
 }
