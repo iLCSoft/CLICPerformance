@@ -39,3 +39,192 @@
    fun:_ZN6marlin12ProcessorMgr4initEv
    fun:main
 }
+
+
+## still reachable ROOT leaks
+{
+   ROOT TEnv::Getvalue
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN4ROOT8Internal8GetROOT2Ev
+   fun:_ZN4TEnv8GetvalueEPKc
+}
+
+
+{
+   clang::TreeTransform
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN5clang13TreeTransformIN12_*
+}
+
+{
+   clann::ClassTemplateDecl
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZNK5clang17ClassTemplateDecl*
+}
+
+{
+   clang::ASTDeclReader
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN5clang13ASTDeclReader*
+}
+
+{
+   TBaseClass::GetClassPointer
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN10TBaseClass15GetClassPointer*
+}
+
+{
+   TROOT::InitInterpreter
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN5TROOT15InitInterpreterEv
+}
+
+{
+   TCling::GenerateTClass
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN6TCling14GenerateTClass*
+}
+
+{
+   clang::Lexer:LexTokenInternal
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN5clang5Lexer16LexTokenInternal*
+}
+
+{
+   TBufferFile::ReadObjectAny
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN11TBufferFile13ReadObjectAnyEPK6TClass
+}
+
+{
+   TListOfDataMembers::Load
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN18TListOfDataMembers4Load*
+}
+
+{
+   clang::MultiplexExternalSemaSource::GetExternalDecl
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN5clang27MultiplexExternalSemaSource15GetExternalDecl*
+   ...
+}
+
+{
+   clang::Parser::ParseDeclarationSpecifiers
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN5clang6Parser26ParseDeclarationSpecifiers*
+}
+
+{
+   TListOfDataMembers::FindObject
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZNK18TListOfDataMembers10FindObjectEPKc
+}
+
+{
+   TCling::TCling
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN6TClingC1EPKcS1_
+}
+
+{
+   clang::Parser::Parse*
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN5clang6Parser*Parse*
+}
+
+{
+   clang::DeclContext*
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZNK5clang11DeclContext*
+}
+
+{
+   cling::Interpreter
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZNK5cling11Interpreter*
+}
+
+{
+   TClingClassInfo::GetBaseOffset
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN15TClingClassInfo13GetBaseOffset*
+}
+
+{
+   TBufferFile::ApplySequence
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN11TBufferFile13ApplySequence*
+}
+
+{
+   cling::IncrementalParser
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN5cling17IncrementalParser*
+}
+
+{
+   clang::ASTReader
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN5clang9ASTReader*
+}
+
+{
+   clang::CodeGen*
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN5clang7CodeGen*
+}
+
+{
+   clang::Sema*
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN5clang4Sema*
+}
