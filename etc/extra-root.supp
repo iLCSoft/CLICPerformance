@@ -4,3 +4,38 @@
   Memcheck:Cond
   fun:_ZN7TObjectaSERKS_
 }
+
+
+## definite ROOT leaks
+{
+   ROOT loading a dictionary leaks memory, dd4hep, lcfiplus dicts etc.
+   Memcheck:Leak
+   match-leak-kinds: definite
+   ...
+   fun:_ZN6TCling14RegisterModule*
+   ...
+}
+{
+   ROOT: a couple of 4 byte leaks when writing file(?)
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:_Znam
+   fun:_Z37TClingLookupHelper__ExistingTypeCheckRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERS4_
+   fun:_ZN10TClassEdit*
+   ...
+}
+
+
+## definite leaks that will be fixed soon
+
+{
+   DD4hep multiple checksum constant creation
+   Memcheck:Leak
+   match-leak-kinds: definite
+   ...
+   fun:_ZN6dd4hep8ConstantC1ERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEES8_S8_
+   ...
+   fun:_ZN16InitializeDD4hep4initEv
+   fun:_ZN6marlin12ProcessorMgr4initEv
+   fun:main
+}
