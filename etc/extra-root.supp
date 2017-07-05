@@ -25,13 +25,47 @@
    ...
 }
 
+## LCIO
+{
+   buffer for reading lcio file
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:_Znam
+   fun:__static_initialization_and_destruction_0
+   fun:_GLOBAL__sub_I_LCSIO.cc
+   obj:*/liblcio.so*
+   ...
+}
 
-## definite leaks that will be fixed soon
+## Marlin
 
 {
-   DD4hep multiple checksum constant creation
+   Marlin ProcessorLoader
    Memcheck:Leak
-   match-leak-kinds: definite
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN6marlin15ProcessorLoaderC1EN9__gnu_cxx17__normal_iteratorIPKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESt6vectorIS8_SaIS8_EEEESE_
+}
+
+
+# {
+#    Global Processor instances
+#    Memcheck:Leak
+#    match-leak-kinds: reachable
+#    fun:_Znwm
+#    fun:*
+#    fun:__static_initialization_and_destruction_0
+#    fun:_GLOBAL__sub_I_*
+#    obj:*libMarlinTrkProcessors.*
+#    ...
+# }
+
+##DD4hep
+
+{
+   DD4hep multiple constant creation
+   Memcheck:Leak
+   match-leak-kinds: definite,indirect
    ...
    fun:_ZN6dd4hep8ConstantC1ERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEES8_S8_
    ...
@@ -40,6 +74,28 @@
    fun:main
 }
 
+{
+   dd4hep segmentations statics
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:SegmentationCreator
+   fun:__static_initialization_and_destruction_0
+   fun:_GLOBAL__sub_I_*
+   obj:*libDDSegmentation.so*
+   ...
+}
+
+{
+   DD4hep plugin loader
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN12_GLOBAL__N_115PluginInterface*
+   fun:instance
+   fun:_ZN6dd4hep13PluginService10getCreatorERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEERKSt9type_info
+   ...
+}
 
 ## still reachable ROOT leaks
 {
@@ -109,11 +165,11 @@
 }
 
 {
-   TBufferFile::ReadObjectAny
+   TBufferFile::Read*
    Memcheck:Leak
-   match-leak-kinds: reachable
+   match-leak-kinds: reachable,indirect
    ...
-   fun:_ZN11TBufferFile13ReadObjectAnyEPK6TClass
+   fun:_ZN11TBufferFile13Read*
 }
 
 {
@@ -184,7 +240,7 @@
 {
    TBufferFile::ApplySequence
    Memcheck:Leak
-   match-leak-kinds: reachable
+   match-leak-kinds: reachable,indirect
    ...
    fun:_ZN11TBufferFile13ApplySequence*
 }
@@ -192,7 +248,7 @@
 {
    cling::IncrementalParser
    Memcheck:Leak
-   match-leak-kinds: reachable
+   match-leak-kinds: reachable,possible
    ...
    fun:_ZN5cling17IncrementalParser*
 }
@@ -221,18 +277,6 @@
    fun:_ZN5clang4Sema*
 }
 
-{
-   TUnixSystem statics
-   Memcheck:Leak
-   match-leak-kinds: reachable
-   ...
-   fun:__static_initialization_and_destruction_0
-   fun:_GLOBAL__sub_I_TUnixSystem.cxx
-   obj:*
-   obj:*
-   obj:*
-   obj:*
-}
 
 {
    stdc++
@@ -262,19 +306,6 @@
    fun:_ZN4llvm3orc*
 }
 
-{
-   TEve geoMangeur (sic)
-   Memcheck:Leak
-   match-leak-kinds: reachable
-   ...
-   fun:init_geo_mangeur
-   fun:__static_initialization_and_destruction_0
-   fun:_GLOBAL__sub_I_TEveGeoShape.cxx
-   obj:*libEve.so
-   ...
-}
-
-
 
 {
    dlopen stuff
@@ -293,6 +324,17 @@
    fun:dlopen_doit
    fun:_dl_catch_error
 }
+
+{
+   ROOT and DD4hep: dynamic loader
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:dlopen_doit
+   fun:_dl_catch_error
+   ...
+}
+
 
 {
    TClass:CallShowMembers
@@ -351,6 +393,17 @@
    fun:_ZN18TListOfDataMembers*
 }
 
+
+{
+   ROOT Static for objects
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_GLOBAL__sub_I_*.c*
+   obj:*/ROOT/*/lib/lib*.so
+   ...
+}
+
 {
    TROOT statics
    Memcheck:Leak
@@ -360,14 +413,222 @@
    ...
 }
 
+# {
+#    TUnixSystem statics
+#    Memcheck:Leak
+#    match-leak-kinds: reachable
+#    ...
+#    fun:__static_initialization_and_destruction_0
+#    fun:_GLOBAL__sub_I_TUnixSystem.cxx
+#    obj:*
+#    obj:*
+#    obj:*
+#    obj:*
+# }
+
+# {
+#    ROOT Class statics
+#    Memcheck:Leak
+#    match-leak-kinds: reachable
+#    ...
+#    fun:*ROOT*GenerateInitInstance*
+#    fun:__static_initialization_and_destruction_0
+#    fun:_GLOBAL__sub_I_*.cxx
+#    ...
+# }
 
 {
-   ROOT Class statics
+   cling addArgument, static
    Memcheck:Leak
    match-leak-kinds: reachable
    ...
-   fun:_ZN4ROOTL25GenerateInitInstanceLocal*
-   fun:__static_initialization_and_destruction_0
-   fun:_GLOBAL__sub_I_*.cxx
+   fun:_ZN4llvm2cl6Option11addArgumentEv
+   ...
+   obj:*libCling.so*
+   ...
+}
+
+{
+   ROOT TLatex
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN6TLatex5Anal*
+}
+
+{
+   TCling::GetSharedLibs
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN6TCling13GetSharedLibsEv
+}
+
+{
+   ROOT TDataMember::Init
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN11TDataMember4Init*
+}
+
+
+{
+   TStreamerBase
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN13TStreamerBase*
+}
+
+
+{
+   TStreamerInfo
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN13TStreamerInfo*
+}
+
+{
+   TBuildRealData
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN14TBuildRealData*
+}
+
+{
+   TGenericClassInfo
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN4ROOT17TGenericClassInfo*
+}
+
+{
+   llvm::FPPassManager
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN4llvm13FPPassManager*
+}
+
+
+
+{
+   ROOT TVirtualGraphPainter
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN20TVirtualGraphPainter*
+}
+
+{
+   ROOT TVirtualHistPainter
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN19TVirtualHistPainter*
+}
+
+{
+   ROOT TEnum
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN5TEnum*
+}
+
+
+## ROOT geoManagert is never cleaned up
+{
+   ROOT geoManager GeomPainter
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN11TGeoManager14GetGeomPainterEv
+   ...
+   fun:_ZN6dd4hep3rec15MaterialManager16materialsBetween*
+   ...
+}
+
+
+{
+   ROOT TGeoManager
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN11TGeoManagerC1EPKcS1_
+   fun:_ZN6dd4hep11DetectorImpC1Ev
+   fun:_ZN6dd4hep8Detector11getInstanceEv
+   fun:_ZN16InitializeDD4hep4initEv
+   fun:_ZN6marlin12ProcessorMgr4initEv
+   fun:main
+}
+
+{
+   ROOT TListOfFunctions
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:_Znam
+   fun:_ZN6TExMapC1Ei
+   fun:_ZN16TListOfFunctionsC1EP6TClass
+   ...
+}
+
+{
+   TPluginHandler::LoadPlugin
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN14TPluginHandler10LoadPluginEv
+   ...
+}
+
+{
+   TClass::GetDataMember
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZNK6TClass13GetDataMemberEPKc
+   ...
+}
+
+{
+   TClass::GetListOfBases
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN6TClass14GetListOfBasesEv
+   ...
+}
+
+{
+   cling::MetaParser::isXCommand
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN5cling10MetaParser10isXCommandERNS_8MetaSema12ActionResultEPNS_5ValueE
+   ...
+}
+
+{
+   clang::getASTRecordLayout
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZNK5clang10ASTContext18getASTRecordLayout*
+   ...
+}
+
+{
+   pthread_once combined with llvm stuff
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN4llvm*
+   ...
+   fun:pthread_once
    ...
 }
