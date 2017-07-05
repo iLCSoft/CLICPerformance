@@ -10,7 +10,7 @@
 {
    ROOT loading a dictionary leaks memory, dd4hep, lcfiplus dicts etc.
    Memcheck:Leak
-   match-leak-kinds: definite
+   match-leak-kinds: definite,reachable
    ...
    fun:_ZN6TCling14RegisterModule*
    ...
@@ -48,6 +48,28 @@
 }
 
 
+{
+   AIDAProcessor opening root file
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN4AIDA9ITree*ROOT*
+   fun:_ZN6marlin13AIDAProcessor4initEv
+   fun:_ZN6marlin12ProcessorMgr4initEv
+   ...
+}
+
+{
+   TrackChecker creating a canvas creates TApplication etc.
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN7TCanvasC1EPKcS1_ii
+   fun:_ZN12TrackChecker3endEv
+   fun:_ZN6marlin12ProcessorMgr3endEv
+   fun:main
+}
+
 # {
 #    Global Processor instances
 #    Memcheck:Leak
@@ -71,7 +93,17 @@
    ...
    fun:_ZN16InitializeDD4hep4initEv
    fun:_ZN6marlin12ProcessorMgr4initEv
-   fun:main
+   ...
+}
+
+{
+   Multiple constant creation from plugins
+   Memcheck:Leak
+   match-leak-kinds: indirect
+   ...
+   fun:_ZN6dd4hep8ConstantC1ERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEES8_S8_
+   ...
+   fun:_ZN6dd4hep11DetectorImp7fromXMLERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEENS_17DetectorBuildTypeE
 }
 
 {
@@ -208,7 +240,7 @@
 {
    clang::Parser::*
    Memcheck:Leak
-   match-leak-kinds: reachable
+   match-leak-kinds: reachable,possible
    ...
    fun:_ZN5clang6Parser*
 }
@@ -571,9 +603,8 @@
    ROOT TListOfFunctions
    Memcheck:Leak
    match-leak-kinds: reachable
-   fun:_Znam
-   fun:_ZN6TExMapC1Ei
-   fun:_ZN16TListOfFunctionsC1EP6TClass
+   ...
+   fun:_ZN16TListOfFunctions*
    ...
 }
 
@@ -631,4 +662,56 @@
    ...
    fun:pthread_once
    ...
+}
+
+{
+   llvm::datalayout
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZNK4llvm10DataLayout*
+   ...
+}
+
+{
+   ROOT TClass::Property
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZNK6TClass8PropertyEv
+   ...
+}
+
+{
+   cling::IncrementalExecutor
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN5cling19IncrementalExecutor*
+}
+
+{
+   cling::BackendPasses
+   Memcheck:Leak
+   match-leak-kinds: possible
+   ...
+   fun:_ZN5cling13BackendPasses11runOnModuleERN4llvm6ModuleE
+   ...
+}
+
+{
+   TClass::GetListOfDataMembers
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZNK6TClass13Get*DataMember*
+   ...
+}
+
+{
+   llvm stuff
+   Memcheck:Leak
+   match-leak-kinds: possible
+   ...
+   fun:_ZN12_GLOBAL__N_117ScalarExprEmitter13VisitCastExpr*
 }
