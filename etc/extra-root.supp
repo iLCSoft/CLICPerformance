@@ -37,6 +37,19 @@
    ...
 }
 
+{
+   SIOWriter allocating allocated in static location
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN17SIO_recordManager3addEPKc
+   fun:_ZN3SIO10SIORecords3addERP10SIO_recordPKc
+   fun:_ZN3SIO10SIORecordsC1Ev
+   fun:_ZN3SIO5LCSIO7recordsEv
+   fun:_ZN3SIO9SIOWriterC1Ev
+   ...
+}
+
 ## Marlin
 
 {
@@ -45,6 +58,15 @@
    match-leak-kinds: reachable
    ...
    fun:_ZN6marlin15ProcessorLoaderC1EN9__gnu_cxx17__normal_iteratorIPKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESt6vectorIS8_SaIS8_EEEESE_
+}
+
+{
+   Marlin readStream
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN3SIO9SIOReader10readStreamEi
+   fun:main
 }
 
 
@@ -67,6 +89,18 @@
    fun:_ZN7TCanvasC1EPKcS1_ii
    fun:_ZN12TrackChecker3endEv
    fun:_ZN6marlin12ProcessorMgr3endEv
+   fun:main
+}
+
+
+{
+   CLICEfficiency calculator creating branches
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN5TTree6Branch*
+   fun:_ZN24ClicEfficiencyCalculator4initEv
+   fun:_ZN6marlin12ProcessorMgr4initEv
    fun:main
 }
 
@@ -585,6 +619,13 @@
    ...
 }
 
+{
+   ROOT GeomPainter
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN11TGeoManager14GetGeomPainterEv
+}
 
 {
    ROOT TGeoManager
@@ -704,7 +745,7 @@
    Memcheck:Leak
    match-leak-kinds: reachable
    ...
-   fun:_ZNK6TClass13Get*DataMember*
+   fun:_ZNK6TClass*Get*DataMember*
    ...
 }
 
@@ -714,4 +755,58 @@
    match-leak-kinds: possible
    ...
    fun:_ZN12_GLOBAL__N_117ScalarExprEmitter13VisitCastExpr*
+}
+
+{
+   llvm CGPassManager
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN12_GLOBAL__N_113CGPassManager*
+}
+
+{
+   TClass::Init
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN6TClass4InitEPKcsPKSt9type_infoP16TVirtualIsAProxyS1_S1_iiP11ClassInfo_tb
+}
+
+{
+   llvm Emulated stuff
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN24TEmulatedCollectionProxyC1E*
+   ...
+}
+
+{
+   llvm SelectionDAG
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   fun:_ZN4llvm12SelectionDAG11getConstant*
+   ...
+}
+
+## for llvm (the compiler)
+
+
+{
+   TBufferFile::Write*
+   Memcheck:Leak
+   match-leak-kinds: definite
+   ...
+   fun:_ZN11TBufferFile16WriteClassBuffer*
+}
+
+{
+   TBuildRealData, definite leak in llvm
+   Memcheck:Leak
+   match-leak-kinds: definite
+   ...
+   fun:_ZN14TBuildRealData*
+   ...
 }
