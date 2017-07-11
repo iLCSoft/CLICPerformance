@@ -34,6 +34,7 @@
     <processor name="MyDDCaloDigi"/>
     <processor name="MyDDSimpleMuonDigi"/> 
     <processor name="MyDDMarlinPandora"/> 
+    <processor name="LumiCalReco"/>
 
     <!-- ========== monitoring  ========== -->
     <processor name="MyClicEfficiencyCalculator"/>
@@ -878,6 +879,54 @@
     <parameter name="treeName" type="string">restree </parameter>
     <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
     <!--parameter name="Verbosity" type="string">DEBUG </parameter-->
+  </processor>
+
+  <processor name="LumiCalReco" type="MarlinLumiCalClusterer">
+    <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
+    <parameter name="Verbosity" type="string"> WARNING </parameter>
+    <!--Collection Containing the Hits in the LumiCal-->
+    <parameter name="LumiCal_Collection" type="string" lcioInType="SimCalorimeterHit"> LumiCalCollection </parameter>
+    <!--Collection of Cluster found in the LumiCal-->
+    <parameter name="LumiCal_Clusters" type="string" lcioOutType="Cluster">LumiCalClusters </parameter>
+    <!--Collection of Reconstructed Particles found in the LumiCal-->
+    <parameter name="LumiCal_RecoParticles" type="string" lcioOutType="ReconstructedParticle">LumiCalRecoParticles </parameter>
+    <!-- Number of events to skip at the begining of the LCIO file-->
+    <parameter name="SkipNEvents" type="int">0 </parameter>
+    <!-- Number of event to work with-->
+    <parameter name="MaxRecordNumber" type="int">10 </parameter>
+    <!--Name of output directory-->
+    <parameter name="OutDirName" type="string">rootOut </parameter>
+    <!--Name of output ROOT file ( without suffix)-->
+    <parameter name="OutRootFileName" type="string">LcalRootOut </parameter>
+    <!-- Place for ROOT tree memory(1) or disk (0) -->
+    <parameter name="MemoryResidentTree" type="int">0 </parameter>
+    <!-- Number of events in memory resident ROOT tree.-->
+    <parameter name="NumEventsTree" type="int">500 </parameter>
+
+    <!--  Clustering/Geometry Parameters -->
+    <!-- Minimal number of hits in cluster-->
+    <parameter name="ClusterMinNumHits" type="int">15 </parameter>
+    <!-- fraction of number of hits in one arm found in one layer to consider this layer as the ShowerPeak layer-->
+    <parameter name="ElementsPercentInShowerPeakLayer" type="double">0.03 </parameter>
+    <!-- Sets minimum for logarithmic energy weights-->
+    <parameter name="LogWeigthConstant" type="double"> 6.5 </parameter>
+    <!-- BP: see explanation in LumiCalClusterer.cpp-->
+    <parameter name="MiddleEnergyHitBoundFrac" type="double"> 0.01 </parameter>
+    <!-- Sets minimum energy deposit for cluster to be accepted [GeV]-->
+    <parameter name="MinClusterEngy" type="double"> 2.0 </parameter>
+    <!-- Calibration factor - converts cluster energy to primary
+	 particle energy ( E_cluster = EnrgyCalibConst*E_primary default value for LCal ILD )-->
+    <parameter name="EnergyCalibConst" type="double"> 0.01213 </parameter>
+    <!-- Hit energy cut - minimum hit energy required [Gev] -->
+    <parameter  name="MinHitEnergy"  type="double"> 20e-06 </parameter>
+    <!-- Moliere radius, controls clusters separation distance [mm]-->
+    <parameter name="MoliereRadius" type="double"> 20 </parameter>
+    <!--Number of neighbor hits to consider -->
+    <parameter name="NumOfNearNeighbor" type="int"> 6 </parameter>
+    <!-- Choose cluster hit position weights LogMthod=-1 or simple EnergyMethod=1 -->
+    <parameter name="WeightingMethod" type="string"> LogMethod </parameter>
+    <!-- Layers relative phi offset (default for model ILD_o1_05,must go to gear sometimes)  [deg]-->
+    <parameter name="ZLayerPhiOffset" type="double"> 0.0 </parameter>
   </processor>
 
   <group name="PfoSelector">
