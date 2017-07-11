@@ -44,7 +44,9 @@
     <!-- ========== output  ========== -->
 
     <group name="PfoSelector" />
-    <processor name="MyLCIOOutputProcessor"/>
+
+    <processor name="Output_REC"/>
+    <processor name="Output_DST"/>
 
   </execute>
 
@@ -249,17 +251,6 @@
     <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
     <parameter name="Verbosity" type="string">WARNING </parameter>
   </processor>
-
-
-  <processor name="MyLCIOOutputProcessor" type="LCIOOutputProcessor">
-    <!--   standard output: full reconstruction keep all collections -->
-    <parameter name="LCIOOutputFile" type="string"> sitracks.slcio </parameter>
-    <parameter name="FullSubsetCollections" type="StringVec"> EfficientMCParticles InefficientMCParticles </parameter>
-    <parameter name="LCIOWriteMode" type="string" value="WRITE_NEW"/>
-    <parameter name="Verbosity" type="string">WARNING </parameter>
-  </processor>
-
-
 
   <!-- == TruthTrackFinder parameters == -->
   <processor name="MyTruthTrackFinder" type="TruthTrackFinder">
@@ -1037,5 +1028,47 @@
     </processor>
 
   </group>
+
+  <processor name="Output_REC" type="LCIOOutputProcessor">
+    <!--   standard output: full reconstruction keep all collections -->
+    <parameter name="LCIOOutputFile" type="string"> Output_REC.slcio </parameter>
+    <parameter name="FullSubsetCollections" type="StringVec"> EfficientMCParticles InefficientMCParticles </parameter>
+    <parameter name="LCIOWriteMode" type="string" value="WRITE_NEW"/>
+    <parameter name="Verbosity" type="string">WARNING </parameter>
+  </processor>
+
+  <processor name="Output_DST" type="LCIOOutputProcessor">
+    <!--   dst output: keep only collections for analysis -->
+    <parameter name="LCIOOutputFile" type="string"> Output_DST.slcio </parameter>
+    <parameter name="FullSubsetCollections" type="StringVec">
+      EfficientMCParticles
+      InefficientMCParticles
+      MCParticlesSkimmed
+    </parameter>
+    <parameter name="DropCollectionTypes" type="StringVec">
+      MCParticle
+      LCRelation
+      SimCalorimeterHit
+      CalorimeterHit
+      SimTrackerHit
+      TrackerHit
+      TrackerHitPlane
+      Track
+      ReconstructedParticle
+      LCFloatVec
+    </parameter>
+    <parameter name="KeepCollectionNames" type="StringVec">
+      MCParticlesSkimmed
+      RecoMCTruthLink
+      SiTracks
+      PandoraClusters
+      PandoraPFOs
+      SelectedPandoraPFOs
+      LooseSelectedPandoraPFOs
+      TightSelectedPandoraPFOs
+    </parameter>
+    <parameter name="LCIOWriteMode" type="string" value="WRITE_NEW"/>
+    <parameter name="Verbosity" type="string">WARNING </parameter>
+  </processor>
 
 </marlin>
