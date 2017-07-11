@@ -35,6 +35,7 @@
     <processor name="MyDDSimpleMuonDigi"/> 
     <processor name="MyDDMarlinPandora"/> 
     <processor name="LumiCalReco"/>
+    <processor name="BeamCalReco"/>
 
     <!-- ========== monitoring  ========== -->
     <processor name="MyClicEfficiencyCalculator"/>
@@ -927,6 +928,55 @@
     <parameter name="WeightingMethod" type="string"> LogMethod </parameter>
     <!-- Layers relative phi offset (default for model ILD_o1_05,must go to gear sometimes)  [deg]-->
     <parameter name="ZLayerPhiOffset" type="double"> 0.0 </parameter>
+  </processor>
+
+
+  <processor name="BeamCalReco" type="BeamCalClusterReco">
+    <!--BeamCalClusterReco reproduces the beamstrahlung background for a given number of bunch-crossings NumberOfBX and puts the signal hits from the lcio input file on top of that, and then clustering is attempted.-->
+    <!--How to estimate background [Gaussian, Parametrised, Pregenerated, Averaged]-->
+    <parameter name="BackgroundMethod" type="string">Gaussian </parameter>
+    <!--Name of BeamCal Collection-->
+    <parameter name="BeamCalCollectionName" type="string" lcioInType="SimCalorimeterHit">BeamCalCollection </parameter>
+    <!--Flag to create the TEfficiency for fast tagging library-->
+    <parameter name="CreateEfficiencyFile" type="bool">false </parameter>
+    <!--Rings from which onwards the outside Thresholds are used-->
+    <parameter name="StartingRing" type="FloatVec">0.0 1.0 1.5 2.5 3.5  4.5 </parameter>
+    <!--Energy in a Cluster to consider it an electron-->
+    <parameter name="ETCluster" type="FloatVec">   5.0 4.0 3.0 2.0 2.0  1.0 </parameter>
+    <!--Energy in a Pad, after subtraction of background required to consider it for signal-->
+    <parameter name="ETPad" type="FloatVec">       0.5 0.4 0.3 0.2 0.15 0.1 </parameter>
+    <!--The name of the rootFile which will contain the TEfficiency objects-->
+    <parameter name="EfficiencyFilename" type="string">TaggingEfficiency.root </parameter>
+    <!--Root Inputfile(s)-->
+    <parameter name="InputFileBackgrounds" type="StringVec">BeamCal_BackgroundPars_3TeV.root </parameter>
+    <!--Multiply deposit energy by this factor to account for sampling fraction-->
+    <parameter name="LinearCalibrationFactor" type="double">116.44 </parameter>
+    <!--MCParticle Collection Name, only needed and used to estimate efficiencies-->
+    <parameter name="MCParticleCollectionName" type="string" lcioInType="MCParticle">MCParticle </parameter>
+    <!--Minimum number of pads in a single tower to be considered for signal-->
+    <parameter name="MinimumTowerSize" type="int">4 </parameter>
+    <!--How many layers are used for shower fitting-->
+    <parameter name="NShowerCountingLayers" type="int">3 </parameter>
+    <!--Number of Bunch Crossings of Background-->
+    <parameter name="NumberOfBX" type="int"> 40 </parameter>
+    <!--Number of Event that should be printed to PDF File-->
+    <parameter name="PrintThisEvent" type="int">-1 </parameter>
+    <!--Name of the Reconstructed Cluster collection-->
+    <parameter name="RecoClusterCollectionname" type="string" lcioOutType="Cluster">BCalClusters </parameter>
+    <!--Name of the Reconstructed Particle collection-->
+    <parameter name="RecoParticleCollectionname" type="string" lcioOutType="ReconstructedParticle">BCalRecoParticle </parameter>
+    <!--If not using ConstPadCuts, each pad SigmaCut*standardDeviation is considered for clusters-->
+    <parameter name="SigmaCut" type="double">1 </parameter>
+    <!--Layer (inclusive) from which on we start looking for signal clusters-->
+    <parameter name="StartLookingInLayer" type="int">10 </parameter>
+    <!--Limit on square norm of tower energy chi2/ndf, where chi2 = (E_dep - E_bg)^2/sig^2. 			      Reasonable value for pregenerated bkg is 5., for parametrised is 2.-->
+    <parameter name="TowerChi2ndfLimit" type="double">5 </parameter>
+    <!--Use Chi2 selection criteria to detect high energy electron in the signal.-->
+    <parameter name="UseChi2Selection" type="bool">false </parameter>
+    <!--Use the cuts for the pads specified in ETPad. If false, the standard deviation of each pad times the SigmaCut Factor is used, the first entry in ETPad is used as a minimum energy to consider a pad at all-->
+    <parameter name="UseConstPadCuts" type="bool">true </parameter>
+    <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
+    <!--parameter name="Verbosity" type="string">DEBUG </parameter-->
   </processor>
 
   <group name="PfoSelector">
