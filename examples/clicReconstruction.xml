@@ -897,7 +897,7 @@
     <!--Name of output directory-->
     <parameter name="OutDirName" type="string">rootOut </parameter>
     <!--Name of output ROOT file ( without suffix)-->
-    <parameter name="OutRootFileName" type="string">LcalRootOut </parameter>
+    <parameter name="OutRootFileName" type="string"></parameter>
     <!-- Place for ROOT tree memory(1) or disk (0) -->
     <parameter name="MemoryResidentTree" type="int">0 </parameter>
     <!-- Number of events in memory resident ROOT tree.-->
