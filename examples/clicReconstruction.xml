@@ -740,6 +740,12 @@
     <parameter name="D0TrackCut" type="float">50 </parameter>
     <!--d0 cut used to determine whether unmatched vertex track can form pfo-->
     <parameter name="D0UnmatchedVertexTrackCut" type="float">5 </parameter>
+
+    <!--The algorithm name for filling start vertex-->
+    <parameter name="StartVertexAlgorithmName" type="string">PandoraPFANew </parameter>
+    <!--Start Vertex Collection Name-->
+    <parameter name="StartVertexCollectionName" type="string" lcioOutType="Vertex"> PandoraStartVertices </parameter>
+
   </processor>
 
   <processor name="MyDDSimpleMuonDigi" type="DDSimpleMuonDigi">
@@ -958,7 +964,7 @@
     <!--PtCutForTightTiming-->
     <parameter name="PtCutForTightTiming" type="float">0.75 </parameter>
     <!--Selected pfo collection name-->
-    <parameter name="SelectedPfoCollection" type="string" lcioOutType="ReconstructedParticle">SelectedPandoraPFANewPFOs </parameter>
+    <parameter name="SelectedPfoCollection" type="string" lcioOutType="ReconstructedParticle">SelectedPandoraPFOs </parameter>
     <!--UseClusterLessPfos-->
     <parameter name="UseClusterLessPfos" type="int">1 </parameter>
     <!--UseNeutronTiming-->
@@ -967,7 +973,7 @@
     <parameter name="Verbosity" type="string">MESSAGE </parameter>
 
     <processor name="MyCLICPfoSelectorDefault" type="CLICPfoSelector">
-      <parameter name="SelectedPfoCollection" type="string" lcioOutType="ReconstructedParticle"> SelectedPandoraPFANewPFOs </parameter>
+      <parameter name="SelectedPfoCollection" type="string" lcioOutType="ReconstructedParticle"> SelectedPandoraPFOs </parameter>
     </processor>
 
     <processor name="MyCLICPfoSelectorLoose" type="CLICPfoSelector">
@@ -992,7 +998,7 @@
       <!--PhotonTightTimingCut-->
       <parameter name="PhotonTightTimingCut" type="float">2. </parameter>
       <!--Selected pfo collection name-->
-      <parameter name="SelectedPfoCollection" type="string" lcioOutType="ReconstructedParticle">LooseSelectedPandoraPFANewPFOs </parameter>
+      <parameter name="SelectedPfoCollection" type="string" lcioOutType="ReconstructedParticle">LooseSelectedPandoraPFOs </parameter>
       <parameter name="Monitoring" type="int">0</parameter>
     </processor>
 
@@ -1021,7 +1027,7 @@
       <!--PtCutForTightTiming-->
       <parameter name="PtCutForTightTiming" type="float">1.0 </parameter>
       <!--Selected pfo collection name-->
-      <parameter name="SelectedPfoCollection" type="string" lcioOutType="ReconstructedParticle">TightSelectedPandoraPFANewPFOs </parameter>
+      <parameter name="SelectedPfoCollection" type="string" lcioOutType="ReconstructedParticle">TightSelectedPandoraPFOs </parameter>
       <!--UseClusterLessPfos-->
       <parameter name="UseClusterLessPfos" type="int">0 </parameter>
       <parameter name="Monitoring" type="int">0</parameter>
