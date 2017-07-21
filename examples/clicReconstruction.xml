@@ -4,6 +4,7 @@
 
     <!-- ========== setup  ========== -->
     <processor name="MyAIDAProcessor"/>
+    <processor name="EventNumber" />
     <processor name="InitDD4hep"/>
     <processor name="Config" />
 
@@ -463,10 +464,12 @@
   </processor>
 
 
+  <processor name="EventNumber" type="Statusmonitor">
+    <parameter name="HowOften" type="int">1 </parameter>
+    <parameter name="Verbosity" type="string"> MESSAGE </parameter>
+  </processor>
 
 
-
-  
   <processor name="MyDDCaloDigi" type="DDCaloDigi">
     <!--Performs simple digitization of sim calo hits...-->
 
