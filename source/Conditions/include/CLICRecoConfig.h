@@ -38,7 +38,7 @@ protected:
   std::string m_trackingOption="Truth";
 
   // Parameters
-  std::vector< std::string > m_overlayPossibleOptions{ "False", "3TeV", "380GeV" };
+  std::vector< std::string > m_overlayPossibleOptions{ "False", "350GeV", "380GeV", "420GeV", "500GeV", "1.4TeV", "3TeV" };
   std::map<std::string, bool> m_overlay{};
   std::string m_overlayChoice="False";
 

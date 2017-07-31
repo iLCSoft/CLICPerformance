@@ -8,12 +8,24 @@
     <processor name="InitDD4hep"/>
     <processor name="Config" />
 
-    <if condition="Config.Overlay3TeV">
-      <processor name="Overlay3TeV"/>
+    <if condition="Config.Overlay350GeV">
+      <processor name="Overlay350GeV"/>
     </if>
 
     <if condition="Config.Overlay380GeV">
       <processor name="Overlay380GeV"/>
+    </if>
+
+    <if condition="Config.Overlay500GeV">
+      <processor name="Overlay500GeV"/>
+    </if>
+
+    <if condition="Config.Overlay1.4TeV">
+      <processor name="Overlay1.4TeV"/>
+    </if>
+
+    <if condition="Config.Overlay3TeV">
+      <processor name="Overlay3TeV"/>
     </if>
 
     <!-- ========== digitisation  ========== -->
@@ -133,19 +145,28 @@
       gghad_02.slcio
     </parameter>
 
-      <processor name="Overlay380GeV" type="OverlayTimingGeneric">
-        <!--Number of Background events to overlay - either fixed or Poisson mean-->
+      <processor name="Overlay350GeV" type="OverlayTimingGeneric">
         <parameter name="NumberBackground" type="float" value="0.0464"/>
-        <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
-        <!--parameter name="Verbosity" type="string" value=""/-->
+      </processor>
+
+      <processor name="Overlay380GeV" type="OverlayTimingGeneric">
+        <parameter name="NumberBackground" type="float" value="0.0464"/>
+      </processor>
+
+      <processor name="Overlay420GeV" type="OverlayTimingGeneric">
+        <parameter name="NumberBackground" type="float" value="0.17"/>
+      </processor>
+
+      <processor name="Overlay500GeV" type="OverlayTimingGeneric">
+        <parameter name="NumberBackground" type="float" value="0.3"/>
+      </processor>
+
+      <processor name="Overlay1.4TeV" type="OverlayTimingGeneric">
+        <parameter name="NumberBackground" type="float" value="1.3"/>
       </processor>
 
       <processor name="Overlay3TeV" type="OverlayTimingGeneric">
-        <!--Processor to overlay events from the background taking the timing of the subdetectors into account-->
-        <!--Number of Background events to overlay - either fixed or Poisson mean-->
         <parameter name="NumberBackground" type="float" value="3.2"/>
-        <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
-        <!--parameter name="Verbosity" type="string" value=""/-->
       </processor>
   </group>
 
