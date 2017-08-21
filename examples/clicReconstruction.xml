@@ -289,8 +289,32 @@
   <processor name="MyTruthTrackFinder" type="TruthTrackFinder">
     <parameter name="FitForward" type="bool">true</parameter>
     <!--Define input tracker hits and relations. NB. Order must be respected -->
-    <parameter name="TrackerHitCollectionNames" type="StringVec" lcioInType="TrackerHitPlane">VXDTrackerHits ITrackerHits OTrackerHits VXDEndcapTrackerHits ITrackerEndcapHits OTrackerEndcapHits</parameter>
-    <parameter name="SimTrackerHitRelCollectionNames" type="StringVec" lcioInType="LCRelation">VXDTrackerHitRelations InnerTrackerBarrelHitsRelations OuterTrackerBarrelHitsRelations VXDEndcapTrackerHitRelations InnerTrackerEndcapHitsRelations OuterTrackerEndcapHitsRelations </parameter>
+    <parameter name="TrackerHitCollectionNames" type="StringVec" lcioInType="TrackerHitPlane">
+      VXDTrackerHits
+      ITrackerHits
+      OTrackerHits
+      VXDEndcapTrackerHits
+      ITrackerEndcapHits
+      OTrackerEndcapHits
+    </parameter>
+    <parameter name="SimTrackerHitRelCollectionNames" type="StringVec" lcioInType="LCRelation">
+      VXDTrackerHitRelations
+      InnerTrackerBarrelHitsRelations
+      OuterTrackerBarrelHitsRelations
+      VXDEndcapTrackerHitRelations
+      InnerTrackerEndcapHitsRelations
+      OuterTrackerEndcapHitsRelations
+    </parameter>
+
+    <!--Name of the MCParticle input collection-->
+    <parameter name="MCParticleCollectionName" type="string" lcioInType="MCParticle">MCParticle </parameter>
+    <!--Silicon track Collection Name-->
+    <parameter name="SiTrackCollectionName" type="string" lcioOutType="Track">SiTracks </parameter>
+    <!--Silicon track particle relation Collection Name-->
+    <parameter name="SiTrackRelationCollectionName" type="string" lcioOutType="LCRelation">SiTrackRelations </parameter>
+    <!--If true use the truth information to initialise the helical prefit, otherwise use prefit by fitting 3 hits-->
+    <parameter name="UseTruthInPrefit" type="bool">false </parameter>
+
     <parameter name="Verbosity" type="string">WARNING </parameter>
   </processor>
 
