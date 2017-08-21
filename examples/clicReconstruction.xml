@@ -47,6 +47,8 @@
       <processor name="MyExtrToTracker"/>
     </if>
 
+    <processor name="Refit" />
+
     <!-- === calorimeter digitization and pandora reco === -->
     <processor name="MyDDCaloDigi"/>
     <processor name="MyDDSimpleMuonDigi"/> 
@@ -379,6 +381,35 @@
   </processor>
 
 
+  <processor name="Refit" type="RefitFinal">
+    <!--Refit processor that calls finaliseLCIOTrack after taking the trackstate from the existing track. No re-sorting of hits is done-->
+    <!--Use Energy Loss in Fit-->
+    <parameter name="EnergyLossOn" type="bool"> true </parameter>
+    <!--Name of the input track to MCParticle relation collection-->
+    <parameter name="InputRelationCollectionName" type="string" lcioInType="LCRelation"> SiTrackRelations </parameter>
+    <!--Name of the input track collection-->
+    <parameter name="InputTrackCollectionName" type="string" lcioInType="Track"> SiTracks </parameter>
+    <!--maximum allowable chi2 increment when moving from one site to another-->
+    <parameter name="Max_Chi2_Incr" type="double"> 1.79769e+30 </parameter>
+    <!--Use MultipleScattering in Fit-->
+    <parameter name="MultipleScatteringOn" type="bool">jtrue </parameter>
+    <!--Refit Track to MCParticle relation collection Name-->
+    <parameter name="OutputRelationCollectionName" type="string" lcioOutType="LCRelation">
+      SiTracks_Refitted_Relation
+    </parameter>
+    <!--Name of the output track collection-->
+    <parameter name="OutputTrackCollectionName" type="string" lcioOutType="Track">
+      SiTracks_Refitted
+    </parameter>
+    <!--Identifier of the reference point to use for the fit initialisation, -1 means at 0 0 0-->
+    <parameter name="ReferencePoint" type="int"> -1 </parameter>
+    <!--Smooth All Mesurement Sites in Fit-->
+    <parameter name="SmoothOn" type="bool"> false </parameter>
+    <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
+    <!--parameter name="Verbosity" type="string"> DEBUG </parameter-->
+    <!--if true extrapolation in the forward direction (in-out), otherwise backward (out-in)-->
+    <parameter name="extrapolateForward" type="bool"> true </parameter>
+  </processor>
 
  
   <processor name="MyDDCellsAutomatonMV" type="DDCellsAutomatonMV"> 
@@ -495,7 +526,7 @@
     <!--Name of the MCParticle input collection-->
     <parameter name="MCParticleCollectionName" type="string" lcioInType="MCParticle">MCParticle </parameter>
     <!--Track collection name-->
-    <parameter name="TrackCollectionName" type="string" lcioInType="Track">SiTracks </parameter>
+    <parameter name="TrackCollectionName" type="string" lcioInType="Track"> SiTracks_Refitted </parameter>
     <!--Track relation collection name-->
     <parameter name="TrackRelationCollectionName" type="string" lcioInType="LCRelation">SiTracksMCTruthLink </parameter>
     <!--Name of the root tree-->
@@ -705,7 +736,7 @@
   <processor name="MyDDMarlinPandora" type="DDPandoraPFANewProcessor">
     <parameter name="PandoraSettingsXmlFile" type="String"> PandoraSettings/PandoraSettingsDefault.xml </parameter>
     <!-- Collection names -->
-    <parameter name="TrackCollections" type="StringVec">SiTracks</parameter>
+    <parameter name="TrackCollections" type="StringVec"> SiTracks_Refitted </parameter>
     <parameter name="ECalCaloHitCollections" type="StringVec">ECALBarrel ECALEndcap ECALOther</parameter>
     <parameter name="HCalCaloHitCollections" type="StringVec">HCALBarrel HCALEndcap HCALOther</parameter>
     <parameter name="LCalCaloHitCollections" type="StringVec"></parameter>
@@ -713,7 +744,7 @@
     <parameter name="MuonCaloHitCollections" type="StringVec">MUON</parameter>
     <parameter name="MCParticleCollections" type="StringVec">MCParticle</parameter>
     <parameter name="RelCaloHitCollections" type="StringVec">RelationCaloHit RelationMuonHit</parameter>
-    <parameter name="RelTrackCollections" type="StringVec">SiTrackRelations</parameter>
+    <parameter name="RelTrackCollections" type="StringVec"> SiTracks_Refitted_Relation </parameter>
     <parameter name="KinkVertexCollections" type="StringVec">KinkVertices</parameter>
     <parameter name="ProngVertexCollections" type="StringVec">ProngVertices</parameter>
     <parameter name="SplitVertexCollections" type="StringVec">SplitVertices</parameter>
@@ -892,7 +923,7 @@
       OuterTrackerEndcapCollection
     </parameter>
     <!--Name of the Tracks input collection-->
-    <parameter name="TrackCollection" type="string" lcioInType="Track"> SiTracks </parameter>
+    <parameter name="TrackCollection" type="string" lcioInType="Track"> SiTracks_Refitted </parameter>
     <!--Name of the trackMCTruthLink output collection - not created if empty()-->
     <parameter name="TrackMCTruthLinkName" type="string" lcioOutType="LCRelation"> SiTracksMCTruthLink </parameter>
     <!--Name of the lcrelation collections, that link the TrackerHits to their SimTrackerHits.-->
