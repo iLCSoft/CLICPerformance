@@ -42,11 +42,19 @@ void CLICRecoConfig::init() {
   if( m_trackingOption == "Truth" ) {
 
     m_truthTracking = true;
+    m_conformalTrackingPlusExtrapolator = false;
+    m_conformalTracking = false;
+
+  } else if( m_trackingOption == "ConformalPlusExtrapolator" ) {
+
+    m_truthTracking = false;
+    m_conformalTrackingPlusExtrapolator = true;
     m_conformalTracking = false;
 
   } else if( m_trackingOption == "Conformal" ) {
 
     m_truthTracking = false;
+    m_conformalTrackingPlusExtrapolator = false;
     m_conformalTracking = true;
 
   }
@@ -80,6 +88,7 @@ void CLICRecoConfig::modifyEvent( LCEvent* ) {
   streamlog_out(MESSAGE) << "Running Config" << std::endl;
 
   setReturnValue( "TruthTracking", m_truthTracking );
+  setReturnValue( "ConformalPlusExtrapolatorTracking", m_conformalTrackingPlusExtrapolator);
   setReturnValue( "ConformalTracking", m_conformalTracking );
 
   for (auto const& over : m_overlay) {

@@ -41,10 +41,12 @@
     <if condition="Config.TruthTracking">
       <processor name="MyTruthTrackFinder"/>
     </if>
-
-    <if condition="Config.ConformalTracking">
+    <if condition="Config.ConformalPlusExtrapolatorTracking">
       <processor name="MyConformalTracking"/>
       <processor name="MyExtrToTracker"/>
+    </if>
+    <if condition="Config.ConformalTracking">
+      <processor name="MyConformalTrackingFull"/>
     </if>
 
     <processor name="Refit" />
@@ -97,7 +99,7 @@
   <processor name="Config" type="CLICRecoConfig" >
     <!--Which option to use for overlay: False, 3TeV, 380GeV. Then use, e.g., Config.Overlay3TeV in the condition-->
     <parameter name="Overlay" type="string">False </parameter>
-    <!--Which option to use for tracking: Truth, Conformal-->
+    <!--Which option to use for tracking: Truth, ConformalPlusExtrapolator, Conformal-->
     <parameter name="Tracking" type="string">Truth </parameter>
   </processor>
 
@@ -380,6 +382,31 @@
     <!--parameter name="Verbosity" type="string">DEBUG </parameter-->
   </processor>
 
+  <processor name="MyConformalTrackingFull" type="ConformalTracking">
+    <!--ConformalTracking constructs tracks using a combined conformal mapping and cellular automaton approach.-->
+
+    <!--Name of the TrackerHit input collections-->
+    <parameter name="TrackerHitCollectionNames" type="StringVec" lcioInType="TrackerHitPlane"> VXDTrackerHits VXDEndcapTrackerHits ITrackerHits OTrackerHits ITrackerEndcapHits OTrackerEndcapHits </parameter>
+    <!--Name of the TrackerHit relation collections-->
+    <parameter name="RelationsNames" type="StringVec" lcioInType="LCRelation"> VXDTrackerHitRelations VXDEndcapTrackerHitRelations InnerTrackerBarrelHitsRelations OuterTrackerBarrelHitsRelations InnerTrackerEndcapHitsRelations OuterTrackerEndcapHitsRelations </parameter>
+
+    <!--Cut values for the pattern recognition -->
+    <parameter name="ThetaRange" type="double"> 0.03 </parameter>
+    <parameter name="MaxCellAngle" type="double"> 0.005 </parameter>
+    <parameter name="MaxCellAngleRZ" type="double"> 0.005 </parameter>
+    <parameter name="MaxDistance" type="double"> 0.02 </parameter>
+    <parameter name="MinClustersOnTrack" type="int"> 6 </parameter>
+    <parameter name="MaxChi2" type="double"> 50 </parameter>
+    <parameter name="DebugPlots" type="bool"> false </parameter>
+    <parameter name="trackPurity" type="double">0.7 </parameter>
+
+    <!--Silicon track Collection Name-->
+    <parameter name="SiTrackCollectionName" type="string" lcioOutType="Track">SiTracks </parameter>
+    <!--Name of the MCParticle input collection-->
+    <parameter name="MCParticleCollectionName" type="string" lcioInType="MCParticle">MCParticle </parameter>
+    <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
+    <!--parameter name="Verbosity" type="string">DEBUG </parameter-->
+  </processor>
 
   <processor name="Refit" type="RefitFinal">
     <!--Refit processor that calls finaliseLCIOTrack after taking the trackstate from the existing track. No re-sorting of hits is done-->
