@@ -90,7 +90,7 @@
     <!--Name of the DD4hep compact xml file to load-->
     <parameter name="EncodingStringParameter"> GlobalTrackerReadoutID </parameter>
     <parameter name="DD4hepXMLFile" type="string">
-      /cvmfs/clicdp.cern.ch/iLCSoft/builds/nightly/x86_64-slc6-gcc62-opt/lcgeo/HEAD/CLIC/compact/CLIC_o3_v11/CLIC_o3_v11.xml
+      /cvmfs/clicdp.cern.ch/iLCSoft/builds/nightly/x86_64-slc6-gcc62-opt/lcgeo/HEAD/CLIC/compact/CLIC_o3_v13/CLIC_o3_v13.xml
     </parameter>
   </processor>
 
@@ -591,7 +591,7 @@
     <!--calibration to convert ECAL deposited energy to MIPs-->
     <parameter name="CalibECALMIP" type="float">0.0001 </parameter>
     <!--Calibration coefficients for ECAL-->
-    <parameter name="CalibrECAL" type="FloatVec">35.7927599201 35.7927599201</parameter>
+    <parameter name="CalibrECAL" type="FloatVec">35.7873928132 35.7873928132</parameter>
     <!--Threshold for ECAL Hits in GeV-->
     <parameter name="ECALThreshold" type="float">5e-05 </parameter>
     <!--Unit for ECAL Threshold. Can be "GeV", "MIP" or "px". MIP and px need properly set calibration constants-->
@@ -670,12 +670,12 @@
     <!--calibration to convert HCAL deposited energy to MIPs-->
     <parameter name="CalibHCALMIP" type="float">0.0001 </parameter>
     <!--Calibration coefficients for Barrel HCAL-->
-    <parameter name="CalibrHCALBarrel" type="FloatVec">48.7032238184</parameter>
+    <parameter name="CalibrHCALBarrel" type="FloatVec">48.6089541748</parameter>
     <!-- CalibrHcalBarrel Should be 38.995 for 17 mm -->
     <!--Calibration coefficients for EndCap HCAL-->
-    <parameter name="CalibrHCALEndcap" type="FloatVec">53.451816135</parameter>
+    <parameter name="CalibrHCALEndcap" type="FloatVec">53.2899125895</parameter>
     <!--Calibration coefficients for Other (Ring) HCAL-->
-    <parameter name="CalibrHCALOther" type="FloatVec">62.8561018224</parameter>
+    <parameter name="CalibrHCALOther" type="FloatVec">63.5104693008</parameter>
     <!--Threshold for HCAL Hits in GeV-->
     <parameter name="HCALThreshold" type="FloatVec">0.00025  </parameter>
     <!--Unit for HCAL Threshold. Can be "GeV", "MIP" or "px". MIP and px need properly set calibration constants-->
@@ -756,14 +756,14 @@
     <parameter name="HCalToMipCalibration" type="float">41.1523</parameter>
     <parameter name="ECalMipThreshold" type="float">0.5</parameter>
     <parameter name="HCalMipThreshold" type="float">0.3</parameter>
-    <parameter name="ECalToEMGeVCalibration" type="float">1.02304560677</parameter>
-    <parameter name="HCalToEMGeVCalibration" type="float">1.02304560677</parameter>
-    <parameter name="ECalToHadGeVCalibrationBarrel" type="float">1.21681209952</parameter>
-    <parameter name="ECalToHadGeVCalibrationEndCap" type="float">1.21681209952</parameter>
-    <parameter name="HCalToHadGeVCalibration" type="float">1.15005241145</parameter>
-    <parameter name="MuonToMipCalibration" type="float">19493.2</parameter>
+    <parameter name="ECalToEMGeVCalibration" type="float">1.02382098451</parameter>
+    <parameter name="HCalToEMGeVCalibration" type="float">1.02382098451</parameter>
+    <parameter name="ECalToHadGeVCalibrationBarrel" type="float">1.1944452816</parameter>
+    <parameter name="ECalToHadGeVCalibrationEndCap" type="float">1.1944452816</parameter>
+    <parameter name="HCalToHadGeVCalibration" type="float">1.04328949699</parameter>
+    <parameter name="MuonToMipCalibration" type="float">19607.8</parameter>
     <parameter name="DigitalMuonHits" type="int">0</parameter>
-    <parameter name="MaxHCalHitHadronicEnergy" type="float">1</parameter> 
+    <parameter name="MaxHCalHitHadronicEnergy" type="float">1000000</parameter> 
     <!--Whether to calculate track states manually, rather than copy stored fitter values-->
     <parameter name="UseOldTrackStateCalculation" type="int">0 </parameter>
     <parameter name="NEventsToSkip" type="int">0</parameter>
