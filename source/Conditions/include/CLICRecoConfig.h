@@ -34,7 +34,7 @@ public:
 protected:
 
   // Parameters
-  const std::vector< std::string > m_trackingPossibleOptions{ "Truth", "Conformal" };
+  const std::vector< std::string > m_trackingPossibleOptions{ "Truth", "ConformalPlusExtrapolator", "Conformal" };
   std::string m_trackingOption="Truth";
 
   // Parameters
@@ -43,6 +43,7 @@ protected:
   std::string m_overlayChoice="False";
 
   bool m_truthTracking = true;
+  bool m_conformalTrackingPlusExtrapolator = false;
   bool m_conformalTracking = false;
 
 
