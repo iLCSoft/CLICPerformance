@@ -207,7 +207,11 @@ void HitResiduals::processEvent( LCEvent * evt ) {
       	marlin_trk->addHit(*it);	
       }//end loop on hits
       //int init_status = FitInit2(track, marlin_trk);          
-      /* int init_status = */ FitInitFromLCIOTrackState(track, marlin_trk);
+      int init_status = FitInitFromLCIOTrackState(track, marlin_trk);
+      if( init_status != IMarlinTrack::success ) {
+        streamlog_out( WARNING ) << "Failed to initialise from trackstate, Skipping this track" << std::endl;
+        continue;
+      }
       //int fit_status = marlin_trk->fit(); 
       //streamlog_out(DEBUG2) << "fit status (good = 0) = " << fit_status << std::endl;
 
@@ -388,11 +392,14 @@ int HitResiduals::FitInit2( Track*& track, MarlinTrk::IMarlinTrack*& _marlinTrk 
 
 
 int HitResiduals::FitInitFromLCIOTrackState( Track*& track, MarlinTrk::IMarlinTrack*& _marlinTrk ){
-  
-  
-  TrackStateImpl trackState( *(track->getTrackState(TrackState::AtFirstHit)) );  
 
-  _marlinTrk->initialise( trackState, _bField, IMarlinTrack::forward ) ;
+  const auto* trackState = track->getTrackState(TrackState::AtFirstHit);
+
+  if( not trackState ) {
+    return IMarlinTrack::error;
+  }
+
+  _marlinTrk->initialise( *trackState, _bField, IMarlinTrack::forward ) ;
 
   // TrackStateImpl trackState( *(track->getTrackState(TrackState::AtLastHit)) );
 
