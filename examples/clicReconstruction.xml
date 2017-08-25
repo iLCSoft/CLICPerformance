@@ -528,7 +528,7 @@
     <!--Name of the efficiency tree-->
     <parameter name="mcTreeName" type="string">mctree </parameter>   <!-- probably to be killed soon -->
     <!--Track collection name-->
-    <parameter name="TrackCollectionName" type="string" lcioInType="Track">SiTracks </parameter>
+    <parameter name="TrackCollectionName" type="string" lcioInType="Track"> SiTracks_Refitted </parameter>
     <!--Name of the TrackerHit input collections-->
     <parameter name="TrackerHitCollectionNames" type="StringVec" lcioInType="TrackerHitPlane"> VXDTrackerHits VXDEndcapTrackerHits ITrackerHits OTrackerHits ITrackerEndcapHits OTrackerEndcapHits  </parameter>
     <!--Name of TrackerHit relation collections-->
@@ -985,7 +985,7 @@
     <!--Smooth All Mesurement Sites in Fit-->
     <parameter name="SmoothOn" type="bool">false </parameter>
     <!--Name of the input track collection-->
-    <parameter name="TrackCollectionName" type="string" lcioInType="Track">SiTracks </parameter>
+    <parameter name="TrackCollectionName" type="string" lcioInType="Track"> SiTracks_Refitted </parameter>
     <!--Name of the output root file-->
     <parameter name="outFileName" type="string">residuals.root </parameter>
     <!--Name of the tree-->
