@@ -393,7 +393,7 @@ int HitResiduals::FitInit2( Track*& track, MarlinTrk::IMarlinTrack*& _marlinTrk 
 
 int HitResiduals::FitInitFromLCIOTrackState( Track*& track, MarlinTrk::IMarlinTrack*& _marlinTrk ){
 
-  const auto* trackState = track->getTrackState(TrackState::AtFirstHit);
+  const auto* trackState = track->getTrackState(TrackState::AtIP);
 
   if( not trackState ) {
     return IMarlinTrack::error;
