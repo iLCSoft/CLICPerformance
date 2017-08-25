@@ -419,7 +419,7 @@
     <!--maximum allowable chi2 increment when moving from one site to another-->
     <parameter name="Max_Chi2_Incr" type="double"> 1.79769e+30 </parameter>
     <!--Use MultipleScattering in Fit-->
-    <parameter name="MultipleScatteringOn" type="bool">jtrue </parameter>
+    <parameter name="MultipleScatteringOn" type="bool"> true </parameter>
     <!--Refit Track to MCParticle relation collection Name-->
     <parameter name="OutputRelationCollectionName" type="string" lcioOutType="LCRelation">
       SiTracks_Refitted_Relation
