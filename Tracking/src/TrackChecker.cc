@@ -430,7 +430,6 @@ void TrackChecker::getCollection(LCCollection* &collection, std::string collecti
     collection = evt->getCollection( collectionName ) ;
   }
   catch(DataNotAvailableException &e){
-    std::cout<<"- cannot get collections !!"<<std::endl;
     streamlog_out(ERROR) << "Collection " << collectionName.c_str() << " is unavailable" << std::endl;
     return;
   }
