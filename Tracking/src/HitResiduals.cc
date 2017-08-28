@@ -336,9 +336,9 @@ void HitResiduals::check( LCEvent * ) {
 
 void HitResiduals::end(){ 
 
-  std::cout << "HitResiduals::end()  " << name() 
-    	    << " processed " << _nEvt << " events in " << _nRun << " runs "
-    	    << std::endl ;
+  streamlog_out(DEBUG8) << "HitResiduals::end()  " << name()
+                        << " processed " << _nEvt << " events in " << _nRun << " runs "
+                        << std::endl ;
 
 }
 
