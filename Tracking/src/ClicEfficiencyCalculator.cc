@@ -233,7 +233,7 @@ void ClicEfficiencyCalculator::processRunHeader( LCRunHeader* ) {
 
 void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
   
-  std::cout<<"Processing event "<<m_eventNumber<<std::endl;
+  streamlog_out( DEBUG8 ) << "Processing event " << m_eventNumber << std::endl;
   
   // First pick up all of the collections that will be used - tracks, MCparticles, hits from relevent subdetectors - and their relations
   
@@ -483,12 +483,14 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
       m_particles["reconstructed"]++;
       m_thetaPtMCParticleReconstructed->Fill(mcTheta,mcPt);
       efficientParticleCollection->addElement(particle);
-      std::cout<<"Reconstructed particle with pt: "<<mcPt<<std::endl;
+      streamlog_out( DEBUG8 ) << "Reconstructed particle with pt: " << mcPt << std::endl;
     }else{
       inefficientParticleCollection->addElement(particle);
-      std::cout<<"Failed to reconstruct particle with pt: "<<mcPt<<" and pdg value "<<particle->getPDG()<<std::endl;
+        streamlog_out( DEBUG8 ) << "Failed to reconstruct particle with pt: " << mcPt
+                                 << " and pdg value " << particle->getPDG()
+                                 <<std::endl;
     }
-    std::cout<<"- particle produced at r = "<<mcVertexR<<std::endl;
+    streamlog_out( DEBUG8 ) << "- particle produced at r = " << mcVertexR << std::endl;
 
     // Check for particles close to each other (needs cleaning up FIXME)
     for(int j=0; j<nParticles; j++){
@@ -576,7 +578,10 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
   evt->addCollection( inefficientParticleCollection , m_outputInefficientMCParticleCollection ) ;
   
   // Increment the event number
-  std::cout<<"For this event reconstructed "<<100.*(double)nReconstructed/(double)nReconstructable<<" % ("<<nReconstructed<<"/"<<nReconstructable<<")"<<std::endl;
+  streamlog_out( DEBUG9 ) <<"For this event reconstructed "
+                          << 100.*(double)nReconstructed/(double)nReconstructable
+                          <<" % (" << nReconstructed << "/" << nReconstructable <<")"
+                          << std::endl;
   m_eventNumber++ ;
 
   // Clean the trees
@@ -771,7 +776,7 @@ bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::str
         if ( vec_hit_subdet.at(j) == vec_hit_subdet.at(k) ) {
           if ( vec_hit_layer.at(j) == vec_hit_layer.at(k) ) {
             isNotLoop = false;
-            std::cout << "=====> loop track " << std::endl;
+            streamlog_out( MESSAGE ) << "=====> loop track " << std::endl;
           }
         }
       }
@@ -781,7 +786,7 @@ bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::str
     vec_hit_layer.clear();
     
     double dist = sqrt( pow(particle->getVertex()[0],2) + pow(particle->getVertex()[1],2) );
-    std::cout<<"----- for mc_pdg = "<< pdg << "   dist from IP = " << dist <<std::endl;
+    streamlog_out( DEBUG8 ) << "----- for mc_pdg = " << pdg << "   dist from IP = " << dist << std::endl;
     if (dist<100.) passIP = true;
     
     double e = sqrt( pow(particle->getEndpoint()[0],2) + pow(particle->getEndpoint()[1],2) );
