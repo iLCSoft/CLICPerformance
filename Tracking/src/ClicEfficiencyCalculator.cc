@@ -93,12 +93,6 @@ ClicEfficiencyCalculator::ClicEfficiencyCalculator() : Processor("ClicEfficiency
                              m_cuts,
                              std::string("NHits"));
   
-  // Flag for acceptable purity level
-  registerProcessorParameter( "trackPurity",
-                             "Purity level used to accept good tracks",
-                             m_purity,
-                             double(0.75));
-  
   // Flag for ntuples to be written
   registerProcessorParameter( "debugPlots",
                              "If true additional plots (n of hits per subdetector per mc particle, mc theta, mc pt, info if the particle is decayed in the tracker) will be added to the Ntuple mctree",
@@ -215,6 +209,7 @@ void ClicEfficiencyCalculator::init() {
     m_simplifiedTree->Branch("m_reconstructed", &m_reconstructed, "m_reconstructed/O");
     m_simplifiedTree->Branch("m_nHits", &m_nHits, "m_nHits/I");
     m_simplifiedTree->Branch("m_nHitsMC", &m_nHitsMC, "m_nHitsMC/I");
+    m_simplifiedTree->Branch("m_purity",&m_purity,"m_purity/D");
     m_simplifiedTree->Branch("m_eventNumber", &m_eventNumber, "m_eventNumber/I");
   }
   
@@ -355,6 +350,10 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     }
     double purity = (double)maxHits/(double)(nHits-nExcluded);
     
+    if(m_simpleOutput){
+      m_purity = purity;
+    }
+
     // Save additional information
     if(m_fullOutput){
       
@@ -381,9 +380,6 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
         m_vec_pdg.push_back(fabs(associatedParticle->getPDG()));
       }
     }
-    
-    // Now compare the purity
-    if(purity < m_purity) continue; // do something with ghosts here
     
     // Now have a track which is associated to a particle
     particleTracks[associatedParticle]++;
