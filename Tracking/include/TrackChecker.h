@@ -120,6 +120,7 @@ class TrackChecker : public Processor {
   std::vector<double > trueD0 = {};
   std::vector<double > trueZ0 = {};
   std::vector<double > trueP = {};
+  std::vector<int >    trueID = {};
 
   std::vector<double > recoPt = {};
   std::vector<double > recoTheta = {};

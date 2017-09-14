@@ -110,6 +110,7 @@ void TrackChecker::init() {
   perftree->Branch("trueD0","std::vector<double >",&trueD0,bufsize,0) ;
   perftree->Branch("trueZ0","std::vector<double >",&trueZ0,bufsize,0) ;
   perftree->Branch("trueP","std::vector<double >",&trueP,bufsize,0) ;
+  perftree->Branch("trueID","std::vector<int > ",&trueID,bufsize,0);
 
   perftree->Branch("recoPt","std::vector<double >",&recoPt,bufsize,0) ;
   perftree->Branch("recoTheta","std::vector<double >",&recoTheta,bufsize,0) ;
@@ -236,7 +237,7 @@ void TrackChecker::processEvent( LCEvent* evt ) {
     double ommcp = helix.getOmega() ;
     double z0mcp = helix.getZ0() ;
     double tLmcp = helix.getTanLambda() ;
-
+    int idmcp    = particle->getPDG();
 
 
     streamlog_out(MESSAGE) << " ---- reference point of track fit x,y,z =  " << track->getReferencePoint()[0] << " , " << track->getReferencePoint()[1] << " , " << track->getReferencePoint()[2] << std::endl;
@@ -313,6 +314,7 @@ void TrackChecker::processEvent( LCEvent* evt ) {
 	  trueD0.push_back(d0mcp);
 	  trueZ0.push_back(z0mcp);
 	  trueP.push_back(truePt.back()/sin(trueThetaRad)); 
+	  trueID.push_back(idmcp);
 
 	  recoPt.push_back(0.3*m_magneticField/(fabs(omtrack)*1000.));
     double recoThetaRad =  M_PI/2 - atan(tLtrack);
@@ -486,6 +488,7 @@ void TrackChecker::clearEventVariables(){
   trueD0.clear();
   trueZ0.clear();
   trueP.clear();
+  trueID.clear();
 
   recoPt.clear();
   recoTheta.clear();
