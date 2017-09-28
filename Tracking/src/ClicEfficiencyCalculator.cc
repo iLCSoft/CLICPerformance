@@ -205,6 +205,7 @@ void ClicEfficiencyCalculator::init() {
     m_simplifiedTree->Branch("m_theta", &m_theta, "m_theta/D");
     m_simplifiedTree->Branch("m_phi", &m_phi, "m_phi/D");
     m_simplifiedTree->Branch("m_vertexR", &m_vertexR, "m_vertexR/D");
+    m_simplifiedTree->Branch("m_distClosestMCPart",&m_distClosestMCPart,"m_distClosestMCPart/D");
     m_simplifiedTree->Branch("m_closeTracks", &m_closeTracks, "m_closeTracks/D");
     m_simplifiedTree->Branch("m_reconstructed", &m_reconstructed, "m_reconstructed/O");
     m_simplifiedTree->Branch("m_nHits", &m_nHits, "m_nHits/I");
@@ -489,6 +490,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     streamlog_out( DEBUG8 ) << "- particle produced at r = " << mcVertexR << std::endl;
 
     // Check for particles close to each other (needs cleaning up FIXME)
+    double minDR = DBL_MAX;
     for(int j=0; j<nParticles; j++){
       if (itParticle!=j){
         MCParticle* particle2 = static_cast<MCParticle*>( particleCollection->getElementAt(j) );
@@ -498,11 +500,12 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
           TLorentzVector particleVector2;
           particleVector2.SetPxPyPzE(particle2->getMomentum()[0],particle2->getMomentum()[1],particle2->getMomentum()[2],particle2->getEnergy());
           double DR = particleVector.DeltaR(particleVector2);
+          minDR = std::min(DR,minDR);
           if (DR<0.4) nCloseTrk++;
         }
       }
     }
-    
+
     // Store data for trees
     if (m_fullOutput) {
       m_vec_vx_reconstructable.push_back(mcVertexX);
@@ -557,6 +560,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
       m_reconstructed = reconstructed;
       m_nHits = particleTrackHits[particle];
       m_nHitsMC = uniqueHits;
+      m_distClosestMCPart = minDR;
       m_closeTracks = nCloseTrk;
       m_simplifiedTree->Fill();
     }

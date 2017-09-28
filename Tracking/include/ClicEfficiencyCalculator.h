@@ -141,7 +141,7 @@ protected:
   std::vector<double > m_vec_p = {};
   
   TTree *m_simplifiedTree = NULL;
-  double m_type = 0.0, m_pt = 0.0, m_theta = 0.0, m_phi = 0.0, m_vertexR = 0.0, m_closeTracks = 0.0, m_purity = 0.0;
+  double m_type = 0.0, m_pt = 0.0, m_theta = 0.0, m_phi = 0.0, m_vertexR = 0.0, m_distClosestMCPart = 0.0,  m_closeTracks = 0.0, m_purity = 0.0;
   int m_nHits = 0, m_nHitsMC = 0;
   bool m_reconstructed = false;
 
