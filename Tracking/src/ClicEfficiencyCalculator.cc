@@ -1,6 +1,5 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 #include "ClicEfficiencyCalculator.h"
-#include "DDRec/API/IDDecoder.h"
 
 #include "marlin/AIDAProcessor.h"
 
