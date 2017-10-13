@@ -333,12 +333,12 @@
     <parameter name="RelationsNames" type="StringVec" lcioInType="LCRelation">VXDTrackerHitRelations VXDEndcapTrackerHitRelations </parameter>
 
     <!--Cut values for the pattern recognition -->
-    <parameter name="ThetaRange" type="double"> 0.03 </parameter>
+    <parameter name="ThetaRange" type="double"> 0.05 </parameter>
     <parameter name="MaxCellAngle" type="double"> 0.005 </parameter>
     <parameter name="MaxCellAngleRZ" type="double"> 0.005 </parameter>
     <parameter name="MaxDistance" type="double"> 0.02 </parameter>
-    <parameter name="MinClustersOnTrack" type="int"> 6 </parameter>
-    <parameter name="MaxChi2" type="double"> 50 </parameter>
+    <parameter name="MinClustersOnTrack" type="int"> 4 </parameter>
+    <parameter name="MaxChi2" type="double"> 100 </parameter>
     <parameter name="DebugPlots" type="bool"> false </parameter>
     <parameter name="trackPurity" type="double">0.7 </parameter>
 
@@ -391,12 +391,12 @@
     <parameter name="RelationsNames" type="StringVec" lcioInType="LCRelation"> VXDTrackerHitRelations VXDEndcapTrackerHitRelations InnerTrackerBarrelHitsRelations OuterTrackerBarrelHitsRelations InnerTrackerEndcapHitsRelations OuterTrackerEndcapHitsRelations </parameter>
 
     <!--Cut values for the pattern recognition -->
-    <parameter name="ThetaRange" type="double"> 0.03 </parameter>
+    <parameter name="ThetaRange" type="double"> 0.05 </parameter>
     <parameter name="MaxCellAngle" type="double"> 0.005 </parameter>
     <parameter name="MaxCellAngleRZ" type="double"> 0.005 </parameter>
     <parameter name="MaxDistance" type="double"> 0.02 </parameter>
-    <parameter name="MinClustersOnTrack" type="int"> 6 </parameter>
-    <parameter name="MaxChi2" type="double"> 50 </parameter>
+    <parameter name="MinClustersOnTrack" type="int"> 4 </parameter>
+    <parameter name="MaxChi2" type="double"> 100 </parameter>
     <parameter name="DebugPlots" type="bool"> false </parameter>
     <parameter name="trackPurity" type="double">0.7 </parameter>
 
