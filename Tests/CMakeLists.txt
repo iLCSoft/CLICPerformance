@@ -79,7 +79,7 @@ ADD_TEST( NAME t_${test_name}
   COMMAND "$ENV{lcgeo_DIR}/bin/run_test_lcgeo.sh"
   ddsim
   --compactFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v13/CLIC_o3_v13.xml
-  --runType=batch -G -N=1000
+  --runType=batch -G -N=100
   --outputFile=testCLIC_o3_v13.slcio
   --gun.isotrop=true
   --steeringFile=${CMAKE_SOURCE_DIR}/examples/clic_steer.py
@@ -94,7 +94,7 @@ ADD_TEST( NAME t_${test_name}
   --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v13/CLIC_o3_v13.xml
   --global.LCIOInputFiles=testCLIC_o3_v13.slcio clicReconstruction.xml
   --Config.Tracking=Truth
-  --global.MaxRecordNumber=3
+  --global.MaxRecordNumber=4
   --Output_REC.LCIOOutputFile=reco_truth_v13_rec.slcio
   --Output_DST.LCIOOutputFile=reco_truth_v13_dst.slcio
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/
@@ -109,7 +109,7 @@ ADD_TEST( NAME t_${test_name}
   --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v13/CLIC_o3_v13.xml
   --global.LCIOInputFiles=testCLIC_o3_v13.slcio clicReconstruction.xml
   --Config.Tracking=Conformal
-  --global.MaxRecordNumber=1000
+  --global.MaxRecordNumber=20
   --Output_REC.LCIOOutputFile=reco_conformal_v13_rec.slcio
   --Output_DST.LCIOOutputFile=reco_conformal_v13_dst.slcio
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/
@@ -124,7 +124,7 @@ ADD_TEST( NAME t_${test_name}
   --global.LCIOInputFiles=testCLIC_o3_v13.slcio clicReconstruction.xml
   --Config.Overlay=3TeV
   --Overlay3TeV.BackgroundFileNames=testCLIC_o3_v13.slcio
-  --global.MaxRecordNumber=3
+  --global.MaxRecordNumber=20
   --Output_REC.LCIOOutputFile=reco_overlay_v13_rec.slcio
   --Output_DST.LCIOOutputFile=reco_overlay_v13_dst.slcio
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/
@@ -165,7 +165,7 @@ ADD_TEST( NAME t_${test_name}
   --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v13/CLIC_o3_v13.xml
   --global.LCIOInputFiles=testCLIC_o3_v13.slcio clicReconstruction.xml
   --Config.Tracking=Conformal
-  --global.MaxRecordNumber=20
+  --global.MaxRecordNumber=3
   --Output_REC.LCIOOutputFile=reco_conformal_valgrind_v13_rec.slcio
   --Output_DST.LCIOOutputFile=reco_conformal_valgrind_v13_dst.slcio
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/ CONFIGURATIONS valgrind
@@ -205,7 +205,7 @@ ADD_TEST( NAME t_${test_name}
   COMMAND "$ENV{lcgeo_DIR}/bin/run_test_lcgeo.sh"
   ddsim
   --compactFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v13/CLIC_o3_v13.xml
-  --runType=batch -N=100
+  --runType=batch -N=4
   --outputFile=testCLIC_o3_v13_zuds.slcio
   --inputFiles /eos/experiment/clicdp/grid/ilc/user/w/webermat/stdhep/Zuds3000/Zuds3000__01.stdhep
   --steeringFile=${CMAKE_SOURCE_DIR}/examples/clic_steer.py
@@ -224,7 +224,7 @@ ADD_TEST( NAME t_${test_name}
   --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v13/CLIC_o3_v13.xml
   --global.LCIOInputFiles=testCLIC_o3_v13_zuds.slcio clicReconstruction.xml
   --Config.Tracking=Conformal
-  --global.MaxRecordNumber=100
+  --global.MaxRecordNumber=4
   --Output_REC.LCIOOutputFile=reco_conformal_v13_zuds_rec.slcio
   --Output_DST.LCIOOutputFile=reco_conformal_v13_zuds_dst.slcio
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/
@@ -249,7 +249,7 @@ ADD_TEST( NAME t_${test_name}
   --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v13/CLIC_o3_v13.xml
   --global.LCIOInputFiles=testCLIC_o3_v13_zuds.slcio clicReconstruction.xml
   --Config.Tracking=Conformal
-  --global.MaxRecordNumber=2
+  --global.MaxRecordNumber=4
   --Output_REC.LCIOOutputFile=reco_conformal_valgrind_v13_zuds_rec.slcio
   --Output_DST.LCIOOutputFile=reco_conformal_valgrind_v13_zuds_dst.slcio
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/ CONFIGURATIONS valgrind
@@ -275,7 +275,7 @@ ADD_TEST( NAME t_${test_name}
   --Config.Overlay=3TeV
   --Config.Tracking=Conformal
   --Overlay3TeV.BackgroundFileNames="/eos/experiment/clicdp/grid/ilc/prod/clic/3tev/gghad/CLIC_o3_v13/SIM/00008258/000/gghad_sim_8258_37.slcio /eos/experiment/clicdp/grid/ilc/prod/clic/3tev/gghad/CLIC_o3_v13/SIM/00008258/000/gghad_sim_8258_38.slcio"
-  --global.MaxRecordNumber=5
+  --global.MaxRecordNumber=4
   --Output_REC.LCIOOutputFile=reco_overlay_conformal_valgrind_v13_zuds_rec.slcio
   --Output_DST.LCIOOutputFile=reco_overlay_conformal_valgrind_v13_zuds_dst.slcio
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/ CONFIGURATIONS valgrind
@@ -299,7 +299,7 @@ ADD_TEST( NAME t_${test_name}
   --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v13/CLIC_o3_v13.xml
   --global.LCIOInputFiles=testCLIC_o3_v13_zuds.slcio clicReconstruction.xml
   --Config.Tracking=Conformal
-  --global.MaxRecordNumber=3
+  --global.MaxRecordNumber=4
   --Output_REC.LCIOOutputFile=reco_conformal_msassif_v13_zuds_rec.slcio
   --Output_DST.LCIOOutputFile=reco_conformal_msassif_v13_zuds_dst.slcio
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/ CONFIGURATIONS valgrind
@@ -323,7 +323,7 @@ ADD_TEST( NAME t_${test_name}
   --Config.Overlay=3TeV
   --Config.Tracking=Conformal
   --Overlay3TeV.BackgroundFileNames="/eos/experiment/clicdp/grid/ilc/prod/clic/3tev/gghad/CLIC_o3_v13/SIM/00008258/000/gghad_sim_8258_37.slcio /eos/experiment/clicdp/grid/ilc/prod/clic/3tev/gghad/CLIC_o3_v13/SIM/00008258/000/gghad_sim_8258_38.slcio"
-  --global.MaxRecordNumber=5
+  --global.MaxRecordNumber=4
   --Output_REC.LCIOOutputFile=reco_overlay_conformal_v13_zuds_rec.slcio
   --Output_DST.LCIOOutputFile=reco_overlay_conformal_v13_zuds_dst.slcio
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/ CONFIGURATIONS valgrind
