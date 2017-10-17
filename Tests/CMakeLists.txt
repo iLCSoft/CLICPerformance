@@ -210,6 +210,7 @@ ADD_TEST( NAME t_${test_name}
   --inputFiles /eos/experiment/clicdp/grid/ilc/user/w/webermat/stdhep/Zuds3000/Zuds3000__01.stdhep
   --steeringFile=${CMAKE_SOURCE_DIR}/examples/clic_steer.py
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/
+  CONFIGURATIONS EOS
   )
 SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES
   FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;ERROR;Error"
@@ -228,6 +229,7 @@ ADD_TEST( NAME t_${test_name}
   --Output_REC.LCIOOutputFile=reco_conformal_v13_zuds_rec.slcio
   --Output_DST.LCIOOutputFile=reco_conformal_v13_zuds_dst.slcio
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/
+  CONFIGURATIONS EOS
   )
 SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES
   FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error"
