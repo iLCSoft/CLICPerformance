@@ -109,7 +109,7 @@ ADD_TEST( NAME t_${test_name}
   --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v13/CLIC_o3_v13.xml
   --global.LCIOInputFiles=testCLIC_o3_v13.slcio clicReconstruction.xml
   --Config.Tracking=Conformal
-  --global.MaxRecordNumber=20
+  --global.MaxRecordNumber=4
   --Output_REC.LCIOOutputFile=reco_conformal_v13_rec.slcio
   --Output_DST.LCIOOutputFile=reco_conformal_v13_dst.slcio
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/
@@ -124,7 +124,7 @@ ADD_TEST( NAME t_${test_name}
   --global.LCIOInputFiles=testCLIC_o3_v13.slcio clicReconstruction.xml
   --Config.Overlay=3TeV
   --Overlay3TeV.BackgroundFileNames=testCLIC_o3_v13.slcio
-  --global.MaxRecordNumber=20
+  --global.MaxRecordNumber=4
   --Output_REC.LCIOOutputFile=reco_overlay_v13_rec.slcio
   --Output_DST.LCIOOutputFile=reco_overlay_v13_dst.slcio
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/
