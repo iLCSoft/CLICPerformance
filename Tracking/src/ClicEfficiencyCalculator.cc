@@ -699,7 +699,8 @@ bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::str
     //if ( fabs(cos(p.Theta()))<0.89 ) passTheta = true;
     //else std::cout<<"----- mc does not pass theta acceptance cut"<<std::endl;
     std::vector<TrackerHit*> trackHits = particleHits[particle];
-    if(trackHits.size() >= 4) passNHits = true;
+    int uniqueHits = getUniqueHits(trackHits,m_encoder);
+    if(uniqueHits >= 4) passNHits = true;
     //else std::cout<<"----- mc has not 4 hits associated"<<std::endl;
     //if(trackHits.size() >= 6) passNHits = true;
     
