@@ -102,7 +102,7 @@ ClicEfficiencyCalculator::ClicEfficiencyCalculator() : Processor("ClicEfficiency
   registerProcessorParameter( "simpleOutput",
                              "A simplified tree can be output with the MC particle properties, including whether or not it was reconstructed",
                              m_simpleOutput,
-                             bool(false));
+                             bool(true));
 
   // Output collections - particles reconstructed and not reconstructed
   registerOutputCollection( LCIO::MCPARTICLE,
