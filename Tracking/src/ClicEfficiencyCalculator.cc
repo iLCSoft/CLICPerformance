@@ -288,7 +288,9 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
   
   std::map<MCParticle*,int> particleTracks;
   std::map<MCParticle*,int> particleTrackHits;
-  
+  std::list<std::pair<MCParticle*,double>> purityTrack;
+  std::list<std::pair<MCParticle*,double>>::const_iterator iter;
+
   /*
    Look at all tracks that were reconstructed and calculate their purity. This can be used to point to all
 	 	reconstructed MC particles. Then loop over MC particles and for each that was not reconstructed check the
@@ -350,9 +352,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     }
     double purity = (double)maxHits/(double)(nHits-nExcluded);
     
-    if(m_simpleOutput){
-      m_purity = purity;
-    }
+    purityTrack.push_back(make_pair(associatedParticle, purity));
 
     // Save additional information
     if(m_fullOutput){
@@ -386,7 +386,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     if(particleTrackHits.count(associatedParticle) == 0 || nHits > particleTrackHits[associatedParticle]) particleTrackHits[associatedParticle] = nHits;
     
   }
-  
+
   /*
    Now for each MC particle we want the list of hits belonging to it. The most
    efficient way is to loop over all hits once, and store the pointers in a
@@ -475,6 +475,11 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     bool reconstructed=false;
     if(particleTracks.count(particle)){
       reconstructed=true;
+      for(iter = purityTrack.begin(); iter != purityTrack.end(); iter++){
+        if((*iter).first == particle){
+          m_purity = (*iter).second;
+        }
+      }
       nReconstructed++;
       m_particles["reconstructed"]++;
       m_thetaPtMCParticleReconstructed->Fill(mcTheta,mcPt);
