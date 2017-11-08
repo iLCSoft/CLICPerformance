@@ -77,6 +77,7 @@ protected:
   std::vector<std::string> m_inputTrackerHitCollections = {};
   std::vector<std::string> m_inputTrackerHitRelationCollections = {};
   std::string m_inputParticleCollection = "";
+  std::string m_inputPhysicsParticleCollection = "";
   std::string m_inputTrackCollection = "";
   std::string m_inputTrackRelationCollection = "";
   std::string m_outputEfficientMCParticleCollection = "";
@@ -143,7 +144,7 @@ protected:
   TTree *m_simplifiedTree = NULL;
   double m_type = 0.0, m_pt = 0.0, m_theta = 0.0, m_phi = 0.0, m_vertexR = 0.0, m_distClosestMCPart = 0.0,  m_closeTracks = 0.0, m_purity = 0.0;
   int m_nHits = 0, m_nHitsMC = 0;
-  bool m_reconstructed = false;
+  bool m_reconstructed = false, m_signal = false;
 
 
 } ;

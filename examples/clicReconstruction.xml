@@ -535,6 +535,8 @@
     <parameter name="TrackerHitRelCollectionNames" type="StringVec" lcioInType="LCRelation"> VXDTrackerHitRelations VXDEndcapTrackerHitRelations InnerTrackerBarrelHitsRelations OuterTrackerBarrelHitsRelations InnerTrackerEndcapHitsRelations OuterTrackerEndcapHitsRelations </parameter>
     <!--Name of the MCParticle input collection-->
     <parameter name="MCParticleCollectionName" type="string" lcioInType="MCParticle">MCParticle </parameter>
+    <!--Name of the MCPhysicsParticles input collection-->
+    <parameter name="MCPhysicsParticleCollectionName" type="string" lcioInType="MCParticle">MCPhysicsParticles </parameter>
     <!--Name of the output collection of the not reconstructed charged MCParticle-->
     <parameter name="MCParticleNotReco" type="string" lcioOutType="MCParticle">MCParticleNotReco </parameter>
     <!--If true additional plots (n of hits per subdetector per mc particle, mc theta, mc pt, info if the particle is decayed in the tracker) will be added to the Ntuple mctree-->

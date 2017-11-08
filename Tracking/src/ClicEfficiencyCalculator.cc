@@ -54,6 +54,12 @@ ClicEfficiencyCalculator::ClicEfficiencyCalculator() : Processor("ClicEfficiency
                           "Name of the MCParticle input collection",
                           m_inputParticleCollection,
                           std::string("MCParticle"));
+
+  registerInputCollection( LCIO::MCPARTICLE,
+                           "MCPhysicsParticleCollectionName",
+                           "Name of the MCPhysicsParticle input collection",
+                           m_inputPhysicsParticleCollection,
+                           std::string("MCPhysicsParticle"));
   
   // All tracker hit collections
   std::vector<std::string> inputTrackerHitCollections;
@@ -199,6 +205,7 @@ void ClicEfficiencyCalculator::init() {
   
   if(m_simpleOutput){
     m_simplifiedTree = new TTree("simplifiedEfficiencyTree","simplifiedEfficiencyTree");
+    m_simplifiedTree->Branch("m_signal",&m_signal,"m_signal/O");
     m_simplifiedTree->Branch("m_type", &m_type, "m_type/D");
     m_simplifiedTree->Branch("m_pt", &m_pt, "m_pt/D");
     m_simplifiedTree->Branch("m_theta", &m_theta, "m_theta/D");
@@ -243,6 +250,13 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
   // Get the collection of MC particles
   LCCollection* particleCollection = 0 ;
   getCollection(particleCollection, m_inputParticleCollection, evt); if(particleCollection == 0) return;
+
+  // Get the collection of MC physics particles
+  LCCollection* physicsParticleCollection = 0;
+  getCollection(physicsParticleCollection, m_inputPhysicsParticleCollection, evt); 
+  if(physicsParticleCollection == 0){
+    getCollection(physicsParticleCollection, m_inputParticleCollection, evt);  
+  }
   
   // Make the output collections
   LCCollectionVec* efficientParticleCollection = new LCCollectionVec( LCIO::MCPARTICLE )  ;
@@ -286,6 +300,14 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     
   }
   
+  // Store all physics MCParticles in a std::set
+  std::set<MCParticle*> physicsParticles;
+
+  for(int itPhys=0; itPhys<physicsParticleCollection->getNumberOfElements(); itPhys++){
+    MCParticle *signal = static_cast<MCParticle*> (physicsParticleCollection->getElementAt(itPhys));
+    physicsParticles.insert(signal);
+  }
+
   std::map<MCParticle*,int> particleTracks;
   std::map<MCParticle*,int> particleTrackHits;
   
@@ -415,7 +437,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
       
       // Get the particle belonging to that hit
       MCParticle* particle = simHit->getMCParticle();
-      
+
       // Push back the element into the container
       particleHits[particle].push_back(hit);
       
@@ -437,6 +459,8 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     nCloseTrk=0;
     MCParticle* particle = static_cast<MCParticle*>( particleCollection->getElementAt(itParticle) ) ;
     
+    bool isSignal = physicsParticles.count(particle) == 1;
+
     // Calculate the particle properties
     TLorentzVector particleVector;
     particleVector.SetPxPyPzE(particle->getMomentum()[0],particle->getMomentum()[1],particle->getMomentum()[2],particle->getEnergy());
@@ -551,6 +575,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     }
     
     if(m_simpleOutput){
+      m_signal = isSignal;
       m_type = particle->getPDG();
       m_pt = mcPt;
       m_theta = mcTheta;
