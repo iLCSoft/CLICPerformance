@@ -3,6 +3,9 @@
 
 #include "marlin/AIDAProcessor.h"
 
+#include "MarlinTrk/HelixTrack.h"
+#include <marlinutil/HelixClass.h>
+
 #include <EVENT/LCCollection.h>
 #include <EVENT/SimTrackerHit.h>
 
@@ -133,12 +136,15 @@ ClicEfficiencyCalculator::ClicEfficiencyCalculator() : Processor("ClicEfficiency
                              "Name of the purity tree",
                              m_purityTreeName,
                              std::string("purityTree"));
-  
+
+  registerProcessorParameter("perfTreeName",
+                             "Name of the track performance tree",
+                             m_perfTreeName, std::string("perfTree"));
+
   registerProcessorParameter("mcTreeName",
                              "Name of the mc tree",
                              m_mcTreeName,
                              std::string("mctree"));
-  
 }
 
 
@@ -179,11 +185,51 @@ void ClicEfficiencyCalculator::init() {
     m_purityTree->Branch("trk_nhits_trk", "std::vector<int >",&m_vec_nhits_trk,bufsize_purity,0);
     m_purityTree->Branch("trk_nhits", "std::vector<int >",&m_vec_nhits,bufsize_purity,0);
     m_purityTree->Branch("trk_purity", "std::vector<double >",&m_vec_purity,bufsize_purity,0);
+    m_purityTree->Branch("innermostR", "std::vector<double >",
+                         &m_vec_innermostR, bufsize_purity, 0);
     m_purityTree->Branch("mc_pdg", "std::vector<int >",&m_vec_pdg,bufsize_purity,0);
     m_purityTree->Branch("mc_theta", "std::vector<double >",&m_vec_theta,bufsize_purity,0);
     m_purityTree->Branch("mc_phi", "std::vector<double >",&m_vec_phi,bufsize_purity,0);
     m_purityTree->Branch("mc_p", "std::vector<double >",&m_vec_p,bufsize_purity,0);
-    
+
+    // Tree for track performance information
+    m_perfTree = new TTree(m_perfTreeName.c_str(), m_perfTreeName.c_str());
+    int bufsize_perf = 32000;
+    m_perfTree->Branch("truePt", "std::vector<double >", &truePt, bufsize_perf,
+                       0);
+    m_perfTree->Branch("trueTheta", "std::vector<double >", &trueTheta,
+                       bufsize_perf, 0);
+    m_perfTree->Branch("truePhi", "std::vector<double >", &truePhi,
+                       bufsize_perf, 0);
+    m_perfTree->Branch("trueD0", "std::vector<double >", &trueD0, bufsize_perf,
+                       0);
+    m_perfTree->Branch("trueZ0", "std::vector<double >", &trueZ0, bufsize_perf,
+                       0);
+    m_perfTree->Branch("trueP", "std::vector<double >", &trueP, bufsize_perf,
+                       0);
+    m_perfTree->Branch("trueID", "std::vector<int > ", &trueID, bufsize_perf,
+                       0);
+    m_perfTree->Branch("trueVertexR", "std::vector<double > ", &trueVertexR,
+                       bufsize_perf, 0);
+
+    m_perfTree->Branch("recoPt", "std::vector<double >", &recoPt, bufsize_perf,
+                       0);
+    m_perfTree->Branch("recoTheta", "std::vector<double >", &recoTheta,
+                       bufsize_perf, 0);
+    m_perfTree->Branch("recoPhi", "std::vector<double >", &recoPhi,
+                       bufsize_perf, 0);
+    m_perfTree->Branch("recoD0", "std::vector<double >", &recoD0, bufsize_perf,
+                       0);
+    m_perfTree->Branch("recoZ0", "std::vector<double >", &recoZ0, bufsize_perf,
+                       0);
+    m_perfTree->Branch("recoP", "std::vector<double >", &recoP, bufsize_perf,
+                       0);
+
+    m_perfTree->Branch("recoNhits", "std::vector<int >", &recoNhits,
+                       bufsize_perf, 0);
+    m_perfTree->Branch("recoChi2OverNDF", "std::vector<double >",
+                       &recoChi2OverNDF, bufsize_perf, 0);
+
     // Tree for MC information
     m_mctree = new TTree(m_mcTreeName.c_str(),m_mcTreeName.c_str());
     int bufsize = 32000; //default buffer size 32KB
@@ -326,7 +372,14 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     
     // Get the track
     Track* track = static_cast<Track*>( trackCollection->getElementAt(itTrack) ) ;
-    
+
+    // Get the track information
+    double d0track = track->getD0();
+    double phtrack = track->getPhi();
+    double omtrack = track->getOmega();
+    double z0track = track->getZ0();
+    double tLtrack = track->getTanLambda();
+
     // Get the hits
     const TrackerHitVec& hitVector = track->getTrackerHits();
     
@@ -335,7 +388,13 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
       streamlog_out(MESSAGE)<<"Track found with no hits on it"<<std::endl;
       continue;
     }
-    
+
+    TrackerHitVec hitVectorSort = hitVector;
+    std::sort(hitVectorSort.begin(), hitVectorSort.end(), sort_by_radius);
+
+    double innermostR = sqrt(pow((hitVector.at(0))->getPosition()[0], 2) +
+                             pow((hitVector.at(0))->getPosition()[1], 2));
+
     // Some storage to keep track of which particles have hits on this track
     std::vector<MCParticle*> trackParticles;
     std::map<MCParticle*,int> trackParticleHits;
@@ -378,19 +437,44 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
 
     // Save additional information
     if(m_fullOutput){
-      
+
+      // Store track info
+
       // Number of hits of each type
       m_vec_nhits_vtx.push_back(nHitsVertex);
       m_vec_nhits_trk.push_back(nHitsTracker);
       m_vec_nhits.push_back(nHits-nExcluded);
       m_vec_purity.push_back(purity);
-      
+      m_vec_innermostR.push_back(innermostR);
+
+      recoPt.push_back(0.3 * m_magneticField / (fabs(omtrack) * 1000.));
+      double recoThetaRad = M_PI / 2 - atan(tLtrack);
+      recoTheta.push_back(recoThetaRad * 180. / M_PI);
+      recoPhi.push_back(phtrack * 180. / M_PI);
+      recoD0.push_back(d0track);
+      recoZ0.push_back(z0track);
+      recoP.push_back(recoPt.back() / sin(recoThetaRad));
+
+      recoNhits.push_back(track->getTrackerHits().size());
+      if (track->getNdf() > 0)
+        recoChi2OverNDF.push_back(track->getChi2() / track->getNdf());
+      else
+        recoChi2OverNDF.push_back(-1.);
+
       // If no particle associated to this track
       if (associatedParticle == 0){
         m_vec_theta.push_back(-1.);
         m_vec_phi.push_back(0.);
         m_vec_p.push_back(0.);
         m_vec_pdg.push_back(-1);
+        truePt.push_back(-1); // omega in 1/mm -> transformed in 1/m
+        trueTheta.push_back(-1);
+        truePhi.push_back(-1);
+        trueD0.push_back(-1);
+        trueZ0.push_back(-1);
+        trueP.push_back(-1);
+        trueID.push_back(-1);
+        trueVertexR.push_back(-1);
       }else {
         
         // Store the MC particle information
@@ -400,6 +484,43 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
         m_vec_phi.push_back(mc_helper.Phi());
         m_vec_p.push_back(mc_helper.P());
         m_vec_pdg.push_back(fabs(associatedParticle->getPDG()));
+
+        // Construct the true helical trajectory
+        HelixClass helix;
+        float pos[3] = {
+            static_cast<float>(associatedParticle->getVertex()[0]),
+            static_cast<float>(associatedParticle->getVertex()[1]),
+            static_cast<float>(
+                associatedParticle->getVertex()[2])}; // Vertex position
+        float mom[3] = {
+            static_cast<float>(associatedParticle->getMomentum()[0]),
+            static_cast<float>(associatedParticle->getMomentum()[1]),
+            static_cast<float>(
+                associatedParticle->getMomentum()[2])}; // Particle momentum
+        float charge = associatedParticle->getCharge(); // Particle charge
+        helix.Initialize_VP(pos, mom, charge,
+                            m_magneticField); // Initialised helix track
+
+        // Now get the pull distributions
+        double d0mcp = helix.getD0();
+        double phmcp = helix.getPhi0();
+        double ommcp = helix.getOmega();
+        double z0mcp = helix.getZ0();
+        double tLmcp = helix.getTanLambda();
+        int idmcp = associatedParticle->getPDG();
+        truePt.push_back(
+            0.3 * m_magneticField /
+            fabs(ommcp * 1000.)); // omega in 1/mm -> transformed in 1/m
+        double trueThetaRad = M_PI / 2 - atan(tLmcp);
+        trueTheta.push_back(trueThetaRad * 180. / M_PI);
+        truePhi.push_back(phmcp * 180. / M_PI);
+        trueD0.push_back(d0mcp);
+        trueZ0.push_back(z0mcp);
+        trueP.push_back(truePt.back() / sin(trueThetaRad));
+        trueID.push_back(idmcp);
+        double vertexR = sqrt(pow(associatedParticle->getVertex()[0], 2) +
+                              pow(associatedParticle->getVertex()[1], 2));
+        trueVertexR.push_back(vertexR);
       }
     }
     
@@ -597,6 +718,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
   
   // Fill the output trees
   if (m_fullOutput) {
+    m_perfTree->Fill();
     m_mctree->Fill();
     m_trackTree->Fill();
     m_purityTree->Fill();
@@ -668,7 +790,6 @@ int ClicEfficiencyCalculator::getLayer(TrackerHit* hit, UTIL::BitField64 &encode
   int layer = encoder[lcio::LCTrackerCellID::layer()];
   return layer;
 }
-
 
 
 bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::string cut, UTIL::BitField64 &m_encoder){
@@ -895,6 +1016,7 @@ void ClicEfficiencyCalculator::clearTreeVar(){
   m_vec_nhits_trk.clear();
   m_vec_nhits.clear();
   m_vec_purity.clear();
+  m_vec_innermostR.clear();
   m_vec_pdg.clear();
   m_vec_theta.clear();
   m_vec_phi.clear();
@@ -902,6 +1024,24 @@ void ClicEfficiencyCalculator::clearTreeVar(){
   
   particleHits.clear();
 
+  truePt.clear();
+  trueTheta.clear();
+  truePhi.clear();
+  trueD0.clear();
+  trueZ0.clear();
+  trueP.clear();
+  trueID.clear();
+  trueVertexR.clear();
+
+  recoPt.clear();
+  recoTheta.clear();
+  recoPhi.clear();
+  recoD0.clear();
+  recoZ0.clear();
+  recoP.clear();
+
+  recoNhits.clear();
+  recoChi2OverNDF.clear();
 }  
 
 
