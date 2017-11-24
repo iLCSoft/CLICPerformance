@@ -9,13 +9,14 @@
 #include <vector>
 #include <map>
 
-#include <gsl/gsl_rng.h>
 #include "DDRec/Surface.h"
+#include "MarlinTrk/IMarlinTrkSystem.h"
 #include <EVENT/LCCollection.h>
 #include <EVENT/MCParticle.h>
-#include "MarlinTrk/IMarlinTrkSystem.h"
-#include <UTIL/CellIDDecoder.h>
+#include <EVENT/TrackerHit.h>
 #include <IMPL/TrackerHitPlaneImpl.h>
+#include <UTIL/CellIDDecoder.h>
+#include <gsl/gsl_rng.h>
 
 #include <AIDA/AIDA.h>
 
@@ -64,9 +65,9 @@ public:
 	int getSubdetector(LCCollection*, UTIL::BitField64&);
 	int getSubdetector(TrackerHit*, UTIL::BitField64&);
 	int getLayer(TrackerHit*, UTIL::BitField64&);
-  int getUniqueHits(std::vector<TrackerHit*>, UTIL::BitField64&);
+        int getUniqueHits(std::vector<TrackerHit *>, UTIL::BitField64 &);
 
-	bool isReconstructable(MCParticle*& particle, std::string cut, UTIL::BitField64&);
+        bool isReconstructable(MCParticle*& particle, std::string cut, UTIL::BitField64&);
 
 	void clearTreeVar();
 
@@ -98,6 +99,7 @@ protected:
   std::string m_mcTreeName = "";
   std::string m_purityTreeName = "";
   std::string m_efficiencyTreeName = "";
+  std::string m_perfTreeName = "";
   std::map<std::string,double> m_particles = {};
   std::map<std::string,double> m_reconstructedParticles = {};
   std::map<MCParticle*, std::vector<TrackerHit*> > particleHits = {};
@@ -136,11 +138,30 @@ protected:
   std::vector<int > m_vec_nhits_trk = {};
   std::vector<int > m_vec_nhits = {};
   std::vector<double > m_vec_purity = {};
+  std::vector<double> m_vec_innermostR = {};
   std::vector<int > m_vec_pdg = {};
   std::vector<double > m_vec_theta = {};
   std::vector<double > m_vec_phi = {};
   std::vector<double > m_vec_p = {};
-  
+
+  TTree *m_perfTree = NULL;
+  std::vector<double> truePt = {};
+  std::vector<double> trueTheta = {};
+  std::vector<double> truePhi = {};
+  std::vector<double> trueD0 = {};
+  std::vector<double> trueZ0 = {};
+  std::vector<double> trueP = {};
+  std::vector<int> trueID = {};
+  std::vector<double> trueVertexR = {};
+  std::vector<double> recoPt = {};
+  std::vector<double> recoTheta = {};
+  std::vector<double> recoPhi = {};
+  std::vector<double> recoD0 = {};
+  std::vector<double> recoZ0 = {};
+  std::vector<double> recoP = {};
+  std::vector<int> recoNhits = {};
+  std::vector<double> recoChi2OverNDF = {};
+
   TTree *m_simplifiedTree = NULL;
   double m_type = 0.0, m_pt = 0.0, m_theta = 0.0, m_phi = 0.0, m_vertexR = 0.0, m_distClosestMCPart = 0.0,  m_closeTracks = 0.0, m_purity = 0.0;
   int m_nHits = 0, m_nHitsMC = 0;
@@ -148,6 +169,15 @@ protected:
 
 
 } ;
+
+// Sort tracker hits from smaller to largest radius
+bool sort_by_radius(EVENT::TrackerHit *hit1, EVENT::TrackerHit *hit2) {
+  double radius1 = sqrt((hit1->getPosition()[0]) * (hit1->getPosition()[0]) +
+                        (hit1->getPosition()[1]) * (hit1->getPosition()[1]));
+  double radius2 = sqrt((hit2->getPosition()[0]) * (hit2->getPosition()[0]) +
+                        (hit2->getPosition()[1]) * (hit2->getPosition()[1]));
+  return (radius1 < radius2);
+}
 
 #endif
 
