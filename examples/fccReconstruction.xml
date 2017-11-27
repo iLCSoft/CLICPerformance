@@ -92,7 +92,7 @@
     <!--Name of the DD4hep compact xml file to load-->
     <parameter name="EncodingStringParameter"> GlobalTrackerReadoutID </parameter>
     <parameter name="DD4hepXMLFile" type="string">
-      /cvmfs/clicdp.cern.ch/iLCSoft/builds/nightly/x86_64-slc6-gcc62-opt/lcgeo/HEAD/CLIC/compact/CLIC_o3_v13/CLIC_o3_v13.xml
+      /cvmfs/clicdp.cern.ch/iLCSoft/builds/2017-11-15/x86_64-slc6-gcc62-opt/lcgeo/HEAD/FCCee/compact/FCCee_o1_v01/FCCee_o1_v01.xml
     </parameter>
   </processor>
 
@@ -334,9 +334,9 @@
 
     <!--Cut values for the pattern recognition -->
     <parameter name="ThetaRange" type="double"> 0.05 </parameter>
-    <parameter name="MaxCellAngle" type="double"> 0.005 </parameter>
-    <parameter name="MaxCellAngleRZ" type="double"> 0.005 </parameter>
-    <parameter name="MaxDistance" type="double"> 0.02 </parameter>
+    <parameter name="MaxCellAngle" type="double"> 0.01 </parameter>
+    <parameter name="MaxCellAngleRZ" type="double"> 0.01 </parameter>
+    <parameter name="MaxDistance" type="double"> 0.03 </parameter>
     <parameter name="MinClustersOnTrack" type="int"> 4 </parameter>
     <parameter name="MaxChi2" type="double"> 100 </parameter>
     <parameter name="DebugPlots" type="bool"> false </parameter>
@@ -392,9 +392,9 @@
 
     <!--Cut values for the pattern recognition -->
     <parameter name="ThetaRange" type="double"> 0.05 </parameter>
-    <parameter name="MaxCellAngle" type="double"> 0.005 </parameter>
-    <parameter name="MaxCellAngleRZ" type="double"> 0.005 </parameter>
-    <parameter name="MaxDistance" type="double"> 0.02 </parameter>
+    <parameter name="MaxCellAngle" type="double"> 0.01 </parameter>
+    <parameter name="MaxCellAngleRZ" type="double"> 0.01 </parameter>
+    <parameter name="MaxDistance" type="double"> 0.03 </parameter>
     <parameter name="MinClustersOnTrack" type="int"> 4 </parameter>
     <parameter name="MaxChi2" type="double"> 100 </parameter>
     <parameter name="DebugPlots" type="bool"> false </parameter>
