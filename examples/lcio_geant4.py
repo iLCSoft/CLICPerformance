@@ -65,14 +65,14 @@ physicsList    = 'FTFP_BERT'  # 'QGSP_BERT'
 cfgDict = {}
 
 #---- B field stepping -------
-cfgDict['field.stepper']            = "HelixSimpleRunge"
+cfgDict['field.stepper']            = "G4ClassicalRK4"
 cfgDict['field.equation']           = "Mag_UsualEqRhs"
 cfgDict['field.eps_min']            = 5e-05*mm
 cfgDict['field.eps_max']            = 0.001*mm
 cfgDict['field.min_chord_step']     = 0.01*mm
 cfgDict['field.delta_chord']        = 0.25*mm
-cfgDict['field.delta_intersection'] = 1e-05*mm
-cfgDict['field.delta_one_step']     = 1e-04*mm
+cfgDict['field.delta_intersection'] = 0.001*mm
+cfgDict['field.delta_one_step']     = 0.01*mm
 
 
 #
