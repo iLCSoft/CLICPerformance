@@ -1,7 +1,7 @@
 import os
 
 from DDSim.DD4hepSimulation import DD4hepSimulation
-from SystemOfUnits import mm, GeV, MeV
+from SystemOfUnits import mm, GeV, MeV, m
 SIM = DD4hepSimulation()
 
 ## The compact XML file
@@ -74,15 +74,15 @@ SIM.action.mapActions = {}
 ################################################################################
 ## Configuration for the magnetic field (stepper) 
 ################################################################################
-SIM.field.delta_chord = 0.25
-SIM.field.delta_intersection = 1e-05
-SIM.field.delta_one_step = 0.0001
-SIM.field.eps_max = 0.001
-SIM.field.eps_min = 5e-05
+SIM.field.delta_chord = 0.25*mm
+SIM.field.delta_intersection = 0.001*mm
+SIM.field.delta_one_step = 0.01*mm
+SIM.field.eps_max = 0.001*mm
+SIM.field.eps_min = 5e-05*mm
 SIM.field.equation = "Mag_UsualEqRhs"
-SIM.field.largest_step = 10000.0
-SIM.field.min_chord_step = 0.01
-SIM.field.stepper = "HelixSimpleRunge"
+SIM.field.largest_step = 10.0*m
+SIM.field.min_chord_step = 0.01*mm
+SIM.field.stepper = "G4ClassicalRK4"
 
 
 ################################################################################
