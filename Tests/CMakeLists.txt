@@ -336,3 +336,50 @@ SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES
   REQUIRED_FILES "/eos/experiment/clicdp/grid/ilc/prod/clic/3tev/gghad/CLIC_o3_v13/SIM/00008258/000/gghad_sim_8258_37.slcio /eos/experiment/clicdp/grid/ilc/prod/clic/3tev/gghad/CLIC_o3_v13/SIM/00008258/000/gghad_sim_8258_38.slcio"
   TIMEOUT 300000
   )
+
+
+SET( test_name "test_CLIC_o3_v13_reco_conformal_zuds_profile" )
+ADD_TEST( NAME t_${test_name}
+  COMMAND
+  ${CMAKE_SOURCE_DIR}/Tests/bin/Profiler.sh ${CMAKE_SOURCE_DIR}/lib/libClicPerformance.so
+  amplxe-cl -collect hotspots -r ../ClicReco/r@@@{at}
+  Marlin
+  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v13/CLIC_o3_v13.xml
+  --global.LCIOInputFiles=testCLIC_o3_v13_zuds.slcio clicReconstruction.xml
+  --Config.Tracking=Conformal
+  --global.MaxRecordNumber=10
+  --Output_REC.LCIOOutputFile=reco_conformal_v13_zuds_rec_prof.slcio
+  --Output_DST.LCIOOutputFile=reco_conformal_v13_zuds_dst_prof.slcio
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/
+  CONFIGURATIONS PROF
+  )
+SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES
+  FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error"
+  DEPENDS test_CLIC_o3_v13_sim_zuds
+  TIMEOUT 300000
+  )
+
+
+SET( test_name "test_CLIC_o3_v13_reco_conformal_zuds_overlay_profile" )
+ADD_TEST( NAME t_${test_name}
+  COMMAND
+  ${CMAKE_SOURCE_DIR}/Tests/bin/Profiler.sh ${CMAKE_SOURCE_DIR}/lib/libClicPerformance.so
+  amplxe-cl -collect hotspots -r ../ClicReco/r@@@{at}_over
+  Marlin
+  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v13/CLIC_o3_v13.xml
+  --global.LCIOInputFiles=testCLIC_o3_v13_zuds.slcio clicReconstruction.xml
+  --Config.Overlay=3TeV
+  --Config.Tracking=Conformal
+  --Overlay3TeV.BackgroundFileNames="gghad_sim_8494_37.slcio gghad_sim_8494_38.slcio"
+  --global.MaxRecordNumber=1
+  --Output_REC.LCIOOutputFile=reco_overlay_conformal_v13_zuds_rec_over_prof.slcio
+  --Output_DST.LCIOOutputFile=reco_overlay_conformal_v13_zuds_dst_over_prof.slcio
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/
+  CONFIGURATIONS PROF
+  )
+SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES
+  FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error"
+  DEPENDS test_CLIC_o3_v13_sim_zuds
+  REQUIRED_FILES "gghad_sim_8494_37.slcio;gghad_sim_8494_38.slcio"
+  TIMEOUT 300000
+  )
