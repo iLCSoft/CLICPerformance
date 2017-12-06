@@ -76,7 +76,7 @@
 
   <global>
     <parameter name="LCIOInputFiles">
-      /afs/cern.ch/work/e/eleogran/public/mu_sim/mu_validation_50kevents.slcio
+      /eos/experiment/clicdp/grid/ilc/user/w/webermat/ddsimstdhep/ILC17-11-09_gcc62_CLIC_o3_v13/Zuds3000_split100/ddsim_ILC171109_gcc62_Zuds3000_CLIC_o3_v13_00_0.slcio
     </parameter>
     <!-- Limit the number of processed records (run+evt): -->
     <parameter name="MaxRecordNumber" value="-1" />
@@ -540,13 +540,13 @@
     <!--calibration to convert ECAL deposited energy to MIPs-->
     <parameter name="CalibECALMIP" type="float">0.0001 </parameter>
     <!--Calibration coefficients for ECAL-->
-    <parameter name="CalibrECAL" type="FloatVec">35.7873928132 35.7873928132</parameter>
+    <parameter name="CalibrECAL" type="FloatVec">35.8411424188 35.8411424188</parameter>
     <!--Threshold for ECAL Hits in GeV-->
     <parameter name="ECALThreshold" type="float">5e-05 </parameter>
     <!--Unit for ECAL Threshold. Can be "GeV", "MIP" or "px". MIP and px need properly set calibration constants-->
     <parameter name="ECALThresholdUnit" type="string">GeV </parameter>
     <!--Energy correction for ECAL endcap-->
-    <parameter name="ECALEndcapCorrectionFactor" type="float">1.070 </parameter>
+    <parameter name="ECALEndcapCorrectionFactor" type="float">1.0672142727</parameter>
     <!--Correct for ECAL gaps-->
     <parameter name="ECALGapCorrection" type="int">1 </parameter>
     <!--Factor applied to gap correction-->
@@ -619,12 +619,12 @@
     <!--calibration to convert HCAL deposited energy to MIPs-->
     <parameter name="CalibHCALMIP" type="float">0.0001 </parameter>
     <!--Calibration coefficients for Barrel HCAL-->
-    <parameter name="CalibrHCALBarrel" type="FloatVec">48.6089541748</parameter>
+    <parameter name="CalibrHCALBarrel" type="FloatVec">49.2031079063</parameter>
     <!-- CalibrHcalBarrel Should be 38.995 for 17 mm -->
     <!--Calibration coefficients for EndCap HCAL-->
-    <parameter name="CalibrHCALEndcap" type="FloatVec">53.2899125895</parameter>
+    <parameter name="CalibrHCALEndcap" type="FloatVec">53.6263377733</parameter>
     <!--Calibration coefficients for Other (Ring) HCAL-->
-    <parameter name="CalibrHCALOther" type="FloatVec">63.5104693008</parameter>
+    <parameter name="CalibrHCALOther" type="FloatVec">62.2125698179</parameter>
     <!--Threshold for HCAL Hits in GeV-->
     <parameter name="HCALThreshold" type="FloatVec">0.00025  </parameter>
     <!--Unit for HCAL Threshold. Can be "GeV", "MIP" or "px". MIP and px need properly set calibration constants-->
@@ -684,6 +684,11 @@
 
   <processor name="MyDDMarlinPandora" type="DDPandoraPFANewProcessor">
     <parameter name="PandoraSettingsXmlFile" type="String"> PandoraSettings/PandoraSettingsDefault.xml </parameter>
+    <!-- CLIC specifict software compensation weights derived from K0L and neutrons -->
+    <parameter name="SoftwareCompensationWeights" type="FloatVec">1.61741 -0.00444385 2.29683e-05 -0.0731236 -0.00157099 -7.09546e-07 0.868443 1.0561 -0.0238574</parameter>
+    <parameter name="SoftwareCompensationEnergyDensityBins" type="FloatVec">0 2. 5. 7.5 9.5 13. 16. 20. 23.5 28. 33. 40. 50. 75. 100.</parameter>
+    <parameter name="FinalEnergyDensityBin" type="float">110.</parameter>
+    <parameter name="MaxClusterEnergyToApplySoftComp" type="float">2000.</parameter>
     <!-- Collection names -->
     <parameter name="TrackCollections" type="StringVec"> SiTracks_Refitted </parameter>
     <parameter name="ECalCaloHitCollections" type="StringVec">ECALBarrel ECALEndcap ECALOther</parameter>
@@ -702,14 +707,14 @@
     <parameter name="PFOCollectionName" type="String">PandoraPFOs</parameter>
     <!-- Calibration constants -->
     <parameter name="ECalToMipCalibration" type="float">181.818 </parameter>
-    <parameter name="HCalToMipCalibration" type="float">41.1523</parameter>
+    <parameter name="HCalToMipCalibration" type="float">40.8163</parameter>
     <parameter name="ECalMipThreshold" type="float">0.5</parameter>
     <parameter name="HCalMipThreshold" type="float">0.3</parameter>
-    <parameter name="ECalToEMGeVCalibration" type="float">1.02382098451</parameter>
-    <parameter name="HCalToEMGeVCalibration" type="float">1.02382098451</parameter>
-    <parameter name="ECalToHadGeVCalibrationBarrel" type="float">1.1944452816</parameter>
-    <parameter name="ECalToHadGeVCalibrationEndCap" type="float">1.1944452816</parameter>
-    <parameter name="HCalToHadGeVCalibration" type="float">1.04328949699</parameter>
+    <parameter name="ECalToEMGeVCalibration" type="float">1.02373335516</parameter>
+    <parameter name="HCalToEMGeVCalibration" type="float">1.02373335516</parameter>
+    <parameter name="ECalToHadGeVCalibrationBarrel" type="float">1.24223718397</parameter>
+    <parameter name="ECalToHadGeVCalibrationEndCap" type="float">1.24223718397</parameter>
+    <parameter name="HCalToHadGeVCalibration" type="float">1.01799349172</parameter>
     <parameter name="MuonToMipCalibration" type="float">19607.8</parameter>
     <parameter name="DigitalMuonHits" type="int">0</parameter>
     <parameter name="MaxHCalHitHadronicEnergy" type="float">1000000</parameter> 
