@@ -1118,11 +1118,11 @@
     <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
     <parameter name="Verbosity" type="string">MESSAGE </parameter>
 
-    <processor name="MyCLICPfoSelectorDefault" type="CLICPfoSelector">
+    <processor name="CLICPfoSelectorDefault_HE" type="CLICPfoSelector">
       <parameter name="SelectedPfoCollection" type="string" lcioOutType="ReconstructedParticle"> SelectedPandoraPFOs </parameter>
     </processor>
 
-    <processor name="MyCLICPfoSelectorLoose" type="CLICPfoSelector">
+    <processor name="CLICPfoSelectorLoose_HE" type="CLICPfoSelector">
       <!--Selects Pfos from full PFO list using timing cuts-->
       <!--ChargedPfoNegativeLooseTimingCut-->
       <parameter name="ChargedPfoNegativeLooseTimingCut" type="float">-2.0</parameter>
@@ -1148,7 +1148,7 @@
       <parameter name="Monitoring" type="int">0</parameter>
     </processor>
 
-    <processor name="MyCLICPfoSelectorTight" type="CLICPfoSelector">
+    <processor name="CLICPfoSelectorTight_HE" type="CLICPfoSelector">
       <!--Selects Pfos from full PFO list using timing cuts-->
       <!--ChargedPfoLooseTimingCut-->
       <parameter name="ChargedPfoLooseTimingCut" type="float">2.0 </parameter>
@@ -1177,6 +1177,97 @@
       <!--UseClusterLessPfos-->
       <parameter name="UseClusterLessPfos" type="int">0 </parameter>
       <parameter name="Monitoring" type="int">0</parameter>
+    </processor>
+
+    <processor name="CLICPfoSelectorDefault_LE" type="CLICPfoSelector">
+      <!--Selects Pfos from full PFO list using timing cuts-->
+      <!--Selected pfo collection name-->
+      <parameter name="SelectedPfoCollection" type="string" lcioOutType="ReconstructedParticle">
+        LE_SelectedPandoraPFOs
+      </parameter>
+      <!-- <parameter name="ChargedPfoPtCutForTightTiming" type="float">1.0</parameter> -->
+      <!-- <parameter name="NeutralHadronPtCutForTightTiming" type="float">1.0</parameter> -->
+      <!-- <parameter name="PhotonPtCutForTightTiming" type="float">1.0</parameter> -->
+      <parameter name="NeutralHadronPtCut" type="float">0.0</parameter>
+      <parameter name="NeutralHadronPtCutForLooseTiming" type="float">2.0</parameter>
+      <parameter name="NeutralHadronLooseTimingCut" type="float">5.0</parameter>
+      <parameter name="NeutralHadronTightTimingCut" type="float">2.5</parameter>
+      <parameter name="PhotonPtCut" type="float">0.0</parameter>
+      <parameter name="PhotonPtCutForLooseTiming" type="float">2.0</parameter>
+      <parameter name="PhotonLooseTimingCut" type="float">5.0</parameter>
+      <parameter name="PhotonTightTimingCut" type="float">1.0</parameter>
+      <parameter name="ChargedPfoPtCut" type="float">0.0</parameter>
+      <parameter name="ChargedPfoPtCutForLooseTiming" type="float">4.0</parameter>
+      <parameter name="ChargedPfoLooseTimingCut" type="float">10.0</parameter>
+      <parameter name="ChargedPfoTightTimingCut" type="float">3.0</parameter>
+      <parameter name="ChargedPfoNegativeLooseTimingCut" type="float">-5.0</parameter>
+      <parameter name="ChargedPfoNegativeTightTimingCut" type="float">-2.0</parameter>
+      <parameter name="ClusterLessPfoTrackTimeCut" type="float">10.</parameter>
+      <parameter name="MinMomentumForClusterLessPfos" type="float">0.0 </parameter>
+      <parameter name="MaxMomentumForClusterLessPfos" type="float">5.0 </parameter>
+      <parameter name="MinPtForClusterLessPfos" type="float">0.0 </parameter>
+      <parameter name="NeutralFarForwardLooseTimingCut" type="float">4.0 </parameter>
+      <parameter name="NeutralFarForwardTightTimingCut" type="float">2.0 </parameter>
+    </processor>
+
+    <processor name="CLICPfoSelectorLoose_LE" type="CLICPfoSelector">
+      <!--Selects Pfos from full PFO list using timing cuts-->
+      <!--Input PFO Collection-->
+      <parameter name="SelectedPfoCollection" type="string" lcioOutType="ReconstructedParticle">
+        LE_LooseSelectedPandoraPFOs
+      </parameter>
+      <parameter name="NeutralHadronPtCut" type="float">0.0</parameter>
+      <!-- <parameter name="NeutralHadronPtCutForTightTiming" type="float">0.75</parameter> -->
+      <!-- <parameter name="PhotonPtCutForTightTiming" type="float">0.75</parameter> -->
+      <!-- <parameter name="ChargedPfoPtCutForTightTiming" type="float">1.0</parameter> -->
+      <parameter name="NeutralHadronPtCutForLooseTiming" type="float">2.0</parameter>
+      <parameter name="NeutralHadronLooseTimingCut" type="float">10.0</parameter>
+      <parameter name="NeutralHadronTightTimingCut" type="float">5.0</parameter>
+      <parameter name="PhotonPtCut" type="float">0.0</parameter>
+      <parameter name="PhotonPtCutForLooseTiming" type="float">2.0</parameter>
+      <parameter name="PhotonLooseTimingCut" type="float">10.0</parameter>
+      <parameter name="PhotonTightTimingCut" type="float">2.5</parameter>
+      <parameter name="ChargedPfoPtCut" type="float">0.0</parameter>
+      <parameter name="ChargedPfoPtCutForLooseTiming" type="float">4.0</parameter>
+      <parameter name="ChargedPfoLooseTimingCut" type="float">10.0</parameter>
+      <parameter name="ChargedPfoTightTimingCut" type="float">5.0</parameter>
+      <parameter name="ChargedPfoNegativeLooseTimingCut" type="float">-20.0</parameter>
+      <parameter name="ChargedPfoNegativeTightTimingCut" type="float">-20.0</parameter>
+      <parameter name="ClusterLessPfoTrackTimeCut" type="float">50.</parameter>
+      <parameter name="MinMomentumForClusterLessPfos" type="float">0.0 </parameter>
+      <parameter name="MaxMomentumForClusterLessPfos" type="float">5.0 </parameter>
+      <parameter name="MinPtForClusterLessPfos" type="float">0.0 </parameter>
+      <parameter name="NeutralFarForwardLooseTimingCut" type="float">10.0 </parameter>
+      <parameter name="NeutralFarForwardTightTimingCut" type="float">5.0 </parameter>
+    </processor>
+
+    <processor name="CLICPfoSelectorTight_LE" type="CLICPfoSelector">
+      <!--Selects Pfos from full PFO list using timing cuts-->
+      <!--Input PFO Collection-->
+      <parameter name="SelectedPfoCollection" type="string" lcioOutType="ReconstructedParticle">LE_TightSelectedPandorPFOs </parameter>
+      <parameter name = "NeutralHadronPtCut" type="float">0.0</parameter>
+      <!-- <parameter name = "NeutralHadronPtCutForTightTiming" type="float">1.0</parameter> -->
+      <!-- <parameter name = "PhotonPtCutForTightTiming" type="float">1.0</parameter> -->
+      <!-- <parameter name = "ChargedPfoPtCutForTightTiming" type="float">1.5</parameter> -->
+      <parameter name="NeutralHadronPtCutForLooseTiming" type="float">3.0</parameter>
+      <parameter name="NeutralHadronLooseTimingCut" type="float">4.0</parameter>
+      <parameter name="NeutralHadronTightTimingCut" type="float">2.0</parameter>
+      <parameter name="PhotonPtCut" type="float">0.0</parameter>
+      <parameter name="PhotonPtCutForLooseTiming" type="float">2.0</parameter>
+      <parameter name="PhotonLooseTimingCut" type="float">1.0</parameter>
+      <parameter name="PhotonTightTimingCut" type="float">1.0</parameter>
+      <parameter name="ChargedPfoPtCut" type="float">0.0</parameter>
+      <parameter name="ChargedPfoPtCutForLooseTiming" type="float">3.0</parameter>
+      <parameter name="ChargedPfoLooseTimingCut" type="float">4.0</parameter>
+      <parameter name="ChargedPfoTightTimingCut" type="float">2.0</parameter>
+      <parameter name="ChargedPfoNegativeLooseTimingCut" type="float">-2.0</parameter>
+      <parameter name="ChargedPfoNegativeTightTimingCut" type="float">-1.0</parameter>
+      <parameter name="ClusterLessPfoTrackTimeCut" type="float">10.</parameter>
+      <parameter name="MinMomentumForClusterLessPfos" type="float">0.0 </parameter>
+      <parameter name="MaxMomentumForClusterLessPfos" type="float">5.0 </parameter>
+      <parameter name="MinPtForClusterLessPfos" type="float">0.75 </parameter>
+      <parameter name="NeutralFarForwardLooseTimingCut" type="float">2.0 </parameter>
+      <parameter name="NeutralFarForwardTightTimingCut" type="float">2.0 </parameter>
     </processor>
 
   </group>
