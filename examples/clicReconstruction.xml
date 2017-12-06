@@ -400,6 +400,11 @@
     <parameter name="DebugPlots" type="bool"> false </parameter>
     <parameter name="trackPurity" type="double">0.7 </parameter>
 
+    <!--sort results from kdtree search-->
+    <parameter name="SortTreeResults" type="bool">true </parameter>
+    <!--retry with tightened parameters, when too many tracks are being created-->
+    <parameter name="RetryTooManyTracks" type="bool">false </parameter>
+
     <!--Silicon track Collection Name-->
     <parameter name="SiTrackCollectionName" type="string" lcioOutType="Track">SiTracks </parameter>
     <!--Name of the MCParticle input collection-->
