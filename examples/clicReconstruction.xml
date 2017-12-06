@@ -1213,6 +1213,7 @@
       MCParticlesSkimmed
       RecoMCTruthLink
       SiTracks
+      SiTracks_Refitted
       PandoraClusters
       PandoraPFOs
       SelectedPandoraPFOs
