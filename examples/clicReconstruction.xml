@@ -1006,9 +1006,9 @@
     <!--Number of Event that should be printed to PDF File-->
     <parameter name="PrintThisEvent" type="int">-1 </parameter>
     <!--Name of the Reconstructed Cluster collection-->
-    <parameter name="RecoClusterCollectionname" type="string" lcioOutType="Cluster">BCalClusters </parameter>
+    <parameter name="RecoClusterCollectionname" type="string" lcioOutType="Cluster">BeamCalClusters </parameter>
     <!--Name of the Reconstructed Particle collection-->
-    <parameter name="RecoParticleCollectionname" type="string" lcioOutType="ReconstructedParticle">BCalRecoParticle </parameter>
+    <parameter name="RecoParticleCollectionname" type="string" lcioOutType="ReconstructedParticle">BeamCalRecoParticles </parameter>
     <!--If not using ConstPadCuts, each pad SigmaCut*standardDeviation is considered for clusters-->
     <parameter name="SigmaCut" type="double">1 </parameter>
     <!--Layer (inclusive) from which on we start looking for signal clusters-->
@@ -1218,6 +1218,10 @@
       SelectedPandoraPFOs
       LooseSelectedPandoraPFOs
       TightSelectedPandoraPFOs
+      LumiCalClusters
+      LumiCalRecoParticles
+      BeamCalClusters
+      BeamCalRecoParticles
     </parameter>
     <parameter name="LCIOWriteMode" type="string" value="WRITE_NEW"/>
     <parameter name="Verbosity" type="string">WARNING </parameter>
