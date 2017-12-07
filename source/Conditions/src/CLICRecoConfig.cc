@@ -10,24 +10,19 @@ CLICRecoConfig::CLICRecoConfig() : Processor("CLICRecoConfig") {
   // modify processor description
   _description = "CLICRecoConfig allows one to configure the processors to run via command line" ;
 
-  std::stringstream trackingOptionDescription;
-  trackingOptionDescription << "Which option to use for tracking: ";
-  toString( trackingOptionDescription, m_trackingPossibleOptions );
+  for (auto& entry : m_allOptions) {
+    std::string const& name = std::get<0>(entry);
+    std::string& value      = std::get<1>(entry);
+    Choices& choices        = std::get<2>(entry);
+    std::stringstream optionDescription, choicesDescription;
+    optionDescription << "Which option to use for " << name << ": ";
+    toString(optionDescription, choices);
+    optionDescription <<". Then use, e.g., Config." << name << value << " in the condition";
+    registerProcessorParameter(name, optionDescription.str(), value, value);
 
-  registerProcessorParameter("Tracking",
-                             trackingOptionDescription.str(),
-                             m_trackingOption,
-                             m_trackingOption);
-
-
-  std::stringstream overlayOptionDescription;
-  overlayOptionDescription << "Which option to use for overlay: ";
-  toString( overlayOptionDescription, m_overlayPossibleOptions );
-  overlayOptionDescription <<". Then use, e.g., Config.Overlay3TeV in the condition";
-  registerProcessorParameter("Overlay",
-                             overlayOptionDescription.str(),
-                             m_overlayChoice,
-                             m_overlayChoice);
+    choicesDescription << "Possible values and conditions for option " << name;
+    registerProcessorParameter(name+"Choices", choicesDescription.str(), choices, choices);
+  }
 
 }
 
@@ -37,42 +32,28 @@ void CLICRecoConfig::init() {
   // Print the initial parameters
   printParameters() ;
 
-  checkOptions( m_trackingOption, m_trackingPossibleOptions );
-
-  if( m_trackingOption == "Truth" ) {
-
-    m_truthTracking = true;
-    m_conformalTrackingPlusExtrapolator = false;
-    m_conformalTracking = false;
-
-  } else if( m_trackingOption == "ConformalPlusExtrapolator" ) {
-
-    m_truthTracking = false;
-    m_conformalTrackingPlusExtrapolator = true;
-    m_conformalTracking = false;
-
-  } else if( m_trackingOption == "Conformal" ) {
-
-    m_truthTracking = false;
-    m_conformalTrackingPlusExtrapolator = false;
-    m_conformalTracking = true;
-
+  for (auto const& entry : m_allOptions) {
+    std::string const& name   = std::get<0>(entry);
+    std::string const& choice = std::get<1>(entry);
+    Choices const& choices    = std::get<2>(entry);
+    checkOptions(choice, choices);
+    for (auto& option: choices ) {
+      m_options[name+option] = (choice == option);
+    }
   }
 
-
-
-  // Treat option for overlay
-  checkOptions( m_overlayChoice, m_overlayPossibleOptions );
-
-  //fill map with overlay options
-  for ( auto& overlayEnergy: m_overlayPossibleOptions ) {
-    if( overlayEnergy == "False" ){ continue; }
-    m_overlay["Overlay"+ overlayEnergy] = (overlayEnergy == m_overlayChoice);
+  // LEGACY: Tracking at the end of the condition
+  // Fill map with tracking options
+  for (auto& trackingOption: m_trackingPossibleOptions) {
+    m_options[trackingOption+"Tracking"] = (trackingOption == m_trackingChoice);
   }
 
-  for ( auto& overlayEnergy: m_overlay ) {
-    streamlog_out(MESSAGE) << std::setw(15) << overlayEnergy.first << " "
-                           << std::boolalpha << overlayEnergy.second  << std::endl;
+  //print all options and values
+  for (auto& option: m_options) {
+    std::stringstream output;
+    output << std::left << std::setw(35) << option.first << " "
+           << std::boolalpha << option.second;
+    streamlog_out(MESSAGE) << output.str() << std::endl;
   }
 
 }
@@ -85,14 +66,10 @@ void CLICRecoConfig::processEvent( LCEvent* ) {
 
 
 void CLICRecoConfig::modifyEvent( LCEvent* ) {
-  streamlog_out(MESSAGE) << "Running Config" << std::endl;
+  streamlog_out(DEBUG9) << "Running Config" << std::endl;
 
-  setReturnValue( "TruthTracking", m_truthTracking );
-  setReturnValue( "ConformalPlusExtrapolatorTracking", m_conformalTrackingPlusExtrapolator);
-  setReturnValue( "ConformalTracking", m_conformalTracking );
-
-  for (auto const& over : m_overlay) {
-    setReturnValue( over.first, over.second );
+  for (auto const& option : m_options) {
+    setReturnValue(option.first, option.second);
   }
 
 }
