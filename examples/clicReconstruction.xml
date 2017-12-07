@@ -38,14 +38,14 @@
 
     <!-- ========== tracking  ========== -->
     <!-- At the moment the name of the final track collection for the MyTruthTrackFinder and MyExtrToTracker processors is the same, so that users can use this example to run easily both the cheater track pattern recognition (still the default for many tasks) or the real one (under final tests) -->
-    <if condition="Config.TruthTracking">
+    <if condition="Config.TrackingTruth">
       <processor name="MyTruthTrackFinder"/>
     </if>
-    <if condition="Config.ConformalPlusExtrapolatorTracking">
+    <if condition="Config.TrackingConformalPlusExtrapolator">
       <processor name="MyConformalTracking"/>
       <processor name="MyExtrToTracker"/>
     </if>
-    <if condition="Config.ConformalTracking">
+    <if condition="Config.TrackingConformal">
       <processor name="MyConformalTrackingFull"/>
     </if>
 
@@ -97,10 +97,20 @@
   </processor>
 
   <processor name="Config" type="CLICRecoConfig" >
-    <!--Which option to use for overlay: False, 3TeV, 380GeV. Then use, e.g., Config.Overlay3TeV in the condition-->
+    <parameter name="Verbosity" options="DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT"> MESSAGE  </parameter>
+    <!--Which option to use for BeamCal: 3TeV, 380GeV. Then use, e.g., Config.BeamCal3TeV in the condition-->
+    <parameter name="BeamCal" type="string">3TeV </parameter>
+    <!--Possible values and conditions for option BeamCal-->
+    <parameter name="BeamCalChoices" type="StringVec">3TeV 380GeV  </parameter>
+    <!--Which option to use for Overlay: False, 350GeV, 380GeV, 420GeV, 500GeV, 1.4TeV, 3TeV. Then use, e.g., Config.OverlayFalse in the condition-->
     <parameter name="Overlay" type="string">False </parameter>
-    <!--Which option to use for tracking: Truth, ConformalPlusExtrapolator, Conformal-->
+    <!--Possible values and conditions for option Overlay-->
+    <parameter name="OverlayChoices" type="StringVec">False 350GeV 380GeV 420GeV 500GeV 1.4TeV 3TeV  </parameter>
+    <!--Which option to use for Tracking: Truth, ConformalPlusExtrapolator, Conformal. Then use, e.g., Config.TrackingTruth in the condition-->
     <parameter name="Tracking" type="string">Truth </parameter>
+    <!--Possible values and conditions for option Tracking-->
+    <parameter name="TrackingChoices" type="StringVec">Truth ConformalPlusExtrapolator Conformal  </parameter>
+    <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
   </processor>
 
   <group name="Overlay">

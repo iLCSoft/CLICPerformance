@@ -6,6 +6,8 @@
 
 class CLICRecoConfig : public marlin::Processor, public marlin::EventModifier {
 
+  using Choices = std::vector<std::string>;
+
 public:
 
   virtual marlin::Processor*  newProcessor() { return new CLICRecoConfig; }
@@ -33,18 +35,24 @@ public:
 
 protected:
 
-  // Parameters
-  const std::vector< std::string > m_trackingPossibleOptions{ "Truth", "ConformalPlusExtrapolator", "Conformal" };
-  std::string m_trackingOption="Truth";
+  std::map<std::string, bool> m_options{};
 
-  // Parameters
-  std::vector< std::string > m_overlayPossibleOptions{ "False", "350GeV", "380GeV", "420GeV", "500GeV", "1.4TeV", "3TeV" };
-  std::map<std::string, bool> m_overlay{};
+  // Tracking
+  const Choices m_trackingPossibleOptions{"Truth", "ConformalPlusExtrapolator", "Conformal"};
+  std::string m_trackingChoice="Truth";
+
+  // Overlay
+  const Choices m_overlayPossibleOptions{"False", "350GeV", "380GeV", "420GeV", "500GeV", "1.4TeV", "3TeV"};
   std::string m_overlayChoice="False";
 
-  bool m_truthTracking = true;
-  bool m_conformalTrackingPlusExtrapolator = false;
-  bool m_conformalTracking = false;
+  // BeamCal
+  const Choices m_beamcalPossibleOptions{"3TeV", "380GeV"};
+  std::string m_beamcalChoice="3TeV";
+
+  std::vector<std::tuple<std::string, std::string, Choices>> m_allOptions =
+    {{"Tracking", m_trackingChoice, m_trackingPossibleOptions},
+     {"BeamCal",  m_beamcalChoice, m_beamcalPossibleOptions},
+     {"Overlay",  m_overlayChoice, m_overlayPossibleOptions}};
 
 
 protected:
