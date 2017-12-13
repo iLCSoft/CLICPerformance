@@ -1017,7 +1017,7 @@
       <!--The name of the rootFile which will contain the TEfficiency objects-->
       <parameter name="EfficiencyFilename" type="string">TaggingEfficiency.root </parameter>
       <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
-      <parameter name="Verbosity" type="string">DEBUG </parameter>
+      <!-- <parameter name="Verbosity" type="string">WARNING </parameter> -->
       <!--Number of Event that should be printed to PDF File-->
       <parameter name="PrintThisEvent" type="int">-1 </parameter>
 
