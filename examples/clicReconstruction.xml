@@ -1292,7 +1292,9 @@
     <processor name="CLICPfoSelectorTight_LE" type="CLICPfoSelector">
       <!--Selects Pfos from full PFO list using timing cuts-->
       <!--Input PFO Collection-->
-      <parameter name="SelectedPfoCollection" type="string" lcioOutType="ReconstructedParticle">LE_TightSelectedPandorPFOs </parameter>
+      <parameter name="SelectedPfoCollection" type="string" lcioOutType="ReconstructedParticle">
+        LE_TightSelectedPandoraPFOs
+      </parameter>
       <parameter name = "NeutralHadronPtCut" type="float">0.0</parameter>
       <!-- <parameter name = "NeutralHadronPtCutForTightTiming" type="float">1.0</parameter> -->
       <!-- <parameter name = "PhotonPtCutForTightTiming" type="float">1.0</parameter> -->
@@ -1358,6 +1360,9 @@
       SelectedPandoraPFOs
       LooseSelectedPandoraPFOs
       TightSelectedPandoraPFOs
+      LE_SelectedPandoraPFOs
+      LE_LooseSelectedPandoraPFOs
+      LE_TightSelectedPandoraPFOs
       LumiCalClusters
       LumiCalRecoParticles
       BeamCalClusters
