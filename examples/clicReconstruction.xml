@@ -12,6 +12,11 @@
     <processor name="InitDD4hep"/>
     <processor name="Config" />
 
+
+    <if condition="Config.OverlayFalse">
+      <processor name="OverlayFalse"/>
+    </if>
+
     <if condition="Config.Overlay350GeV">
       <processor name="Overlay350GeV"/>
     </if>
@@ -169,6 +174,12 @@
       gghad_01.slcio
       gghad_02.slcio
     </parameter>
+
+      <processor name="OverlayFalse" type="OverlayTimingGeneric">
+        <parameter name="BackgroundFileNames" type="StringVec"> </parameter>
+        <parameter name="NBunchtrain" type="int" value="0"/>
+        <parameter name="NumberBackground" type="float" value="0."/>
+      </processor>
 
       <processor name="Overlay350GeV" type="OverlayTimingGeneric">
         <parameter name="NumberBackground" type="float" value="0.0464"/>
