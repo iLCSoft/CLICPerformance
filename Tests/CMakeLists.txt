@@ -73,65 +73,87 @@ SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  "Except
 
 
 
-
-SET( test_name "test_CLIC_o3_v13_sim" )
+SET(EOS_BACKGROUND_FILE /eos/experiment/clicdp/grid/ilc/prod/clic/3tev/gghad/CLIC_o3_v14/SIM/00009245/000/gghad_sim_9245_37.slcio)
+SET(CLIC_DETECTOR_MODEL CLIC_o3_v14)
+SET( test_name "test_${CLIC_DETECTOR_MODEL}_sim" )
 ADD_TEST( NAME t_${test_name}
   COMMAND "$ENV{lcgeo_DIR}/bin/run_test_lcgeo.sh"
   ddsim
-  --compactFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v13/CLIC_o3_v13.xml
+  --compactFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
   --runType=batch -G -N=100
-  --outputFile=testCLIC_o3_v13.slcio
+  --outputFile=test${CLIC_DETECTOR_MODEL}.slcio
   --gun.isotrop=true
   --steeringFile=${CMAKE_SOURCE_DIR}/examples/clic_steer.py
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/
   )
 SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;ERROR;Error" )
 
-SET( test_name "test_CLIC_o3_v13_reco_truth" )
+SET( test_name "test_${CLIC_DETECTOR_MODEL}_reco_truth" )
 ADD_TEST( NAME t_${test_name}
   COMMAND ${CMAKE_SOURCE_DIR}/Tests/bin/MarlinTests.sh
   ${CMAKE_SOURCE_DIR}/lib/libClicPerformance.so  Marlin
-  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v13/CLIC_o3_v13.xml
-  --global.LCIOInputFiles=testCLIC_o3_v13.slcio clicReconstruction.xml
+  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
+  --global.LCIOInputFiles=test${CLIC_DETECTOR_MODEL}.slcio clicReconstruction.xml
   --Config.Tracking=Truth
   --global.MaxRecordNumber=4
-  --Output_REC.LCIOOutputFile=reco_truth_v13_rec.slcio
-  --Output_DST.LCIOOutputFile=reco_truth_v13_dst.slcio
+  --Output_REC.LCIOOutputFile=reco_truth_${CLIC_DETECTOR_MODEL}_rec.slcio
+  --Output_DST.LCIOOutputFile=reco_truth_${CLIC_DETECTOR_MODEL}_dst.slcio
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/
   )
 SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error" )
 
 
-SET( test_name "test_CLIC_o3_v13_reco_conformal" )
+SET( test_name "test_${CLIC_DETECTOR_MODEL}_reco_conformal" )
 ADD_TEST( NAME t_${test_name}
   COMMAND ${CMAKE_SOURCE_DIR}/Tests/bin/MarlinTests.sh
   ${CMAKE_SOURCE_DIR}/lib/libClicPerformance.so  Marlin
-  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v13/CLIC_o3_v13.xml
-  --global.LCIOInputFiles=testCLIC_o3_v13.slcio clicReconstruction.xml
+  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
+  --global.LCIOInputFiles=test${CLIC_DETECTOR_MODEL}.slcio clicReconstruction.xml
   --Config.Tracking=Conformal
   --global.MaxRecordNumber=4
-  --Output_REC.LCIOOutputFile=reco_conformal_v13_rec.slcio
-  --Output_DST.LCIOOutputFile=reco_conformal_v13_dst.slcio
+  --Output_REC.LCIOOutputFile=reco_conformal_${CLIC_DETECTOR_MODEL}_rec.slcio
+  --Output_DST.LCIOOutputFile=reco_conformal_${CLIC_DETECTOR_MODEL}_dst.slcio
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/
   )
 SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error" )
 
-SET( test_name "test_CLIC_o3_v13_reco_overlay" )
+SET( test_name "test_${CLIC_DETECTOR_MODEL}_reco_overlay" )
 ADD_TEST( NAME t_${test_name}
   COMMAND ${CMAKE_SOURCE_DIR}/Tests/bin/MarlinTests.sh
   ${CMAKE_SOURCE_DIR}/lib/libClicPerformance.so  Marlin
-  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v13/CLIC_o3_v13.xml
-  --global.LCIOInputFiles=testCLIC_o3_v13.slcio clicReconstruction.xml
+  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
+  --global.LCIOInputFiles=test${CLIC_DETECTOR_MODEL}.slcio clicReconstruction.xml
   --Config.Overlay=3TeV
-  --Overlay3TeV.BackgroundFileNames=testCLIC_o3_v13.slcio
+  --Overlay3TeV.BackgroundFileNames=test${CLIC_DETECTOR_MODEL}.slcio
   --global.MaxRecordNumber=4
-  --Output_REC.LCIOOutputFile=reco_overlay_v13_rec.slcio
-  --Output_DST.LCIOOutputFile=reco_overlay_v13_dst.slcio
+  --Output_REC.LCIOOutputFile=reco_overlay_${CLIC_DETECTOR_MODEL}_rec.slcio
+  --Output_DST.LCIOOutputFile=reco_overlay_${CLIC_DETECTOR_MODEL}_dst.slcio
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/
   )
 SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error" )
 
-SET( test_name "test_CLIC_o3_v13_reco_overlay_valgrind" )
+
+SET( test_name "test_${CLIC_DETECTOR_MODEL}_reco_real_overlay" )
+ADD_TEST( NAME t_${test_name}
+  COMMAND ${CMAKE_SOURCE_DIR}/Tests/bin/MarlinTests.sh
+  ${CMAKE_SOURCE_DIR}/lib/libClicPerformance.so  Marlin
+  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
+  --global.LCIOInputFiles=test${CLIC_DETECTOR_MODEL}.slcio clicReconstruction.xml
+  --Config.Overlay=3TeV
+  --Overlay3TeV.BackgroundFileNames=${EOS_BACKGROUND_FILE}
+  --global.MaxRecordNumber=4
+  --Output_REC.LCIOOutputFile=reco_overlay_${CLIC_DETECTOR_MODEL}_rec.slcio
+  --Output_DST.LCIOOutputFile=reco_overlay_${CLIC_DETECTOR_MODEL}_dst.slcio
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/
+  CONFIGURATIONS EOS
+  )
+SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES
+  FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error"
+  REQUIRED_FILES ${EOS_BACKGROUND_FILE}
+)
+
+
+SET( test_name "test_${CLIC_DETECTOR_MODEL}_reco_overlay_valgrind" )
 ADD_TEST( NAME t_${test_name}
   COMMAND
   ${CMAKE_SOURCE_DIR}/Tests/bin/ValgrindTests.sh ${CMAKE_SOURCE_DIR}/lib/libClicPerformance.so ${VALGRIND_LIB}
@@ -141,18 +163,18 @@ ADD_TEST( NAME t_${test_name}
   --suppressions=${ROOT_DIR}/../etc/valgrind-root.supp
   --suppressions=${CMAKE_SOURCE_DIR}/etc/extra-root.supp
   Marlin
-  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v13/CLIC_o3_v13.xml
-  --global.LCIOInputFiles=testCLIC_o3_v13.slcio clicReconstruction.xml
+  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
+  --global.LCIOInputFiles=test${CLIC_DETECTOR_MODEL}.slcio clicReconstruction.xml
   --Config.Overlay=3TeV
-  --Overlay3TeV.BackgroundFileNames=testCLIC_o3_v13.slcio
+  --Overlay3TeV.BackgroundFileNames=test${CLIC_DETECTOR_MODEL}.slcio
   --global.MaxRecordNumber=3
-  --Output_REC.LCIOOutputFile=reco_overlay_valgrind_v13_rec.slcio
-  --Output_DST.LCIOOutputFile=reco_overlay_valgrind_v13_dst.slcio
+  --Output_REC.LCIOOutputFile=reco_overlay_valgrind_${CLIC_DETECTOR_MODEL}_rec.slcio
+  --Output_DST.LCIOOutputFile=reco_overlay_valgrind_${CLIC_DETECTOR_MODEL}_dst.slcio
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/ CONFIGURATIONS valgrind
   )
 SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error" )
 
-SET( test_name "test_CLIC_o3_v13_reco_conformal_valgrind" )
+SET( test_name "test_${CLIC_DETECTOR_MODEL}_reco_conformal_valgrind" )
 ADD_TEST( NAME t_${test_name}
   COMMAND
   ${CMAKE_SOURCE_DIR}/Tests/bin/ValgrindTests.sh ${CMAKE_SOURCE_DIR}/lib/libClicPerformance.so ${VALGRIND_LIB}
@@ -162,12 +184,12 @@ ADD_TEST( NAME t_${test_name}
   --suppressions=${ROOT_DIR}/../etc/valgrind-root.supp
   --suppressions=${CMAKE_SOURCE_DIR}/etc/extra-root.supp
   Marlin
-  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v13/CLIC_o3_v13.xml
-  --global.LCIOInputFiles=testCLIC_o3_v13.slcio clicReconstruction.xml
+  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
+  --global.LCIOInputFiles=test${CLIC_DETECTOR_MODEL}.slcio clicReconstruction.xml
   --Config.Tracking=Conformal
   --global.MaxRecordNumber=3
-  --Output_REC.LCIOOutputFile=reco_conformal_valgrind_v13_rec.slcio
-  --Output_DST.LCIOOutputFile=reco_conformal_valgrind_v13_dst.slcio
+  --Output_REC.LCIOOutputFile=reco_conformal_valgrind_${CLIC_DETECTOR_MODEL}_rec.slcio
+  --Output_DST.LCIOOutputFile=reco_conformal_valgrind_${CLIC_DETECTOR_MODEL}_dst.slcio
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/ CONFIGURATIONS valgrind
   )
 SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error"
@@ -175,7 +197,7 @@ SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  "Except
   )
 
 
-SET( test_name "test_CLIC_o3_v13_reco_conformal_overlay_valgrind" )
+SET( test_name "test_${CLIC_DETECTOR_MODEL}_reco_conformal_overlay_valgrind" )
 ADD_TEST( NAME t_${test_name}
   COMMAND
   ${CMAKE_SOURCE_DIR}/Tests/bin/ValgrindTests.sh ${CMAKE_SOURCE_DIR}/lib/libClicPerformance.so ${VALGRIND_LIB}
@@ -185,14 +207,14 @@ ADD_TEST( NAME t_${test_name}
   --suppressions=${ROOT_DIR}/../etc/valgrind-root.supp
   --suppressions=${CMAKE_SOURCE_DIR}/etc/extra-root.supp
   Marlin
-  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v13/CLIC_o3_v13.xml
-  --global.LCIOInputFiles=testCLIC_o3_v13.slcio clicReconstruction.xml
+  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
+  --global.LCIOInputFiles=test${CLIC_DETECTOR_MODEL}.slcio clicReconstruction.xml
   --Config.Overlay=3TeV
   --Config.Tracking=Conformal
-  --Overlay3TeV.BackgroundFileNames=testCLIC_o3_v13.slcio
+  --Overlay3TeV.BackgroundFileNames=test${CLIC_DETECTOR_MODEL}.slcio
   --global.MaxRecordNumber=3
-  --Output_REC.LCIOOutputFile=reco_overlay_conformal_valgrind_v13_rec.slcio
-  --Output_DST.LCIOOutputFile=reco_overlay_conformal_valgrind_v13_dst.slcio
+  --Output_REC.LCIOOutputFile=reco_overlay_conformal_valgrind_${CLIC_DETECTOR_MODEL}_rec.slcio
+  --Output_DST.LCIOOutputFile=reco_overlay_conformal_valgrind_${CLIC_DETECTOR_MODEL}_dst.slcio
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/ CONFIGURATIONS valgrind
   )
 SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error"
@@ -200,13 +222,13 @@ SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  "Except
   )
 
 
-SET( test_name "test_CLIC_o3_v13_sim_zuds" )
+SET( test_name "test_${CLIC_DETECTOR_MODEL}_sim_zuds" )
 ADD_TEST( NAME t_${test_name}
   COMMAND "$ENV{lcgeo_DIR}/bin/run_test_lcgeo.sh"
   ddsim
-  --compactFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v13/CLIC_o3_v13.xml
+  --compactFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
   --runType=batch -N=4
-  --outputFile=testCLIC_o3_v13_zuds.slcio
+  --outputFile=test${CLIC_DETECTOR_MODEL}_zuds.slcio
   --inputFiles /eos/experiment/clicdp/grid/ilc/user/w/webermat/stdhep/Zuds3000/Zuds3000__01.stdhep
   --steeringFile=${CMAKE_SOURCE_DIR}/examples/clic_steer.py
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/
@@ -218,27 +240,50 @@ SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES
   TIMEOUT 300000
   )
 
-SET( test_name "test_CLIC_o3_v13_reco_conformal_zuds" )
+SET( test_name "test_${CLIC_DETECTOR_MODEL}_reco_conformal_zuds" )
 ADD_TEST( NAME t_${test_name}
   COMMAND ${CMAKE_SOURCE_DIR}/Tests/bin/MarlinTests.sh
   ${CMAKE_SOURCE_DIR}/lib/libClicPerformance.so  Marlin
-  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v13/CLIC_o3_v13.xml
-  --global.LCIOInputFiles=testCLIC_o3_v13_zuds.slcio clicReconstruction.xml
+  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
+  --global.LCIOInputFiles=test${CLIC_DETECTOR_MODEL}_zuds.slcio clicReconstruction.xml
   --Config.Tracking=Conformal
   --global.MaxRecordNumber=4
-  --Output_REC.LCIOOutputFile=reco_conformal_v13_zuds_rec.slcio
-  --Output_DST.LCIOOutputFile=reco_conformal_v13_zuds_dst.slcio
+  --Output_REC.LCIOOutputFile=reco_conformal_${CLIC_DETECTOR_MODEL}_zuds_rec.slcio
+  --Output_DST.LCIOOutputFile=reco_conformal_${CLIC_DETECTOR_MODEL}_zuds_dst.slcio
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/
   CONFIGURATIONS EOS
   )
 SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES
   FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error"
-  DEPENDS test_CLIC_o3_v13_sim_zuds
+  DEPENDS test_${CLIC_DETECTOR_MODEL}_sim_zuds
+  TIMEOUT 300000
+  )
+
+SET( test_name "test_${CLIC_DETECTOR_MODEL}_reco_conformal_zuds_overlay" )
+ADD_TEST( NAME t_${test_name}
+  COMMAND ${CMAKE_SOURCE_DIR}/Tests/bin/MarlinTests.sh
+  ${CMAKE_SOURCE_DIR}/lib/libClicPerformance.so  Marlin
+  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
+  --global.LCIOInputFiles=test${CLIC_DETECTOR_MODEL}_zuds.slcio clicReconstruction.xml
+  --Config.Tracking=Conformal
+  --global.MaxRecordNumber=4
+  --Config.Overlay=3TeV
+  --Overlay3TeV.BackgroundFileNames=${EOS_BACKGROUND_FILE}
+  --Output_REC.LCIOOutputFile=reco_conformal_${CLIC_DETECTOR_MODEL}_zuds_rec.slcio
+  --Output_DST.LCIOOutputFile=reco_conformal_${CLIC_DETECTOR_MODEL}_zuds_dst.slcio
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/
+  CONFIGURATIONS EOS
+  )
+SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES
+  FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error"
+  DEPENDS test_${CLIC_DETECTOR_MODEL}_sim_zuds
+  REQUIRED_FILES "${EOS_BACKGROUND_FILE}"
   TIMEOUT 300000
   )
 
 
-SET( test_name "test_CLIC_o3_v13_reco_conformal_zuds_valgrind" )
+
+SET( test_name "test_${CLIC_DETECTOR_MODEL}_reco_conformal_zuds_valgrind" )
 ADD_TEST( NAME t_${test_name}
   COMMAND
   ${CMAKE_SOURCE_DIR}/Tests/bin/ValgrindTests.sh ${CMAKE_SOURCE_DIR}/lib/libClicPerformance.so ${VALGRIND_LIB}
@@ -248,21 +293,21 @@ ADD_TEST( NAME t_${test_name}
   --suppressions=${ROOT_DIR}/../etc/valgrind-root.supp
   --suppressions=${CMAKE_SOURCE_DIR}/etc/extra-root.supp
   Marlin
-  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v13/CLIC_o3_v13.xml
-  --global.LCIOInputFiles=testCLIC_o3_v13_zuds.slcio clicReconstruction.xml
+  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
+  --global.LCIOInputFiles=test${CLIC_DETECTOR_MODEL}_zuds.slcio clicReconstruction.xml
   --Config.Tracking=Conformal
   --global.MaxRecordNumber=4
-  --Output_REC.LCIOOutputFile=reco_conformal_valgrind_v13_zuds_rec.slcio
-  --Output_DST.LCIOOutputFile=reco_conformal_valgrind_v13_zuds_dst.slcio
+  --Output_REC.LCIOOutputFile=reco_conformal_valgrind_${CLIC_DETECTOR_MODEL}_zuds_rec.slcio
+  --Output_DST.LCIOOutputFile=reco_conformal_valgrind_${CLIC_DETECTOR_MODEL}_zuds_dst.slcio
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/ CONFIGURATIONS valgrind
   )
 SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES
   FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error"
-  DEPENDS test_CLIC_o3_v13_sim_zuds
+  DEPENDS test_${CLIC_DETECTOR_MODEL}_sim_zuds
   TIMEOUT 300000
   )
 
-SET( test_name "test_CLIC_o3_v13_reco_conformal_overlay_zuds_valgrind" )
+SET( test_name "test_${CLIC_DETECTOR_MODEL}_reco_conformal_overlay_zuds_valgrind" )
 ADD_TEST( NAME t_${test_name}
   COMMAND
   ${CMAKE_SOURCE_DIR}/Tests/bin/ValgrindTests.sh ${CMAKE_SOURCE_DIR}/lib/libClicPerformance.so ${VALGRIND_LIB}
@@ -272,114 +317,114 @@ ADD_TEST( NAME t_${test_name}
   --suppressions=${ROOT_DIR}/../etc/valgrind-root.supp
   --suppressions=${CMAKE_SOURCE_DIR}/etc/extra-root.supp
   Marlin
-  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v13/CLIC_o3_v13.xml
-  --global.LCIOInputFiles=testCLIC_o3_v13_zuds.slcio clicReconstruction.xml
+  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
+  --global.LCIOInputFiles=test${CLIC_DETECTOR_MODEL}_zuds.slcio clicReconstruction.xml
   --Config.Overlay=3TeV
   --Config.Tracking=Conformal
-  --Overlay3TeV.BackgroundFileNames="/eos/experiment/clicdp/grid/ilc/prod/clic/3tev/gghad/CLIC_o3_v13/SIM/00008258/000/gghad_sim_8258_37.slcio /eos/experiment/clicdp/grid/ilc/prod/clic/3tev/gghad/CLIC_o3_v13/SIM/00008258/000/gghad_sim_8258_38.slcio"
+  --Overlay3TeV.BackgroundFileNames=${EOS_BACKGROUND_FILE}
   --global.MaxRecordNumber=4
-  --Output_REC.LCIOOutputFile=reco_overlay_conformal_valgrind_v13_zuds_rec.slcio
-  --Output_DST.LCIOOutputFile=reco_overlay_conformal_valgrind_v13_zuds_dst.slcio
+  --Output_REC.LCIOOutputFile=reco_overlay_conformal_valgrind_${CLIC_DETECTOR_MODEL}_zuds_rec.slcio
+  --Output_DST.LCIOOutputFile=reco_overlay_conformal_valgrind_${CLIC_DETECTOR_MODEL}_zuds_dst.slcio
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/ CONFIGURATIONS valgrind
   )
 SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES
   FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error"
-  DEPENDS test_CLIC_o3_v13_sim_zuds
-  REQUIRED_FILES "/eos/experiment/clicdp/grid/ilc/prod/clic/3tev/gghad/CLIC_o3_v13/SIM/00008258/000/gghad_sim_8258_37.slcio /eos/experiment/clicdp/grid/ilc/prod/clic/3tev/gghad/CLIC_o3_v13/SIM/00008258/000/gghad_sim_8258_38.slcio"
+  DEPENDS test_${CLIC_DETECTOR_MODEL}_sim_zuds
+  REQUIRED_FILES ${EOS_BACKGROUND_FILE}
   TIMEOUT 300000
   )
 
 
 
-SET( test_name "test_CLIC_o3_v13_reco_conformal_zuds_massif" )
+SET( test_name "test_${CLIC_DETECTOR_MODEL}_reco_conformal_zuds_massif" )
 ADD_TEST( NAME t_${test_name}
   COMMAND
   ${CMAKE_SOURCE_DIR}/Tests/bin/ValgrindTests.sh ${CMAKE_SOURCE_DIR}/lib/libClicPerformance.so ${VALGRIND_LIB}
   ${VALGRIND}
   --tool=massif
   Marlin
-  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v13/CLIC_o3_v13.xml
-  --global.LCIOInputFiles=testCLIC_o3_v13_zuds.slcio clicReconstruction.xml
+  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
+  --global.LCIOInputFiles=test${CLIC_DETECTOR_MODEL}_zuds.slcio clicReconstruction.xml
   --Config.Tracking=Conformal
   --global.MaxRecordNumber=4
-  --Output_REC.LCIOOutputFile=reco_conformal_msassif_v13_zuds_rec.slcio
-  --Output_DST.LCIOOutputFile=reco_conformal_msassif_v13_zuds_dst.slcio
+  --Output_REC.LCIOOutputFile=reco_conformal_msassif_${CLIC_DETECTOR_MODEL}_zuds_rec.slcio
+  --Output_DST.LCIOOutputFile=reco_conformal_msassif_${CLIC_DETECTOR_MODEL}_zuds_dst.slcio
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/ CONFIGURATIONS valgrind
   )
 SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES
   FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error"
-  DEPENDS test_CLIC_o3_v13_sim_zuds
+  DEPENDS test_${CLIC_DETECTOR_MODEL}_sim_zuds
   TIMEOUT 300000
   )
 
 
-SET( test_name "test_CLIC_o3_v13_reco_conformal_overlay_zuds_massif" )
+SET( test_name "test_${CLIC_DETECTOR_MODEL}_reco_conformal_overlay_zuds_massif" )
 ADD_TEST( NAME t_${test_name}
   COMMAND
   ${CMAKE_SOURCE_DIR}/Tests/bin/ValgrindTests.sh ${CMAKE_SOURCE_DIR}/lib/libClicPerformance.so ${VALGRIND_LIB}
   ${VALGRIND}
   --tool=massif
   Marlin
-  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v13/CLIC_o3_v13.xml
-  --global.LCIOInputFiles=testCLIC_o3_v13_zuds.slcio clicReconstruction.xml
+  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
+  --global.LCIOInputFiles=test${CLIC_DETECTOR_MODEL}_zuds.slcio clicReconstruction.xml
   --Config.Overlay=3TeV
   --Config.Tracking=Conformal
-  --Overlay3TeV.BackgroundFileNames="/eos/experiment/clicdp/grid/ilc/prod/clic/3tev/gghad/CLIC_o3_v13/SIM/00008258/000/gghad_sim_8258_37.slcio /eos/experiment/clicdp/grid/ilc/prod/clic/3tev/gghad/CLIC_o3_v13/SIM/00008258/000/gghad_sim_8258_38.slcio"
+  --Overlay3TeV.BackgroundFileNames=${EOS_BACKGROUND_FILE}
   --global.MaxRecordNumber=4
-  --Output_REC.LCIOOutputFile=reco_overlay_conformal_v13_zuds_rec.slcio
-  --Output_DST.LCIOOutputFile=reco_overlay_conformal_v13_zuds_dst.slcio
+  --Output_REC.LCIOOutputFile=reco_overlay_conformal_${CLIC_DETECTOR_MODEL}_zuds_rec.slcio
+  --Output_DST.LCIOOutputFile=reco_overlay_conformal_${CLIC_DETECTOR_MODEL}_zuds_dst.slcio
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/ CONFIGURATIONS valgrind
   )
 SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES
   FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error"
-  DEPENDS test_CLIC_o3_v13_sim_zuds
-  REQUIRED_FILES "/eos/experiment/clicdp/grid/ilc/prod/clic/3tev/gghad/CLIC_o3_v13/SIM/00008258/000/gghad_sim_8258_37.slcio /eos/experiment/clicdp/grid/ilc/prod/clic/3tev/gghad/CLIC_o3_v13/SIM/00008258/000/gghad_sim_8258_38.slcio"
+  DEPENDS test_${CLIC_DETECTOR_MODEL}_sim_zuds
+  REQUIRED_FILES ${EOS_BACKGROUND_FILE}
   TIMEOUT 300000
   )
 
 
-SET( test_name "test_CLIC_o3_v13_reco_conformal_zuds_profile" )
+SET( test_name "test_${CLIC_DETECTOR_MODEL}_reco_conformal_zuds_profile" )
 ADD_TEST( NAME t_${test_name}
   COMMAND
   ${CMAKE_SOURCE_DIR}/Tests/bin/Profiler.sh ${CMAKE_SOURCE_DIR}/lib/libClicPerformance.so
   amplxe-cl -collect hotspots -r ../ClicReco/r@@@{at}
   Marlin
-  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v13/CLIC_o3_v13.xml
-  --global.LCIOInputFiles=testCLIC_o3_v13_zuds.slcio clicReconstruction.xml
+  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
+  --global.LCIOInputFiles=test${CLIC_DETECTOR_MODEL}_zuds.slcio clicReconstruction.xml
   --Config.Tracking=Conformal
   --global.MaxRecordNumber=10
-  --Output_REC.LCIOOutputFile=reco_conformal_v13_zuds_rec_prof.slcio
-  --Output_DST.LCIOOutputFile=reco_conformal_v13_zuds_dst_prof.slcio
+  --Output_REC.LCIOOutputFile=reco_conformal_${CLIC_DETECTOR_MODEL}_zuds_rec_prof.slcio
+  --Output_DST.LCIOOutputFile=reco_conformal_${CLIC_DETECTOR_MODEL}_zuds_dst_prof.slcio
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/
   CONFIGURATIONS PROF
   )
 SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES
   FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error"
-  DEPENDS test_CLIC_o3_v13_sim_zuds
+  DEPENDS test_${CLIC_DETECTOR_MODEL}_sim_zuds
   TIMEOUT 300000
   )
 
 
-SET( test_name "test_CLIC_o3_v13_reco_conformal_zuds_overlay_profile" )
+SET( test_name "test_${CLIC_DETECTOR_MODEL}_reco_conformal_zuds_overlay_profile" )
 ADD_TEST( NAME t_${test_name}
   COMMAND
   ${CMAKE_SOURCE_DIR}/Tests/bin/Profiler.sh ${CMAKE_SOURCE_DIR}/lib/libClicPerformance.so
   amplxe-cl -collect hotspots -r ../ClicReco/r@@@{at}_over
   Marlin
-  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o3_v13/CLIC_o3_v13.xml
-  --global.LCIOInputFiles=testCLIC_o3_v13_zuds.slcio clicReconstruction.xml
+  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
+  --global.LCIOInputFiles=test${CLIC_DETECTOR_MODEL}_zuds.slcio clicReconstruction.xml
   --Config.Overlay=3TeV
   --Config.Tracking=Conformal
-  --Overlay3TeV.BackgroundFileNames="gghad_sim_8494_37.slcio gghad_sim_8494_38.slcio"
+  --Overlay3TeV.BackgroundFileNames=${EOS_BACKGROUND_FILE}
   --global.MaxRecordNumber=1
-  --Output_REC.LCIOOutputFile=reco_overlay_conformal_v13_zuds_rec_over_prof.slcio
-  --Output_DST.LCIOOutputFile=reco_overlay_conformal_v13_zuds_dst_over_prof.slcio
+  --Output_REC.LCIOOutputFile=reco_overlay_conformal_${CLIC_DETECTOR_MODEL}_zuds_rec_over_prof.slcio
+  --Output_DST.LCIOOutputFile=reco_overlay_conformal_${CLIC_DETECTOR_MODEL}_zuds_dst_over_prof.slcio
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/examples/
   CONFIGURATIONS PROF
   )
 SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES
   FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error"
-  DEPENDS test_CLIC_o3_v13_sim_zuds
-  REQUIRED_FILES "gghad_sim_8494_37.slcio;gghad_sim_8494_38.slcio"
+  DEPENDS test_${CLIC_DETECTOR_MODEL}_sim_zuds
+  REQUIRED_FILES ${EOS_BACKGROUND_FILE}
   TIMEOUT 300000
   )
