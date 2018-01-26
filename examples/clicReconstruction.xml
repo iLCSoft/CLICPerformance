@@ -74,6 +74,8 @@
       <processor name="BeamCalReco380GeV"/>
     </if>
 
+    <group name="MergeCollections" />
+
     <!-- ========== monitoring  ========== -->
     <processor name="MyClicEfficiencyCalculator"/>
     <processor name="MyRecoMCTruthLinker"/>
@@ -846,11 +848,22 @@
     <parameter name="RelationOutputCollection" type="string">RelationMuonHit </parameter>
   </processor>
 
-  <processor name="MyStatusmonitor" type="Statusmonitor">
-    <parameter name="HowOften" type="int">100</parameter>
-    <parameter name="Verbosity" type="string">MESSAGE </parameter>
-  </processor>
+  <group name="MergeCollections">
 
+    <processor name="MergeRP" type="MergeCollections">
+      <parameter name="CollectionParameterIndex" type="int">0 </parameter>
+      <parameter name="InputCollectionIDs" type="IntVec"> </parameter>
+      <parameter name="InputCollections" type="StringVec"> PandoraPFOs LumiCalRecoParticles BeamCalRecoParticles </parameter>
+      <parameter name="OutputCollection" type="string"> MergedRecoParticles </parameter>
+    </processor>
+
+    <processor name="MergeClusters" type="MergeCollections">
+      <parameter name="CollectionParameterIndex" type="int">0 </parameter>
+      <parameter name="InputCollectionIDs" type="IntVec"> </parameter>
+      <parameter name="InputCollections" type="StringVec"> PandoraClusters LumiCalClusterer BeamCalClusters </parameter>
+      <parameter name="OutputCollection" type="string"> MergedClusters </parameter>
+    </processor>
+  </group>
 
   <processor name="MyRecoMCTruthLinker" type="RecoMCTruthLinker">
     <!--links RecontructedParticles to the MCParticle based on number of hits used-->
@@ -859,7 +872,7 @@
     <!--Name of the updated calo-hit MCTruthLink output collection - not created if empty()-->
     <parameter name="CalohitMCTruthLinkName" type="string" lcioOutType="LCRelation"> CalohitMCTruthLink </parameter>
     <!--Name of the Clusters input collection-->
-    <parameter name="ClusterCollection" type="string" lcioInType="Cluster">PandoraClusters </parameter>
+    <parameter name="ClusterCollection" type="string" lcioInType="Cluster">MergedClusters </parameter>
     <!--Name of the clusterMCTruthLink output collection - not created if empty()-->
     <parameter name="ClusterMCTruthLinkName" type="string" lcioOutType="LCRelation"> ClusterMCTruthLink </parameter>
     <!--true: All reco <-> true relations are given, with weight = 10000*calo
@@ -872,7 +885,7 @@
     <!-- FIXME:Check if we really want to keep those -->
     <parameter name="KeepDaughtersPDG" type="IntVec">22 111 310 13 211 321 3120 </parameter>
     <!--Name of the MCParticle input collection-->
-    <parameter name="MCParticleCollection" type="string" lcioInType="MCParticle"> MCParticle </parameter>
+    <parameter name="MCParticleCollection" type="string" lcioInType="MCParticle"> MCPhysicsParticles </parameter>
     <!--Name of the skimmed MCParticle  output collection - not created if empty()-->
     <parameter name="MCParticlesSkimmedName" type="string" lcioOutType="MCParticle"> MCParticlesSkimmed </parameter>
     <!--Name of the MCTruthClusterLink output collection-->
@@ -884,7 +897,7 @@
     <!--Name of the RecoMCTruthLink output collection - not created if empty()-->
     <parameter name="RecoMCTruthLinkName" type="string" lcioOutType="LCRelation"> RecoMCTruthLink </parameter>
     <!--Name of the ReconstructedParticles input collection-->
-    <parameter name="RecoParticleCollection" type="string" lcioInType="ReconstructedParticle"> PandoraPFOs </parameter>
+    <parameter name="RecoParticleCollection" type="string" lcioInType="ReconstructedParticle"> MergedRecoParticles </parameter>
     <!--save photons from Brems-->
     <parameter name="SaveBremsstrahlungPhotons" type="bool">false </parameter>
     <!--Names of the SimCaloHits input collections-->
@@ -1360,6 +1373,7 @@
       Track
       ReconstructedParticle
       LCFloatVec
+      Clusters
     </parameter>
     <parameter name="KeepCollectionNames" type="StringVec">
       MCParticlesSkimmed
@@ -1378,6 +1392,8 @@
       LumiCalRecoParticles
       BeamCalClusters
       BeamCalRecoParticles
+      MergedRecoParticles
+      MergedClusters
     </parameter>
     <parameter name="LCIOWriteMode" type="string" value="WRITE_NEW"/>
     <parameter name="Verbosity" type="string">WARNING </parameter>
