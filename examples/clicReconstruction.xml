@@ -971,7 +971,7 @@
     <!--parameter name="Verbosity" type="string">DEBUG </parameter-->
   </processor>
 
-  <processor name="LumiCalReco" type="MarlinLumiCalClusterer">
+  <processor name="LumiCalReco_Obs" type="MarlinLumiCalClusterer">
     <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
     <parameter name="Verbosity" type="string"> WARNING </parameter>
     <!--Collection Containing the Hits in the LumiCal-->
@@ -1017,6 +1017,64 @@
     <parameter name="WeightingMethod" type="string"> LogMethod </parameter>
     <!-- Layers relative phi offset (default for model ILD_o1_05,must go to gear sometimes)  [deg]-->
     <parameter name="ZLayerPhiOffset" type="double"> 0.0 </parameter>
+  </processor>
+
+
+  <processor name="LumiCalReco" type="BeamCalClusterReco">
+    <!--BeamCalClusterReco reproduces the beamstrahlung background for a given number of bunch-crossings NumberOfBX and puts the signal hits from the lcio input file on top of that, and then clustering is attempted.-->
+    <!--How to estimate background [Gaussian, Parametrised, Pregenerated, Averaged, Empty]-->
+    <parameter name="BackgroundMethod" type="string">Empty </parameter>
+    <!--The Name of the Detector the reconstruction is for-->
+    <parameter name="DetectorName" type="string">LumiCal </parameter>
+    <!--The ID of the first layer of the detector BeamCal 1: LumiCal: 0-->
+    <parameter name="DetectorStartingLayerID" type="double"> 0 </parameter>
+    <!--Collection of CalorimeterHits from the BeamCal,only created when input are SimCalorimeterHits-->
+    <parameter name="BeamCalHitsOutCollection" type="string" lcioOutType="CalorimeterHit">LumiCal_Hits </parameter>
+    <!--Name of BeamCal Collection-->
+    <parameter name="BeamCalCollectionName" type="string" lcioInType="SimCalorimeterHit">LumiCalCollection </parameter>
+    <!--Name of the Reconstructed Cluster collection-->
+    <parameter name="RecoClusterCollectionname" type="string" lcioOutType="Cluster">LumiCalClusters </parameter>
+    <!--Name of the Reconstructed Particle collection-->
+    <parameter name="RecoParticleCollectionname" type="string" lcioOutType="ReconstructedParticle">LumiCalRecoParticles </parameter>
+    <!--MCParticle Collection Name, only needed and used to estimate efficiencies-->
+    <parameter name="MCParticleCollectionName" type="string" lcioInType="MCParticle">MCParticle </parameter>
+    <!--Multiply deposit energy by this factor to account for sampling fraction-->
+    <parameter name="LinearCalibrationFactor" type="double"> 82.377 </parameter>
+    <!--Weighting constant to use in logarithmic weighting of hits, if negative energy weighting is used-->
+    <parameter name="LogWeightingConstant" type="double"> 6.1 </parameter>
+    <!--Maximum Distance between primary tower and neighbours to put into one cluster-->
+    <parameter name="MaxPadDistance" type="double"> 62 </parameter>
+    <!--Number of Bunch Crossings of Background-->
+    <parameter name="NumberOfBX" type="int"> 0 </parameter>
+    <!--Flag to create the TEfficiency for fast tagging library-->
+    <parameter name="CreateEfficiencyFile" type="bool">false </parameter>
+    <!--The name of the rootFile which will contain the TEfficiency objects-->
+    <parameter name="EfficiencyFilename" type="string">TaggingEfficiency.root </parameter>
+    <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
+    <parameter name="Verbosity" type="string">DEBUG0 </parameter>
+    <!--Number of Event that should be printed to PDF File-->
+    <parameter name="PrintThisEvent" type="int">-1 </parameter>
+    <parameter name="InputFileBackgrounds" type="StringVec"> </parameter>
+    <!--Rings from which onwards the outside Thresholds are used-->
+    <parameter name="StartingRing" type="FloatVec">0.0 </parameter>
+    <!--Energy in a Cluster to consider it an electron-->
+    <parameter name="ETCluster" type="FloatVec"> 0.2 </parameter>
+    <!--Energy in a Pad, after subtraction of background required to consider it for signal-->
+    <parameter name="ETPad" type="FloatVec"> 20e-06 </parameter>
+    <!--Layer (inclusive) from which on we start looking for signal clusters-->
+    <parameter name="StartLookingInLayer" type="int">1 </parameter>
+    <!--Use the cuts for the pads specified in ETPad. If false, the standard deviation of each pad times the SigmaCut Factor is used, the first entry in ETPad is used as a minimum energy to consider a pad at all-->
+    <parameter name="UseConstPadCuts" type="bool">false </parameter>
+    <!--If not using ConstPadCuts, each pad SigmaCut*standardDeviation is considered for clusters-->
+    <parameter name="SigmaCut" type="double">1 </parameter>
+    <!--Minimum number of pads in a single tower to be considered for signal-->
+    <parameter name="MinimumTowerSize" type="int">4 </parameter>
+    <!--How many layers are used for shower fitting-->
+    <parameter name="NShowerCountingLayers" type="int">30 </parameter>
+    <!--Limit on square norm of tower eqnergy chi2/ndf, where chi2 = (E_dep - E_bg)^2/sig^2. Reasonable value for pregenerated bkg is 5., for parametrised is 2.-->
+    <parameter name="TowerChi2ndfLimit" type="double">5 </parameter>
+    <!--Use Chi2 selection criteria to detect high energy electron in the signal.-->
+    <parameter name="UseChi2Selection" type="bool">false </parameter>
   </processor>
 
 
