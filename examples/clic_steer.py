@@ -7,7 +7,7 @@ SIM = DD4hepSimulation()
 ## The compact XML file
 SIM.compactFile = ""
 ## Lorentz boost for the crossing angle, in radian!
-SIM.crossingAngleBoost = 0.0
+SIM.crossingAngleBoost = 0.010
 SIM.enableDetailedShowerMode = True
 SIM.enableG4GPS = False
 SIM.enableG4Gun = False
