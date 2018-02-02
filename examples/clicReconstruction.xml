@@ -1026,6 +1026,8 @@
     <parameter name="BackgroundMethod" type="string">Empty </parameter>
     <!--The Name of the Detector the reconstruction is for-->
     <parameter name="DetectorName" type="string">LumiCal </parameter>
+    <!--The ID where the SubClusterEnergy will be added: //LumiCal=3, BeamCal=5 in DDPFOCreator.hh-->
+    <parameter name="SubClusterEnergyID" type="int"> 3 </parameter>
     <!--The ID of the first layer of the detector BeamCal 1: LumiCal: 0-->
     <parameter name="DetectorStartingLayerID" type="double"> 0 </parameter>
     <!--Collection of CalorimeterHits from the BeamCal,only created when input are SimCalorimeterHits-->
@@ -1082,6 +1084,12 @@
       <!--BeamCalClusterReco reproduces the beamstrahlung background for a given number of bunch-crossings NumberOfBX and puts the signal hits from the lcio input file on top of that, and then clustering is attempted.-->
       <!--How to estimate background [Gaussian, Parametrised, Pregenerated, Averaged]-->
       <parameter name="BackgroundMethod" type="string">Gaussian </parameter>
+      <!--The Name of the Detector the reconstruction is for-->
+      <parameter name="DetectorName" type="string"> BeamCal </parameter>
+      <!--The ID where the SubClusterEnergy will be added: //LumiCal=3, BeamCal=5 in DDPFOCreator.hh-->
+      <parameter name="SubClusterEnergyID" type="int"> 5 </parameter>
+      <!--The ID of the first layer of the detector BeamCal 1: LumiCal: 0-->
+      <parameter name="DetectorStartingLayerID" type="double"> 1 </parameter>
       <!--Name of BeamCal Collection-->
       <parameter name="BeamCalCollectionName" type="string" lcioInType="SimCalorimeterHit">BeamCalCollection </parameter>
       <!--Name of the Reconstructed Cluster collection-->
