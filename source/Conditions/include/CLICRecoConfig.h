@@ -42,7 +42,7 @@ protected:
   std::string m_trackingChoice="Truth";
 
   // Overlay
-  const Choices m_overlayPossibleOptions{"False", "350GeV", "380GeV", "420GeV", "500GeV", "1.4TeV", "3TeV"};
+  const Choices m_overlayPossibleOptions{"False", "91GeV", "350GeV", "365GeV",  "380GeV", "420GeV", "500GeV", "1.4TeV", "3TeV"};
   std::string m_overlayChoice="False";
 
   // BeamCal
