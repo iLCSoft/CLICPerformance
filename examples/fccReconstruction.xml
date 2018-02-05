@@ -84,7 +84,7 @@
   </processor>
 
   <processor name="Config" type="CLICRecoConfig" >
-    <!--Which option to use for overlay: False, 3TeV, 380GeV. Then use, e.g., Config.Overlay3TeV in the condition-->
+    <!--Which option to use for overlay: False, 91GeV, 365GeV. Then use, e.g., Config.Overlay91GeV in the condition-->
     <parameter name="Overlay" type="string">False </parameter>
     <!--Which option to use for tracking: Truth, ConformalPlusExtrapolator, Conformal-->
     <parameter name="Tracking" type="string">Truth </parameter>
@@ -100,28 +100,28 @@
     <parameter name="NBunchtrain" type="int" value="20"/>
 
     <parameter name="Collection_IntegrationTimes" type="StringVec" >
-      VertexBarrelCollection        10
-      VertexEndcapCollection        10
+      VertexBarrelCollection        380
+      VertexEndcapCollection        380
 
-      InnerTrackerBarrelCollection  10
-      InnerTrackerEndcapCollection  10
+      InnerTrackerBarrelCollection  380
+      InnerTrackerEndcapCollection  380
 
-      OuterTrackerBarrelCollection  10
-      OuterTrackerEndcapCollection  10
+      OuterTrackerBarrelCollection  380
+      OuterTrackerEndcapCollection  380
 
-      ECalBarrelCollection          10
-      ECalEndcapCollection          10
-      ECalPlugCollection            10
+      ECalBarrelCollection          380
+      ECalEndcapCollection          380
+      ECalPlugCollection            380
 
-      HCalBarrelCollection          10
-      HCalEndcapCollection          10
-      HCalRingCollection            10
+      HCalBarrelCollection          380
+      HCalEndcapCollection          380
+      HCalRingCollection            380
 
-      YokeBarrelCollection          10
-      YokeEndcapCollection          10
+      YokeBarrelCollection          380
+      YokeEndcapCollection          380
 
-      LumiCalCollection             10
-      BeamCalCollection             10
+      LumiCalCollection             380
+      BeamCalCollection             380
     </parameter>
     <!--Number of the Bunch crossing of the physics event-->
     <parameter name="PhysicsBX" type="int" value="1"/>
