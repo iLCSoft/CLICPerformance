@@ -835,6 +835,85 @@
     <!--Start Vertex Collection Name-->
     <parameter name="StartVertexCollectionName" type="string" lcioOutType="Vertex"> PandoraStartVertices </parameter>
 
+    <!--Normal vector for the muon barrel sensitive layers in local coordinates-->
+    <parameter name="YokeBarrelNormalVector" type="FloatVec">0 0 1  </parameter>
+    <!--Normal vector for the HCal barrel sensitive layers in local coordinates-->
+    <parameter name="HCalBarrelNormalVector" type="FloatVec">0 0 1  </parameter>
+    <!--Normal vector for the ECal barrel sensitive layers in local coordinates-->
+    <parameter name="ECalBarrelNormalVector" type="FloatVec">0 0 1  </parameter>
+    <!--The bfield in the muon barrel, units Tesla-->
+    <parameter name="MuonBarrelBField" type="float">-1.5 </parameter>
+    <!--The bfield in the muon endcap, units Tesla-->
+    <parameter name="MuonEndCapBField" type="float">0.01 </parameter>
+
+    <!--The constant term for EM shower-->
+    <parameter name="EMConstantTerm" type="float">0.01 </parameter>
+    <!--The stochastic term for EM shower-->
+    <parameter name="EMStochasticTerm" type="float">0.17 </parameter>
+    <!--The constant term for Hadronic shower-->
+    <parameter name="HadConstantTerm" type="float">0.03 </parameter>
+    <!--The stochastic term for Hadronic shower-->
+    <parameter name="HadStochasticTerm" type="float">0.6 </parameter>
+
+    <!--The input energy points for hadronic energy correction-->
+    <parameter name="InputEnergyCorrectionPoints" type="FloatVec"> </parameter>
+
+    <!--Maximum number of layers from candidate outer layer hit to rear of detector-->
+    <parameter name="LayersFromEdgeMaxRearDistance" type="float">250 </parameter>
+    <!--Number of layers from edge for hit to be flagged as an outer layer hit-->
+    <parameter name="NOuterSamplingLayers" type="int">3 </parameter>
+    <!--Distance of possible second track state in the ECal Endcap to the ECal barrel inner radius-->
+    <parameter name="TrackStateTolerance" type="float">0 </parameter>
+
+    <!--Track cut on distance from BarrelTracker inner r to id whether track can form pfo-->
+    <parameter name="MaxBarrelTrackerInnerRDistance" type="float">50 </parameter>
+
+    <!--The minimum correction to on ecal hit in Pandora energy correction-->
+    <parameter name="MinCleanCorrectedHitEnergy" type="float">0.1 </parameter>
+    <!--The minimum hit energy to apply ecal correction in Pandora energy correction-->
+    <parameter name="MinCleanHitEnergy" type="float">0.5 </parameter>
+    <!--The minimum hit energy fraction to apply ecal correction in Pandora energy correction-->
+    <parameter name="MinCleanHitEnergyFraction" type="float">0.01 </parameter>
+
+    <!--The energy for a digital muon calorimeter hit, units GeV-->
+    <parameter name="MuonHitEnergy" type="float">0.5 </parameter>
+
+    <!--Whether to form pandora track relationships using v0 and kink info-->
+    <parameter name="ShouldFormTrackRelationships" type="int">1 </parameter>
+
+    <!--The name of the DDTrackCreator implementation-->
+    <parameter name="TrackCreatorName" type="string">DDTrackCreatorCLIC </parameter>
+    <!--Name of the track fitting system to be used (KalTest, DDKalTest, aidaTT, ... )-->
+    <parameter name="TrackSystemName" type="string">DDKalTest </parameter>
+    <!--The output energy points for hadronic energy correction-->
+    <parameter name="OutputEnergyCorrectionPoints" type="FloatVec"> </parameter>
+
+
+    <!--To use scintillator layers ~ hybrid ECAL, this should be true-->
+    <parameter name="UseEcalScLayers" type="int">0 </parameter>
+    <!--Threshold for creating calo hits in the Sc-layers of ECAL, units mip-->
+    <parameter name="ECalScMipThreshold" type="float">0 </parameter>
+    <!--The calibration from deposited Sc-layer energy to EM energy-->
+    <parameter name="ECalScToEMGeVCalibration" type="float">1 </parameter>
+    <!--The calibration from deposited Sc-layer energy to the barrel hadronic energy-->
+    <parameter name="ECalScToHadGeVCalibrationBarrel" type="float">1 </parameter>
+    <!--The calibration from deposited Sc-layer energy on the endcaps to hadronic energy-->
+    <parameter name="ECalScToHadGeVCalibrationEndCap" type="float">1 </parameter>
+    <!--The calibration from deposited Sc-layer energy to mip-->
+    <parameter name="ECalScToMipCalibration" type="float">1 </parameter>
+    <!--Threshold for creating calo hits in the Si-layers of ECAL, units mip-->
+    <parameter name="ECalSiMipThreshold" type="float">0 </parameter>
+    <!--The calibration from deposited Si-layer energy to EM energy-->
+    <parameter name="ECalSiToEMGeVCalibration" type="float">1 </parameter>
+    <!--The calibration from deposited Si-layer energy on the barrel to hadronic energy-->
+    <parameter name="ECalSiToHadGeVCalibrationBarrel" type="float">1 </parameter>
+    <!--The calibration from deposited Si-layer energy on the enecaps to hadronic energy-->
+    <parameter name="ECalSiToHadGeVCalibrationEndCap" type="float">1 </parameter>
+    <!--The calibration from deposited Si-layer energy to mip-->
+    <parameter name="ECalSiToMipCalibration" type="float">1 </parameter>
+    <!--To use strip splitting algorithm, this should be true-->
+    <parameter name="StripSplittingOn" type="int">0 </parameter>
+
   </processor>
 
   <processor name="MyDDSimpleMuonDigi" type="DDSimpleMuonDigi">
