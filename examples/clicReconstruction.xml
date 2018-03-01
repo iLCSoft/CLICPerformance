@@ -56,6 +56,7 @@
     </if>
     <if condition="Config.TrackingConformal">
       <processor name="MyConformalTrackingFull"/>
+      <processor name="ClonesAndSplitTracksFinder"/>
     </if>
 
     <processor name="Refit" />
@@ -447,6 +448,18 @@
     <!--parameter name="Verbosity" type="string">DEBUG </parameter-->
   </processor>
 
+  <processor name="ClonesAndSplitTracksFinder" type="ClonesAndSplitTracksFinder">
+    <parameter name="InputTrackCollection" type="string"> SiTracks </parameter>
+    <parameter name="OutputTrackCollection" type="string"> SiTracksMerged </parameter>
+    <parameter name="MultipleScatteringOn" type="bool"> true </parameter>
+    <parameter name="EnergyLossOn" type="bool"> true </parameter>
+    <parameter name="SmoothOn" type="bool"> false </parameter>
+    <parameter name="extrapolateForward" type="bool"> true </parameter>
+    <parameter name="maxDeltaTheta" type="double"> 0.59 </parameter>
+    <parameter name="maxDeltaPhi" type="double"> 0.99 </parameter>
+    <parameter name="maxDeltaPt" type="double"> 0.69 </parameter>
+  </processor>
+
   <processor name="Refit" type="RefitFinal">
     <!--Refit processor that calls finaliseLCIOTrack after taking the trackstate from the existing track. No re-sorting of hits is done-->
     <!--Use Energy Loss in Fit-->
@@ -454,7 +467,7 @@
     <!--Name of the input track to MCParticle relation collection-->
     <parameter name="InputRelationCollectionName" type="string" lcioInType="LCRelation"> SiTrackRelations </parameter>
     <!--Name of the input track collection-->
-    <parameter name="InputTrackCollectionName" type="string" lcioInType="Track"> SiTracks </parameter>
+    <parameter name="InputTrackCollectionName" type="string" lcioInType="Track"> SiTracksMerged </parameter>
     <!--maximum allowable chi2 increment when moving from one site to another-->
     <parameter name="Max_Chi2_Incr" type="double"> 1.79769e+30 </parameter>
     <!--Use MultipleScattering in Fit-->
