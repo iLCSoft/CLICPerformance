@@ -449,8 +449,8 @@
   </processor>
 
   <processor name="ClonesAndSplitTracksFinder" type="ClonesAndSplitTracksFinder">
-    <parameter name="InputTrackCollection" type="string"> SiTracksCT </parameter>
-    <parameter name="OutputTrackCollection" type="string"> SiTracks </parameter>
+    <parameter name="InputTrackCollectionName" type="string"> SiTracksCT </parameter>
+    <parameter name="OutputTrackCollectionName" type="string"> SiTracks </parameter>
     <parameter name="MultipleScatteringOn" type="bool"> true </parameter>
     <parameter name="EnergyLossOn" type="bool"> true </parameter>
     <parameter name="SmoothOn" type="bool"> false </parameter>
