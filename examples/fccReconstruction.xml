@@ -372,7 +372,7 @@
     <parameter name="trackPurity" type="double">0.7 </parameter>
 
     <!--Silicon track Collection Name-->
-    <parameter name="SiTrackCollectionName" type="string" lcioOutType="Track">SiTracks </parameter>
+    <parameter name="SiTrackCollectionName" type="string" lcioOutType="Track">SiTracksCT </parameter>
     <!--Name of the MCParticle input collection-->
     <parameter name="MCParticleCollectionName" type="string" lcioInType="MCParticle">MCParticle </parameter>
     <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
@@ -380,8 +380,8 @@
   </processor>
 
   <processor name="ClonesAndSplitTracksFinder" type="ClonesAndSplitTracksFinder">
-    <parameter name="InputTrackCollection" type="string"> SiTracks </parameter>
-    <parameter name="OutputTrackCollection" type="string"> SiTracksMerged </parameter>
+    <parameter name="InputTrackCollection" type="string"> SiTracksCT </parameter>
+    <parameter name="OutputTrackCollection" type="string"> SiTracks </parameter>
     <parameter name="MultipleScatteringOn" type="bool"> true </parameter>
     <parameter name="EnergyLossOn" type="bool"> true </parameter>
     <parameter name="SmoothOn" type="bool"> false </parameter>
@@ -398,7 +398,7 @@
     <!--Name of the input track to MCParticle relation collection-->
     <parameter name="InputRelationCollectionName" type="string" lcioInType="LCRelation"> SiTrackRelations </parameter>
     <!--Name of the input track collection-->
-    <parameter name="InputTrackCollectionName" type="string" lcioInType="Track"> SiTracksMerged </parameter>
+    <parameter name="InputTrackCollectionName" type="string" lcioInType="Track"> SiTracks </parameter>
     <!--maximum allowable chi2 increment when moving from one site to another-->
     <parameter name="Max_Chi2_Incr" type="double"> 1.79769e+30 </parameter>
     <!--Use MultipleScattering in Fit-->
