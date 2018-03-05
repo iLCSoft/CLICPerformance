@@ -17,12 +17,28 @@
       <processor name="OverlayFalse"/>
     </if>
 
+    <if condition="Config.Overlay350GeV_CDR">
+      <processor name="Overlay350GeV_CDR"/>
+    </if>
+
     <if condition="Config.Overlay350GeV">
       <processor name="Overlay350GeV"/>
     </if>
 
+    <if condition="Config.Overlay350GeV_L6">
+      <processor name="Overlay350GeV_L6"/>
+    </if>
+
+    <if condition="Config.Overlay380GeV_CDR">
+      <processor name="Overlay380GeV_CDR"/>
+    </if>
+
     <if condition="Config.Overlay380GeV">
       <processor name="Overlay380GeV"/>
+    </if>
+
+    <if condition="Config.Overlay380GeV_L6">
+      <processor name="Overlay380GeV_L6"/>
     </if>
 
     <if condition="Config.Overlay500GeV">
@@ -35,6 +51,10 @@
 
     <if condition="Config.Overlay3TeV">
       <processor name="Overlay3TeV"/>
+    </if>
+
+    <if condition="Config.Overlay3TeV_L6">
+      <processor name="Overlay3TeV_L6"/>
     </if>
 
     <!-- ========== digitisation  ========== -->
@@ -124,7 +144,7 @@
     <!--Which option to use for Overlay: False, 350GeV, 380GeV, 420GeV, 500GeV, 1.4TeV, 3TeV. Then use, e.g., Config.OverlayFalse in the condition-->
     <parameter name="Overlay" type="string">False </parameter>
     <!--Possible values and conditions for option Overlay-->
-    <parameter name="OverlayChoices" type="StringVec">False 350GeV 380GeV 420GeV 500GeV 1.4TeV 3TeV  </parameter>
+    <parameter name="OverlayChoices" type="StringVec">False 350GeV_CDR 350GeV 350GeV_L6 380GeV 380GeV_CDR 380GeV_L6 420GeV 500GeV 1.4TeV 3TeV 3TeV_L6 </parameter>
     <!--Which option to use for Tracking: Truth, ConformalPlusExtrapolator, Conformal. Then use, e.g., Config.TrackingTruth in the condition-->
     <parameter name="Tracking" type="string">Truth </parameter>
     <!--Possible values and conditions for option Tracking-->
@@ -184,12 +204,34 @@
         <parameter name="NumberBackground" type="float" value="0."/>
       </processor>
 
+      <processor name="Overlay350GeV_CDR" type="OverlayTimingGeneric">
+        <!-- Overlay parameters for CDR studies, from scaled 500 GeV machine -->
+        <parameter name="NumberBackground" type="float" value="0.0464"/>
+      </processor>
+
       <processor name="Overlay350GeV" type="OverlayTimingGeneric">
+        <!-- Overlay parameters for L*=4.3m  -->
+        <parameter name="NumberBackground" type="float" value="0.16"/>
+      </processor>
+
+      <processor name="Overlay350GeV_L6" type="OverlayTimingGeneric">
+        <!-- Overlay parameters for L*=6m option -->
+        <parameter name="NumberBackground" type="float" value="0.14"/>
+      </processor>
+
+      <processor name="Overlay380GeV_CDR" type="OverlayTimingGeneric">
+        <!-- Overlay parameters for CDR studies, from scaled 500 GeV machine -->
         <parameter name="NumberBackground" type="float" value="0.0464"/>
       </processor>
 
       <processor name="Overlay380GeV" type="OverlayTimingGeneric">
-        <parameter name="NumberBackground" type="float" value="0.0464"/>
+        <!-- Overlay parameters for L*=4.3m -->
+        <parameter name="NumberBackground" type="float" value="0.18"/>
+      </processor>
+
+      <processor name="Overlay380GeV_L6" type="OverlayTimingGeneric">
+        <!-- Overlay parameters for L*=6m option -->
+        <parameter name="NumberBackground" type="float" value="0.17"/>
       </processor>
 
       <processor name="Overlay420GeV" type="OverlayTimingGeneric">
@@ -207,6 +249,12 @@
       <processor name="Overlay3TeV" type="OverlayTimingGeneric">
         <parameter name="NumberBackground" type="float" value="3.2"/>
       </processor>
+
+      <processor name="Overlay3TeV_L6" type="OverlayTimingGeneric">
+        <!-- Overlay parameters for L*=6m option: http://clic-beam-beam.web.cern.ch/clic-beam-beam/3tev_l6.html -->
+        <parameter name="NumberBackground" type="float" value="3.9"/>
+      </processor>
+
   </group>
 
   <processor name="VXDBarrelDigitiser" type="DDPlanarDigiProcessor">
