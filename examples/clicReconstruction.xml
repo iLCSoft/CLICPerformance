@@ -231,7 +231,7 @@
 
       <processor name="Overlay380GeV_L6" type="OverlayTimingGeneric">
         <!-- Overlay parameters for L*=6m option -->
-        <parameter name="NumberBackground" type="float" value="0.17"/>
+        <parameter name="NumberBackground" type="float" value="0.178"/>
       </processor>
 
       <processor name="Overlay420GeV" type="OverlayTimingGeneric">
@@ -252,7 +252,7 @@
 
       <processor name="Overlay3TeV_L6" type="OverlayTimingGeneric">
         <!-- Overlay parameters for L*=6m option: http://clic-beam-beam.web.cern.ch/clic-beam-beam/3tev_l6.html -->
-        <parameter name="NumberBackground" type="float" value="3.9"/>
+        <parameter name="NumberBackground" type="float" value="3.12"/>
       </processor>
 
   </group>
