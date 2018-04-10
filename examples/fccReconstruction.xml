@@ -26,7 +26,7 @@
 
     <!-- ========== tracking  ========== -->
     <!-- At the moment the name of the final track collection for the MyTruthTrackFinder and MyExtrToTracker processors is the same, so that users can use this example to run easily both the cheater track pattern recognition (still the default for many tasks) or the real one (under final tests) -->
-    <if condition="Config.TruthTracking">
+    <if condition="Config.TrackingTruth">
       <processor name="MyTruthTrackFinder"/>
     </if>
     <if condition="Config.ConformalTracking">
