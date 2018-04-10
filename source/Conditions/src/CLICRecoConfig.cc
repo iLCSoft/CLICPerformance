@@ -42,12 +42,6 @@ void CLICRecoConfig::init() {
     }
   }
 
-  // LEGACY: Tracking at the end of the condition
-  // Fill map with tracking options
-  for (auto& trackingOption: m_trackingPossibleOptions) {
-    m_options[trackingOption+"Tracking"] = (trackingOption == m_trackingChoice);
-  }
-
   //print all options and values
   for (auto& option: m_options) {
     std::stringstream output;

@@ -38,21 +38,16 @@ protected:
   std::map<std::string, bool> m_options{};
 
   // Tracking
-  const Choices m_trackingPossibleOptions{"Truth", "ConformalPlusExtrapolator", "Conformal"};
-  std::string m_trackingChoice="Truth";
-
+  const Choices m_trackingPossibleOptions{"Truth", "Conformal"};
   // Overlay
   const Choices m_overlayPossibleOptions{"False", "91GeV", "350GeV", "365GeV",  "380GeV", "420GeV", "500GeV", "1.4TeV", "3TeV"};
-  std::string m_overlayChoice="False";
-
   // BeamCal
   const Choices m_beamcalPossibleOptions{"3TeV", "380GeV"};
-  std::string m_beamcalChoice="3TeV";
 
   std::vector<std::tuple<std::string, std::string, Choices>> m_allOptions =
-    {{"Tracking", m_trackingChoice, m_trackingPossibleOptions},
-     {"BeamCal",  m_beamcalChoice, m_beamcalPossibleOptions},
-     {"Overlay",  m_overlayChoice, m_overlayPossibleOptions}};
+    {{"Tracking", "Conformal", m_trackingPossibleOptions},
+     {"BeamCal",  "3TeV", m_beamcalPossibleOptions},
+     {"Overlay",  "False", m_overlayPossibleOptions}};
 
 
 protected:
