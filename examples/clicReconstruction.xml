@@ -70,10 +70,6 @@
     <if condition="Config.TrackingTruth">
       <processor name="MyTruthTrackFinder"/>
     </if>
-    <if condition="Config.TrackingConformalPlusExtrapolator">
-      <processor name="MyConformalTracking"/>
-      <processor name="MyExtrToTracker"/>
-    </if>
     <if condition="Config.TrackingConformal">
       <processor name="MyConformalTrackingFull"/>
       <processor name="ClonesAndSplitTracksFinder"/>
@@ -146,9 +142,9 @@
     <!--Possible values and conditions for option Overlay-->
     <parameter name="OverlayChoices" type="StringVec">False 350GeV_CDR 350GeV 350GeV_L6 380GeV 380GeV_CDR 380GeV_L6 420GeV 500GeV 1.4TeV 3TeV 3TeV_L6 </parameter>
     <!--Which option to use for Tracking: Truth, ConformalPlusExtrapolator, Conformal. Then use, e.g., Config.TrackingTruth in the condition-->
-    <parameter name="Tracking" type="string">Truth </parameter>
+    <parameter name="Tracking" type="string">Conformal </parameter>
     <!--Possible values and conditions for option Tracking-->
-    <parameter name="TrackingChoices" type="StringVec">Truth ConformalPlusExtrapolator Conformal  </parameter>
+    <parameter name="TrackingChoices" type="StringVec">Truth  Conformal  </parameter>
     <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
   </processor>
 
@@ -406,65 +402,6 @@
   </processor>
 
   <!-- == Pattern recognition parameters == -->
-
-  <processor name="MyConformalTracking" type="ConformalTracking">
-    <!--ConformalTracking constructs tracks using a combined conformal mapping and cellular automaton approach.-->
-
-    <!--Name of the TrackerHit input collections-->
-    <parameter name="TrackerHitCollectionNames" type="StringVec" lcioInType="TrackerHitPlane">VXDTrackerHits VXDEndcapTrackerHits </parameter>
-    <!--Name of the TrackerHit relation collections-->
-    <parameter name="RelationsNames" type="StringVec" lcioInType="LCRelation">VXDTrackerHitRelations VXDEndcapTrackerHitRelations </parameter>
-
-    <!--Cut values for the pattern recognition -->
-    <parameter name="ThetaRange" type="double"> 0.05 </parameter>
-    <parameter name="MaxCellAngle" type="double"> 0.005 </parameter>
-    <parameter name="MaxCellAngleRZ" type="double"> 0.005 </parameter>
-    <parameter name="MaxDistance" type="double"> 0.02 </parameter>
-    <parameter name="MinClustersOnTrack" type="int"> 4 </parameter>
-    <parameter name="MaxChi2" type="double"> 100 </parameter>
-    <parameter name="DebugPlots" type="bool"> false </parameter>
-    <parameter name="trackPurity" type="double">0.7 </parameter>
-
-    <!--Silicon track Collection Name-->
-    <parameter name="SiTrackCollectionName" type="string" lcioOutType="Track">CATracks </parameter>
-    <!--Name of the MCParticle input collection-->
-    <parameter name="MCParticleCollectionName" type="string" lcioInType="MCParticle">MCParticle </parameter>
-    <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
-    <!--parameter name="Verbosity" type="string">DEBUG </parameter-->
-  </processor>
-
-
-
-
-  <processor name="MyExtrToTracker" type="ExtrToTracker">
-    <!--ExtrToTracker refits an input VXD track collection, and used IMarlinTrk tools to propagate it to the main tracker-->
-
-    <!--maximum allowable chi2 increment when moving from one site to another-->
-    <parameter name="Max_Chi2_Incr" type="double">10 </parameter>
-    <!--Name of the input track collection-->
-    <parameter name="InputTrackCollectionName" type="string" lcioInType="Track">CATracks </parameter>
-    <!--Name of the output track collection-->
-    <parameter name="OutputTrackCollectionName" type="string" lcioOutType="Track">SiTracks </parameter>
-    <!--vector of name of the digi hits collection - nned to be syncro with vecSubdetName!-->
-    <parameter name="vecDigiHits" type="StringVec" lcioInType="TrackerHitPlane">ITrackerHits OTrackerHits ITrackerEndcapHits OTrackerEndcapHits  </parameter>
-    <!--vector of names of all subdetector to exrapolate to-->
-    <parameter name="vecSubdetName" type="StringVec">InnerTrackerBarrel OuterTrackerBarrel InnerTrackerEndcap OuterTrackerEndcap  </parameter>
-    <!--Name of the output collection with the not used hits-->
-    <parameter name="OutputNotUsedHitCollectionName" type="string" lcioOutType="TrackerHitPlane">NotUsedHits </parameter>
-    <!--perform a final refit of the extrapolated track-->
-    <parameter name="PerformFinalRefit" type="bool">false </parameter>
-    <!--Use Energy Loss in Fit-->
-    <parameter name="EnergyLossOn" type="bool">true </parameter>
-    <!--Use MultipleScattering in Fit-->
-    <parameter name="MultipleScatteringOn" type="bool">true </parameter>
-    <!--Smooth All Mesurement Sites in Fit-->
-    <parameter name="SmoothOn" type="bool">false </parameter>
-    <!--times d0(Z0) acceptable from track extrapolation point-->
-    <parameter name="SearchSigma" type="double">3 </parameter> <!-- not used but in doubt to use it, that's why it still exists -->
-    <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
-    <!--parameter name="Verbosity" type="string">DEBUG </parameter-->
-  </processor>
-
   <processor name="MyConformalTrackingFull" type="ConformalTracking">
     <!--ConformalTracking constructs tracks using a combined conformal mapping and cellular automaton approach.-->
 
