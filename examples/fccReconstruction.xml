@@ -29,7 +29,7 @@
     <if condition="Config.TrackingTruth">
       <processor name="MyTruthTrackFinder"/>
     </if>
-    <if condition="Config.ConformalTracking">
+    <if condition="Config.TrackingConformal">
       <processor name="MyConformalTrackingFull"/>
       <processor name="ClonesAndSplitTracksFinder"/>
     </if>
