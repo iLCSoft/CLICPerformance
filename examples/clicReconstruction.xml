@@ -71,7 +71,7 @@
       <processor name="MyTruthTrackFinder"/>
     </if>
     <if condition="Config.TrackingConformal">
-      <processor name="MyConformalTrackingFull"/>
+      <processor name="MyConformalTracking"/>
       <processor name="ClonesAndSplitTracksFinder"/>
     </if>
 
@@ -402,7 +402,7 @@
   </processor>
 
   <!-- == Pattern recognition parameters == -->
-  <processor name="MyConformalTrackingFull" type="ConformalTracking">
+  <processor name="MyConformalTracking" type="ConformalTracking">
     <!--ConformalTracking constructs tracks using a combined conformal mapping and cellular automaton approach.-->
 
     <!--Name of the TrackerHit input collections-->
