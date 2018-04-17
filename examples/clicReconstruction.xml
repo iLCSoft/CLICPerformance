@@ -406,6 +406,12 @@
 
     <!--Name of the TrackerHit input collections-->
     <parameter name="TrackerHitCollectionNames" type="StringVec" lcioInType="TrackerHitPlane"> VXDTrackerHits VXDEndcapTrackerHits ITrackerHits OTrackerHits ITrackerEndcapHits OTrackerEndcapHits </parameter>
+    <!--Name of the TrackerHit input collections from the Vertex Barrel-->
+    <parameter name="VertexBarrelHitCollectionNames" type="StringVec" lcioInType="TrackerHitPlane">VXDTrackerHits </parameter>
+    <!--Name of the TrackerHit input collections from the Vertex Endcap-->
+    <parameter name="VertexEndcapHitCollectionNames" type="StringVec" lcioInType="TrackerHitPlane">VXDEndcapTrackerHits </parameter>
+    <!--Name of the TrackerHit input collections from the Main Tracker-->
+    <parameter name="MainTrackerHitCollectionNames" type="StringVec" lcioInType="TrackerHitPlane">ITrackerHits OTrackerHits ITrackerEndcapHits OTrackerEndcapHits </parameter>
     <!--Name of the TrackerHit relation collections-->
     <parameter name="RelationsNames" type="StringVec" lcioInType="LCRelation"> VXDTrackerHitRelations VXDEndcapTrackerHitRelations InnerTrackerBarrelHitsRelations OuterTrackerBarrelHitsRelations InnerTrackerEndcapHitsRelations OuterTrackerEndcapHitsRelations </parameter>
 
