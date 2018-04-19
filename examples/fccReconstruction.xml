@@ -75,7 +75,7 @@
     <!--Name of the DD4hep compact xml file to load-->
     <parameter name="EncodingStringParameter"> GlobalTrackerReadoutID </parameter>
     <parameter name="DD4hepXMLFile" type="string">
-      /cvmfs/clicdp.cern.ch/iLCSoft/builds/2017-11-15/x86_64-slc6-gcc62-opt/lcgeo/HEAD/FCCee/compact/FCCee_o1_v01/FCCee_o1_v01.xml
+      /cvmfs/clicdp.cern.ch/iLCSoft/builds/nightly/x86_64-slc6-gcc62-opt/lcgeo/HEAD/FCCee/compact/FCCee_o1_v02/FCCee_o1_v02.xml
     </parameter>
   </processor>
 
@@ -83,7 +83,7 @@
     <!--Which option to use for overlay: False, 91GeV, 365GeV. Then use, e.g., Config.Overlay91GeV in the condition-->
     <parameter name="Overlay" type="string">False </parameter>
     <!--Which option to use for tracking: Truth, ConformalPlusExtrapolator, Conformal-->
-    <parameter name="Tracking" type="string">Truth </parameter>
+    <parameter name="Tracking" type="string">Conformal </parameter>
   </processor>
 
   <group name="Overlay">
@@ -407,7 +407,7 @@
     <!-- compression of output file 0: false >0: true (default) -->
     <parameter name="Compress" type="int" value="1"/>
     <!-- filename without extension-->
-    <parameter name="FileName" type="string" value="histograms500GeV_ttbar"/>
+    <parameter name="FileName" type="string" value="histograms"/>
     <!-- type of output file xml (default) or root ( only OpenScientist)-->
     <parameter name="FileType" type="string" value="root "/>
   </processor>
