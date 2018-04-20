@@ -31,6 +31,7 @@
     </if>
     <if condition="Config.TrackingConformal">
       <processor name="MyConformalTracking"/>
+      <processor name="ClonesAndSplitTracksFinder"/>
     </if>
 
     <processor name="Refit" />
@@ -316,11 +317,24 @@
     <parameter name="trackPurity" type="double">0.7 </parameter>
 
     <!--Silicon track Collection Name-->
-    <parameter name="SiTrackCollectionName" type="string" lcioOutType="Track">SiTracks </parameter>
+    <parameter name="SiTrackCollectionName" type="string" lcioOutType="Track">SiTracksCT </parameter>
     <!--Name of the MCParticle input collection-->
     <parameter name="MCParticleCollectionName" type="string" lcioInType="MCParticle">MCParticle </parameter>
     <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
     <!--parameter name="Verbosity" type="string">DEBUG </parameter-->
+  </processor>
+
+  <processor name="ClonesAndSplitTracksFinder" type="ClonesAndSplitTracksFinder">
+    <parameter name="InputTrackCollectionName" type="string"> SiTracksCT </parameter>
+    <parameter name="OutputTrackCollectionName" type="string"> SiTracks </parameter>
+    <parameter name="MultipleScatteringOn" type="bool"> true </parameter>
+    <parameter name="EnergyLossOn" type="bool"> true </parameter>
+    <parameter name="SmoothOn" type="bool"> false </parameter>
+    <parameter name="extrapolateForward" type="bool"> true </parameter>
+    <parameter name="maxDeltaTheta" type="double"> 0.59 </parameter>
+    <parameter name="maxDeltaPhi" type="double"> 0.99 </parameter>
+    <parameter name="maxDeltaPt" type="double"> 0.69 </parameter>
+    <parameter name="mergeSplitTracks" type="bool"> false </parameter>
   </processor>
 
   <processor name="Refit" type="RefitFinal">
