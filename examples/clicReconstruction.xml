@@ -449,7 +449,7 @@
     <parameter name="maxDeltaTheta" type="double"> 0.59 </parameter>
     <parameter name="maxDeltaPhi" type="double"> 0.99 </parameter>
     <parameter name="maxDeltaPt" type="double"> 0.69 </parameter>
-    <parameter name="clonesOnly" type="bool"> true </parameter>
+    <parameter name="mergeSplitTracks" type="bool"> false </parameter>
   </processor>
 
 
