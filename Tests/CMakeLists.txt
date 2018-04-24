@@ -123,6 +123,7 @@ ADD_TEST( NAME t_${test_name}
   ${CMAKE_SOURCE_DIR}/lib/libClicPerformance.so  Marlin
   --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
   --global.LCIOInputFiles=test${CLIC_DETECTOR_MODEL}.slcio clicReconstruction.xml
+  --Config.Tracking=Truth
   --Config.Overlay=3TeV
   --Overlay3TeV.BackgroundFileNames=test${CLIC_DETECTOR_MODEL}.slcio
   --global.MaxRecordNumber=4
@@ -139,6 +140,7 @@ ADD_TEST( NAME t_${test_name}
   ${CMAKE_SOURCE_DIR}/lib/libClicPerformance.so  Marlin
   --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
   --global.LCIOInputFiles=test${CLIC_DETECTOR_MODEL}.slcio clicReconstruction.xml
+  --Config.Tracking=Truth
   --Config.Overlay=3TeV
   --Overlay3TeV.BackgroundFileNames=${EOS_BACKGROUND_FILE}
   --global.MaxRecordNumber=4
@@ -165,6 +167,7 @@ ADD_TEST( NAME t_${test_name}
   Marlin
   --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
   --global.LCIOInputFiles=test${CLIC_DETECTOR_MODEL}.slcio clicReconstruction.xml
+  --Config.Tracking=Truth
   --Config.Overlay=3TeV
   --Overlay3TeV.BackgroundFileNames=test${CLIC_DETECTOR_MODEL}.slcio
   --global.MaxRecordNumber=3
@@ -209,8 +212,8 @@ ADD_TEST( NAME t_${test_name}
   Marlin
   --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
   --global.LCIOInputFiles=test${CLIC_DETECTOR_MODEL}.slcio clicReconstruction.xml
-  --Config.Overlay=3TeV
   --Config.Tracking=Conformal
+  --Config.Overlay=3TeV
   --Overlay3TeV.BackgroundFileNames=test${CLIC_DETECTOR_MODEL}.slcio
   --global.MaxRecordNumber=3
   --Output_REC.LCIOOutputFile=reco_overlay_conformal_valgrind_${CLIC_DETECTOR_MODEL}_rec.slcio
@@ -319,8 +322,8 @@ ADD_TEST( NAME t_${test_name}
   Marlin
   --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
   --global.LCIOInputFiles=test${CLIC_DETECTOR_MODEL}_zuds.slcio clicReconstruction.xml
-  --Config.Overlay=3TeV
   --Config.Tracking=Conformal
+  --Config.Overlay=3TeV
   --Overlay3TeV.BackgroundFileNames=${EOS_BACKGROUND_FILE}
   --global.MaxRecordNumber=4
   --Output_REC.LCIOOutputFile=reco_overlay_conformal_valgrind_${CLIC_DETECTOR_MODEL}_zuds_rec.slcio
@@ -367,8 +370,8 @@ ADD_TEST( NAME t_${test_name}
   Marlin
   --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
   --global.LCIOInputFiles=test${CLIC_DETECTOR_MODEL}_zuds.slcio clicReconstruction.xml
-  --Config.Overlay=3TeV
   --Config.Tracking=Conformal
+  --Config.Overlay=3TeV
   --Overlay3TeV.BackgroundFileNames=${EOS_BACKGROUND_FILE}
   --global.MaxRecordNumber=4
   --Output_REC.LCIOOutputFile=reco_overlay_conformal_${CLIC_DETECTOR_MODEL}_zuds_rec.slcio
@@ -413,8 +416,8 @@ ADD_TEST( NAME t_${test_name}
   Marlin
   --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
   --global.LCIOInputFiles=test${CLIC_DETECTOR_MODEL}_zuds.slcio clicReconstruction.xml
-  --Config.Overlay=3TeV
   --Config.Tracking=Conformal
+  --Config.Overlay=3TeV
   --Overlay3TeV.BackgroundFileNames=${EOS_BACKGROUND_FILE}
   --global.MaxRecordNumber=1
   --Output_REC.LCIOOutputFile=reco_overlay_conformal_${CLIC_DETECTOR_MODEL}_zuds_rec_over_prof.slcio
