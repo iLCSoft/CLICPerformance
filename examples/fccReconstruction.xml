@@ -1081,6 +1081,7 @@
     </parameter>
     <parameter name="KeepCollectionNames" type="StringVec">
       MCParticlesSkimmed
+      MCPhysicsParticles
       RecoMCTruthLink
       SiTracks
       PandoraClusters
