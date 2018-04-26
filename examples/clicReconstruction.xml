@@ -1511,7 +1511,7 @@
     <parameter name="FullSubsetCollections" type="StringVec">
       EfficientMCParticles
       InefficientMCParticles
-      MCParticlesSkimmed
+      MCPhysicsParticles
     </parameter>
     <parameter name="DropCollectionTypes" type="StringVec">
       MCParticle
