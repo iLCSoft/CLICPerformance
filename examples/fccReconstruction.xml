@@ -720,7 +720,7 @@
     <!--Normal vector for the ECal barrel sensitive layers in local coordinates-->
     <parameter name="ECalBarrelNormalVector" type="FloatVec">0 0 1  </parameter>
     <!--The bfield in the muon barrel, units Tesla-->
-    <parameter name="MuonBarrelBField" type="float">-1.5 </parameter>
+    <parameter name="MuonBarrelBField" type="float">-1.0</parameter>
     <!--The bfield in the muon endcap, units Tesla-->
     <parameter name="MuonEndCapBField" type="float">0.01 </parameter>
 
