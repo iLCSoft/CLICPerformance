@@ -315,6 +315,8 @@
     <parameter name="MaxChi2" type="double"> 100 </parameter>
     <parameter name="DebugPlots" type="bool"> false </parameter>
     <parameter name="trackPurity" type="double">0.7 </parameter>
+    <!-- TEMPORARY: flag to switch off tight cuts in combined vertex b+e-->
+    <parameter name="EnableTightCutsVertexCombined" type="bool"> false </parameter> 
 
     <!--Silicon track Collection Name-->
     <parameter name="SiTrackCollectionName" type="string" lcioOutType="Track">SiTracksCT </parameter>
