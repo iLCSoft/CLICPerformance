@@ -839,7 +839,7 @@
     <!-- FIXME:Check if we really want to keep those -->
     <parameter name="KeepDaughtersPDG" type="IntVec">22 111 310 13 211 321 3120 </parameter>
     <!--Name of the MCParticle input collection-->
-    <parameter name="MCParticleCollection" type="string" lcioInType="MCParticle"> MCParticle </parameter>
+    <parameter name="MCParticleCollection" type="string" lcioInType="MCParticle"> MCPhysicsParticles </parameter>
     <!--Name of the skimmed MCParticle  output collection - not created if empty()-->
     <parameter name="MCParticlesSkimmedName" type="string" lcioOutType="MCParticle"> MCParticlesSkimmed </parameter>
     <!--Name of the MCTruthClusterLink output collection-->
@@ -1165,6 +1165,7 @@
       MCPhysicsParticles
       RecoMCTruthLink
       SiTracks
+      SiTracks_Refitted
       PandoraClusters
       PandoraPFOs
       SelectedPandoraPFOs
