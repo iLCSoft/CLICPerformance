@@ -8,6 +8,10 @@
     <processor name="InitDD4hep"/>
     <processor name="Config" />
 
+    <if condition="Config.OverlayFalse">
+      <processor name="OverlayFalse"/>
+    </if>
+
     <if condition="Config.Overlay91GeV">
       <processor name="Overlay91GeV"/>
     </if>
@@ -81,10 +85,15 @@
   </processor>
 
   <processor name="Config" type="CLICRecoConfig" >
+    <parameter name="Verbosity" options="DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT"> MESSAGE </parameter>
     <!--Which option to use for overlay: False, 91GeV, 365GeV. Then use, e.g., Config.Overlay91GeV in the condition-->
     <parameter name="Overlay" type="string">False </parameter>
-    <!--Which option to use for tracking: Truth, ConformalPlusExtrapolator, Conformal-->
+    <!--Possible values and conditions for option Overlay-->
+    <parameter name="OverlayChoices" type="StringVec"> False 91GeV 365GeV </parameter>
+    <!--Which option to use for tracking: Truth, ConformalPlusExtrapolator, Conformal.-->
     <parameter name="Tracking" type="string">Conformal </parameter>
+    <!--Possible values and conditions for option Tracking-->
+    <parameter name="TrackingChoices" type="StringVec"> Truth Conformal </parameter>
   </processor>
 
   <group name="Overlay">
