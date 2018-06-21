@@ -100,35 +100,6 @@
     <parameter name="MCParticleCollectionName" type="string">MCParticle </parameter>
     <!--The output MC Particle Collection Name for the physics event-->
     <parameter name="MCPhysicsParticleCollectionName" type="string"> MCPhysicsParticles </parameter>
-    <!--Time difference between bunches in the bunch train in ns-->
-    <parameter name="Delta_t" type="float" value="20"/>
-    <!--Number of bunches in a bunch train-->
-    <parameter name="NBunchtrain" type="int" value="20"/>
-
-    <parameter name="Collection_IntegrationTimes" type="StringVec" >
-      VertexBarrelCollection        380
-      VertexEndcapCollection        380
-
-      InnerTrackerBarrelCollection  380
-      InnerTrackerEndcapCollection  380
-
-      OuterTrackerBarrelCollection  380
-      OuterTrackerEndcapCollection  380
-
-      ECalBarrelCollection          380
-      ECalEndcapCollection          380
-      ECalPlugCollection            380
-
-      HCalBarrelCollection          380
-      HCalEndcapCollection          380
-      HCalRingCollection            380
-
-      YokeBarrelCollection          380
-      YokeEndcapCollection          380
-
-      LumiCalCollection             380
-      BeamCalCollection             380
-    </parameter>
     <!--Number of the Bunch crossing of the physics event-->
     <parameter name="PhysicsBX" type="int" value="1"/>
     <!--Draw random number of Events to overlay from Poisson distribution with  mean value NumberBackground-->
@@ -141,13 +112,77 @@
       pairs_Z_sim.slcio
     </parameter>
 
-      <processor name="Overlay91GeV" type="OverlayTimingGeneric">
-        <parameter name="NumberBackground" type="float" value="1."/>
-      </processor>
+    <processor name="OverlayFalse" type="OverlayTimingGeneric">
+      <parameter name="BackgroundFileNames" type="StringVec"> </parameter>
+      <parameter name="NBunchtrain" type="int" value="0"/>
+      <parameter name="NumberBackground" type="float" value="0."/>
+    </processor>
 
-      <processor name="Overlay365GeV" type="OverlayTimingGeneric">
-        <parameter name="NumberBackground" type="float" value="1."/>
-      </processor>
+    <processor name="Overlay91GeV" type="OverlayTimingGeneric">
+      <!--Time difference between bunches in the bunch train in ns (19.6ns in reality)-->
+      <parameter name="Delta_t" type="float" value="20"/>
+      <!--Number of bunches in a bunch train-->
+      <parameter name="NBunchtrain" type="int" value="20"/>
+      <!--Integration time per subdetector: at the moment 400ns (from ALICE?) - 20ns (Physics is at 1st BX) -->
+      <parameter name="Collection_IntegrationTimes" type="StringVec" >
+	VertexBarrelCollection        380
+	VertexEndcapCollection        380
+
+	InnerTrackerBarrelCollection  380
+	InnerTrackerEndcapCollection  380
+
+	OuterTrackerBarrelCollection  380
+	OuterTrackerEndcapCollection  380
+
+	ECalBarrelCollection          380
+	ECalEndcapCollection          380
+	ECalPlugCollection            380
+
+	HCalBarrelCollection          380
+	HCalEndcapCollection          380
+	HCalRingCollection            380
+
+	YokeBarrelCollection          380
+	YokeEndcapCollection          380
+
+	LumiCalCollection             380
+	BeamCalCollection             380
+      </parameter>
+      <parameter name="NumberBackground" type="float" value="1."/>
+    </processor>
+
+    <processor name="Overlay365GeV" type="OverlayTimingGeneric">
+      <!--Time difference between bunches in the bunch train in ns-->
+      <parameter name="Delta_t" type="float" value="3396"/>
+      <!--Number of bunches in a bunch train-->
+      <parameter name="NBunchtrain" type="int" value="3"/>
+      <!--Integration time per subdetector: at the moment 10us (from ALICE?) - 3369ns (Physics is at 1st BX) -->
+      <parameter name="Collection_IntegrationTimes" type="StringVec" >
+	VertexBarrelCollection        6631
+	VertexEndcapCollection        6631
+
+	InnerTrackerBarrelCollection  6631
+	InnerTrackerEndcapCollection  6631
+
+	OuterTrackerBarrelCollection  6631
+	OuterTrackerEndcapCollection  6631
+
+	ECalBarrelCollection          6631
+	ECalEndcapCollection          6631
+	ECalPlugCollection            6631
+
+	HCalBarrelCollection          6631
+	HCalEndcapCollection          6631
+	HCalRingCollection            6631
+
+	YokeBarrelCollection          6631
+	YokeEndcapCollection          6631
+
+	LumiCalCollection             6631
+	BeamCalCollection             6631
+      </parameter>
+      <parameter name="NumberBackground" type="float" value="1."/>
+    </processor>
   </group>
 
   <processor name="VXDBarrelDigitiser" type="DDPlanarDigiProcessor">
