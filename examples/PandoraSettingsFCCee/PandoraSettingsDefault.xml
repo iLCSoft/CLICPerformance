@@ -7,7 +7,7 @@
     <ShouldCollapseMCParticlesToPfoTarget>true</ShouldCollapseMCParticlesToPfoTarget>
 
     <!-- PLUGIN REGISTRATION -->
-    <HadronicEnergyCorrectionPlugins>CleanClusters ScaleHotHadrons</HadronicEnergyCorrectionPlugins>
+    <HadronicEnergyCorrectionPlugins>SoftwareCompensation</HadronicEnergyCorrectionPlugins>
     <EmShowerPlugin>LCEmShowerId</EmShowerPlugin>
     <PhotonPlugin>LCPhotonId</PhotonPlugin>
     <ElectronPlugin>LCElectronId</ElectronPlugin>
@@ -401,7 +401,7 @@
         <TargetClusterListName>PrimaryClusters</TargetClusterListName>
         <MuonClusterListName>MuonRemovedYokeClusters</MuonClusterListName>
         <MinHitsInMuonCluster>3</MinHitsInMuonCluster>
-        <CoilCorrectionMinInnerRadius>3483</CoilCorrectionMinInnerRadius>
+        <CoilCorrectionMinInnerRadius>3719</CoilCorrectionMinInnerRadius>
     </algorithm>
 
     <!-- Photon recovery -->
