@@ -335,37 +335,64 @@
 
   <!-- == Pattern recognition parameters == -->
 
-  <processor name="MyConformalTracking" type="ConformalTracking">
+  <processor name="MyConformalTracking" type="ConformalTrackingV2">
     <!--ConformalTracking constructs tracks using a combined conformal mapping and cellular automaton approach.-->
 
     <!--Name of the TrackerHit input collections-->
     <parameter name="TrackerHitCollectionNames" type="StringVec" lcioInType="TrackerHitPlane"> VXDTrackerHits VXDEndcapTrackerHits ITrackerHits OTrackerHits ITrackerEndcapHits OTrackerEndcapHits </parameter>
-    <!--Name of the TrackerHit input collections from the Vertex Barrel-->
-    <parameter name="VertexBarrelHitCollectionNames" type="StringVec" lcioInType="TrackerHitPlane">VXDTrackerHits </parameter>
-    <!--Name of the TrackerHit input collections from the Vertex Endcap-->
-    <parameter name="VertexEndcapHitCollectionNames" type="StringVec" lcioInType="TrackerHitPlane">VXDEndcapTrackerHits </parameter>
-    <!--Name of the TrackerHit input collections from the Main Tracker-->
-    <parameter name="MainTrackerHitCollectionNames" type="StringVec" lcioInType="TrackerHitPlane">ITrackerHits OTrackerHits ITrackerEndcapHits OTrackerEndcapHits </parameter>
-    <!--Name of the TrackerHit relation collections-->
-    <parameter name="RelationsNames" type="StringVec" lcioInType="LCRelation"> VXDTrackerHitRelations VXDEndcapTrackerHitRelations InnerTrackerBarrelHitsRelations OuterTrackerBarrelHitsRelations InnerTrackerEndcapHitsRelations OuterTrackerEndcapHitsRelations </parameter>
-
-
-    <!--Cut values for the pattern recognition -->
-    <parameter name="ThetaRange" type="double"> 0.05 </parameter>
-    <parameter name="MaxCellAngle" type="double"> 0.01 </parameter>
-    <parameter name="MaxCellAngleRZ" type="double"> 0.01 </parameter>
-    <parameter name="MaxDistance" type="double"> 0.03 </parameter>
-    <parameter name="MinClustersOnTrack" type="int"> 4 </parameter>
-    <parameter name="MaxChi2" type="double"> 100 </parameter>
-    <parameter name="DebugPlots" type="bool"> false </parameter>
-    <parameter name="trackPurity" type="double">0.7 </parameter>
-    <!-- TEMPORARY: flag to switch off tight cuts in combined vertex b+e-->
-    <parameter name="EnableTightCutsVertexCombined" type="bool"> false </parameter> 
-
-    <!--Silicon track Collection Name-->
-    <parameter name="SiTrackCollectionName" type="string" lcioOutType="Track">SiTracksCT </parameter>
     <!--Name of the MCParticle input collection-->
     <parameter name="MCParticleCollectionName" type="string" lcioInType="MCParticle">MCParticle </parameter>
+    <!--Name of the TrackerHit relation collections-->
+    <parameter name="RelationsNames" type="StringVec" lcioInType="LCRelation"> VXDTrackerHitRelations VXDEndcapTrackerHitRelations InnerTrackerBarrelHitsRelations OuterTrackerBarrelHitsRelations InnerTrackerEndcapHitsRelations OuterTrackerEndcapHitsRelations </parameter>
+    <!--Silicon track Collection Name-->
+    <parameter name="SiTrackCollectionName" type="string" lcioOutType="Track">SiTracksCT </parameter>
+    <!--Debug hits Collection Name-->
+    <parameter name="DebugHits" type="string" lcioOutType="TrackerHitPlane"> DebugHits </parameter>
+
+    <!--enable debug plots -->
+    <parameter name="DebugPlots" type="bool"> false </parameter>
+    <!--retry with tightened parameters, when too many tracks are being created-->
+    <parameter name="RetryTooManyTracks" type="bool">false </parameter>
+    <!--sort results from kdtree search-->
+    <parameter name="SortTreeResults" type="bool">true </parameter>
+
+    <!--steps for the pattern recognition-->
+    <parameter name="Steps" type="StringVec"> 
+      [VXDBarrel]
+      @Collections : VXDTrackerHits
+      @Parameters : MaxCellAngle : 0.01; MaxCellAngleRZ : 0.01; Chi2Cut : 100; MinClustersOnTrack : 4; MaxDistance : 0.03;
+      @Flags : HighPTFit, VertexToTracker
+      @Functions : CombineCollections, BuildNewTracks
+      [VXDEncap]
+      @Collections : VXDEndcapTrackerHits
+      @Parameters : MaxCellAngle : 0.01; MaxCellAngleRZ : 0.01; Chi2Cut : 100; MinClustersOnTrack : 4; MaxDistance : 0.03;
+      @Flags : HighPTFit, VertexToTracker
+      @Functions : CombineCollections, ExtendTracks
+      [LowerCellAngle1]
+      @Collections : VXDTrackerHits, VXDEndcapTrackerHits
+      @Parameters : MaxCellAngle : 0.05; MaxCellAngleRZ : 0.05; Chi2Cut : 100; MinClustersOnTrack : 4; MaxDistance : 0.03;
+      @Flags : HighPTFit, VertexToTracker, RadialSearch
+      @Functions : CombineCollections, BuildNewTracks
+      [LowerCellAngle2]
+      @Collections :
+      @Parameters : MaxCellAngle : 0.1; MaxCellAngleRZ : 0.1; Chi2Cut : 2000; MinClustersOnTrack : 4; MaxDistance : 0.03;
+      @Flags : HighPTFit, VertexToTracker, RadialSearch
+      @Functions : BuildNewTracks, SortTracks
+      [Tracker]
+      @Collections : ITrackerHits, OTrackerHits, ITrackerEndcapHits, OTrackerEndcapHits
+      @Parameters : MaxCellAngle : 0.1; MaxCellAngleRZ : 0.1; Chi2Cut : 2000; MinClustersOnTrack : 4; MaxDistance : 0.03;
+      @Flags : HighPTFit, VertexToTracker, RadialSearch
+      @Functions : CombineCollections, ExtendTracks
+      [Displaced]
+      @Collections : VXDTrackerHits, VXDEndcapTrackerHits, ITrackerHits, OTrackerHits, ITrackerEndcapHits, OTrackerEndcapHits
+      @Parameters : MaxCellAngle : 0.1; MaxCellAngleRZ : 0.1; Chi2Cut : 1000; MinClustersOnTrack : 5; MaxDistance : 0.015;
+      @Flags : OnlyZSchi2cut, RadialSearch
+      @Functions : CombineCollections, BuildNewTracks
+    </parameter>
+
+    <parameter name="trackPurity" type="double">0.7 </parameter>
+    <parameter name="ThetaRange" type="double"> 0.05 </parameter>
+ 
     <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
     <!--parameter name="Verbosity" type="string">DEBUG </parameter-->
   </processor>
