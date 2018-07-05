@@ -1456,6 +1456,8 @@
       <parameter name="MinPtForClusterLessPfos" type="float">0.0 </parameter>
       <parameter name="NeutralFarForwardLooseTimingCut" type="float">4.0 </parameter>
       <parameter name="NeutralFarForwardTightTimingCut" type="float">2.0 </parameter>
+      <parameter name="HCalBarrelLooseTimingCut" type="float">5 </parameter>
+      <parameter name="HCalBarrelTightTimingCut" type="float">2.5 </parameter>
     </processor>
 
     <processor name="CLICPfoSelectorLoose_LE" type="CLICPfoSelector">
@@ -1487,6 +1489,8 @@
       <parameter name="MinPtForClusterLessPfos" type="float">0.0 </parameter>
       <parameter name="NeutralFarForwardLooseTimingCut" type="float">10.0 </parameter>
       <parameter name="NeutralFarForwardTightTimingCut" type="float">5.0 </parameter>
+      <parameter name="HCalBarrelLooseTimingCut" type="float">10 </parameter>
+      <parameter name="HCalBarrelTightTimingCut" type="float">5 </parameter>
     </processor>
 
     <processor name="CLICPfoSelectorTight_LE" type="CLICPfoSelector">
@@ -1518,6 +1522,8 @@
       <parameter name="MinPtForClusterLessPfos" type="float">0.75 </parameter>
       <parameter name="NeutralFarForwardLooseTimingCut" type="float">2.0 </parameter>
       <parameter name="NeutralFarForwardTightTimingCut" type="float">2.0 </parameter>
+      <parameter name="HCalBarrelLooseTimingCut" type="float">4 </parameter>
+      <parameter name="HCalBarrelTightTimingCut" type="float">2 </parameter>
     </processor>
 
   </group>
