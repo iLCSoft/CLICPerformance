@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="us-ascii"?>
+
+<!--##########################################
+    #  Example default steering file for     #
+    #  ILD and CLIC when drawn via ced2go    #
+    #  Author: T.Quast, 12/08/2015            #
+    ##########################################
+
+    Usage: 
+    This file is used instead of ced2go-template.xml if in 
+    "ced2go -d <rel. path of detectorFile.xml> <rel. path of slcio-File>" 
+    the detectorFile.xml contains a <lccdd> tag. 
+  -->
+
+
+<marlin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ilcsoft.desy.de/marlin/marlin.xsd">
+ <execute>
+  <!-- <processor name="MyEventSelector"/> -->
+  <!--   <if condition="MyEventSelector"> -->
+      <processor name="MyInitializeDD4hep"/>
+      <processor name="MyCEDViewer"/>
+   <!-- </if> -->
+</execute>
+
+ <global>
+   <parameter name="LCIOInputFiles">
+      $LCIOInputFiles$
+   </parameter> 
+   <parameter name="SkipNEvents" value="0"/>
+   <parameter name="Verbosity" options="DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT"> MESSAGE  </parameter>  
+ </global>
+
+ <processor name="MyInitializeDD4hep" type="InitializeDD4hep">
+  <parameter name="DD4hepXMLFile">
+    $DD4XMLFile$
+  </parameter>
+</processor>
+
+ <processor name="MyEventSelector" type="EventSelector">
+   <!--event list - pairs of Eventnumber RunNumber-->
+   <parameter name="EventList" type="IntVec"> 
+       28 0
+       33 0
+       52 0
+       63 0
+       73 0
+       78 0
+   </parameter>
+ </processor>
+
+
+<processor name="MyCEDViewer" type="DDCEDViewer">
+  <parameter name="DrawDetector" type="bool">true </parameter>
+  <parameter name="DrawSurfaces" type="bool">
+    $DrawSurfaces$
+  </parameter>
+  <parameter name="DetailledDrawing">
+    VertexBarrel
+  </parameter>
+ <!--CEDViewer: event display of LCIO objects  - based on CED by A.Zhelezov.-->
+  <!--color scheme to be used for drawing - see startup log MESSAGEs for options-->
+  <parameter name="ColorScheme" type="int">12 </parameter>
+  <!--draw detector from GEAR file with given ID (see MarlinCED::newEvent() ) : 0 ILD, 1 CLIC, -1 none-->
+  <parameter name="DrawDetectorID" type="int">1 </parameter>
+  <!--draw a helix for PFO objects (usefull for Si tracker): 0: disabled, 1: enabled-->
+  <parameter name="DrawHelixForPFOs" type="int">1 </parameter>
+  <!--draw a helix for Track objects: -1: none, 0: default, 1: atIP, 2: atFirstHit, 3: atLastHit, 4: atCalorimeter-->
+  <parameter name="DrawHelixForTrack" type="int">1 </parameter>
+  <!--Max R (mm) Extent for drawing Helix if UseTPCForLimitsOfHelix false-->
+  <parameter name="HelixMaxR" type="float">2150 </parameter>
+  <!--Max Z (mm) Extent for drawing Helix if UseTPCForLimitsOfHelix false-->
+  <parameter name="HelixMaxZ" type="float">2307 </parameter>
+  <!--minimum energy of MCParticles to be drawn-->
+  <parameter name="MCParticleEnergyCut" type="float">0.001 </parameter>
+  <!--draw helices in the color of the track/PFO: 0: disabled (lightgrey), 1: enabled-->
+  <parameter name="UseColorForHelixTracks" type="int">1 </parameter>
+  <!--Use the gear parameters to define the max extent of drawing a helix-->
+  <parameter name="UseTPCForLimitsOfHelix" type="bool">false </parameter>
+  <!--If set true generator status is ignored for MCParticles to be drawn-->
+  <parameter name="UsingParticleGun" type="bool">false </parameter>
+  <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
+  <!--parameter name="Verbosity" type="string">DEBUG </parameter-->
+  <!--Wait for Keyboard before proceed-->
+  <parameter name="WaitForKeyboard" type="int">1 </parameter>
+  <parameter name="DrawInLayer"> 
+    VXDCollection 0 5 1
+    SITCollection 0 5 1
+    FTD_PIXELCollection 0 5 1
+    FTD_STRIPCollection 0 5 1
+    FTDCollection 0 5 1
+    TPCCollection 0 3 1
+    SETCollection 0 3 1
+    ETDCollection 0 3 1
+    VertexBarrelCollection 0 5 1
+    VertexEndcapCollection 0 5 1
+    InnerTrackerBarrelCollection 0 5 1
+    InnerTrackerEndcapCollection 0 5 1
+    OuterTrackerBarrelCollection 0 5 1
+    OuterTrackerEndcapCollection 0 5 1
+    
+     VXDTrackerHits       0  5  11
+     SITTrackerHits       0  5  11
+     TPCTrackerHits       0  5  11
+     FTDTrackerHits       0  5  11
+     FTDStripTrackerHits  0  5  11
+     FTDPixelTrackerHits  0  5  11
+     FTDSpacePoints       0  5  11
+     SETTrackerHits       0  5  11
+     ITrackerEndcapHits    0 5 11
+     ITrackerHits          0 5 11
+     OTrackerEndcapHits    0 5 11
+     OTrackerHits          0 5 11
+     VXDEndcapTrackerHits  0 5 11
+
+     HcalEndCapsCollection       0 3 2
+     LHcalCollection             0 3 2
+     LumiCalCollection           0 3 2
+     MuonBarrelCollection        0 3 2
+     MuonEndCapCollection        0 3 2
+     EcalBarrelSiliconCollection 0 3 2  
+     EcalBarrelSiliconPreShower  0 3 2  
+     EcalEndcapRingCollection    0 3 2  
+     EcalEndcapRingPreShower     0 3 2  
+     EcalEndcapSiliconCollection 0 3 2  
+     EcalEndcapSiliconPreShower  0 3 2  
+     HcalBarrelRegCollection     0 3 2
+     HcalEndCapRingsCollection   0 3 2
+
+     ECalBarrelCollection 0 3 2
+     ECalEndcapCollection 0 3 2
+     ECalPlugCollection 0 3 2
+     HCalBarrelCollection 0 3 2
+     HCalEndcapCollection 0 3 2
+     HCalRingCollection 0 3 2
+     YokeBarrelCollection 0 3 2
+     YokeEndcapCollection 0 3 2
+     LumiCalCollection 0 3 2
+     BeamCalCollection 0 3 2
+
+
+     HCALEndcap   0 5 12
+     HCALOther    0 5 12
+     MUON         0 2 12
+     LHCAL        0 3 12  
+     LCAL         0 3 12
+     BCAL         0 3 12
+     ECALBarrel   0 2 12
+     ECALEndcap   0 2 12
+     ECALOther    0 2 12
+     HCALBarrel   0 5 12
+
+     TruthTracks      0 6 3
+     ForwardTracks    0 6 4
+     SiTracks         0 6 5
+     ClupatraTracks   0 6 6
+     MarlinTrkTracks  0 6 7
+
+     PandoraClusters  0 3 8
+     PandoraPFOs      0 3 9
+     
+     MCParticle 0 3 0
+
+     VertexBarrelHits 0 5 11
+     VertexEndcapHits 0 5 11
+     InnerTrackerBarrelHits 0 5 11
+     InnerTrackerEndcapHits 0 5 11
+     OuterTrackerBarrelHits 0 5 11
+     OuterTrackerEndcapHits 0 5 11
+
+     ECalBarrelHits 0 3 12
+     ECalEndcapHits 0 3 12
+     ECalPlugHits 0 3 12
+     HCalBarrelHits 0 3 12
+     HCalEndcapHits 0 3 12
+     HCalRingHits 0 3 12
+     YokeBarrelHits 0 3 12
+     YokeEndcapHits 0 3 12
+     LumiCalHits 0 3 12
+     BeamCalHits 0 3 12
+     
+     Tracks 0 3 3
+
+     SelectedPandoraPFOCollection 0 3 4
+     LooseSelectedPandoraPFOCollection 0 3 5
+     TightSelectedPandoraPFOCollection 0 3 6
+     TightSelectedPandoraPFANewPFOs 0 3 6
+     PandoraPFOCollection 0 3 7
+     JetOut 0 0 3
+
+  </parameter>
+</processor>
+
+
+</marlin>
