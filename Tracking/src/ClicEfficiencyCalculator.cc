@@ -709,7 +709,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
       m_vertexR = mcVertexR;
       m_reconstructed = reconstructed;
       m_nHits = particleTrackHits[particle];
-      m_nHitsMC = uniqueHits;
+      m_nHitsMC = trackHits.size();
       m_distClosestMCPart = minDR;
       m_closeTracks = nCloseTrk;
       m_simplifiedTree->Fill();
