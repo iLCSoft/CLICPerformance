@@ -1,3 +1,234 @@
+# v02-01
+
+* 2018-10-05 Erica Brondolin ([PR#90](https://github.com/ilcsoft/ClicPerformance/pull/90))
+  - In the tree the nHitsMC must be the number of hits that are reconstructed and that belong to the same particle.
+
+* 2018-08-23 Oleksandr Viazlo ([PR#89](https://github.com/ilcsoft/ClicPerformance/pull/89))
+  - Update FCCee_o1_v03_CED
+    - add magnetic field
+    - change color of Yoke
+
+* 2018-08-22 Marko Petric ([PR#88](https://github.com/ilcsoft/ClicPerformance/pull/88))
+  - Add `FCCee_o1_v03_CED` model into Visualisation folder. Model only suitable for event display not for simulation!
+    - example usage: `ced2go -t ced2go-template-DD4.xml -d FCCee_o1_v03_CED.xml data/REC/00010521/000/Z_uds_rec_10521_105.slcio`
+  - Final colour scheme still has to be decided by FCCee people
+
+* 2018-08-09 Emilia Leogrande ([PR#87](https://github.com/ilcsoft/ClicPerformance/pull/87))
+  - ConformalTracking: Set pT threshold to run extendHighPt as introduced in iLCSoft/ConformalTracking#42
+    - Added to both clic and fccee steering files
+
+* 2018-07-06 Erica Brondolin ([PR#86](https://github.com/ilcsoft/ClicPerformance/pull/86))
+  - Clic Reconstruction: Update the Low Energy timing cuts: the variables "HcalBarrelLoose(/Tight)TimingCut" are now set consistently with the loose (tight) timing cuts imposed on neutral hadrons.
+
+* 2018-06-29 Emilia Leogrande ([PR#85](https://github.com/ilcsoft/ClicPerformance/pull/85))
+  - clicReconstruction.xml and fccReconstruction.xml: setup the configuration for ConformalTrackingV2
+  - parameters match the configuration of old ConformalTracking
+  - NB: parameters for clic and fcc are supposed to be different
+
+* 2018-06-29 Andre Sailer ([PR#84](https://github.com/ilcsoft/ClicPerformance/pull/84))
+  - Splitting fcc and clic configuration files into separate folders: clicConfig and fcceeConfig
+
+* 2018-06-27 Oleksandr Viazlo ([PR#83](https://github.com/ilcsoft/ClicPerformance/pull/83))
+  - enable Software Compensation for CLD
+  - CLD calorimeter calibration constants for new default settings
+  - correct CoilCorrectionMinInnerRadius value for CLD
+
+* 2018-06-25 Emilia Leogrande ([PR#81](https://github.com/ilcsoft/ClicPerformance/pull/81))
+  - Updates in the fccReconstruction.xml:
+  - MCPhysicsParticles (instead of MCParticle) given as input to the RecoMCTruthLinker to make the MCParticlesSkimmed
+  - SiTracks_Refitted added to the output collections in the DST
+  - fixed setup for Overlay group
+
+* 2018-05-18 Emilia Leogrande ([PR#80](https://github.com/ilcsoft/ClicPerformance/pull/80))
+  - clicReconstruction: in ConformalTracking, added flag to enable tight cuts in the vertex combined (barrel+endcap) hits reconstruction
+  - done similarly to fccReconstruction
+  - to be upgraded soon with a more elegant solution
+
+* 2018-05-16 Emilia Leogrande ([PR#79](https://github.com/ilcsoft/ClicPerformance/pull/79))
+  - fccReconstruction: in ConformalTracking settings, added processor parameter to enable/disable the tight cuts for the combined vertex barrel + endcap reconstruction 
+  - default = true (enabled)
+  - for FCCee, it needs to be disabled because of 10degrees tracks (2 hits in the vertex barrel + 6 in the endcap). Looser cuts allow to pick the vertex (b+e) hits in one track, otherwise tight cuts allow for a track made with a subset of hits, while the leftover hits are used for a second track
+  - the external processor parameter is a temporary solution
+
+* 2018-04-26 Emilia Leogrande ([PR#77](https://github.com/ilcsoft/ClicPerformance/pull/77))
+  - Tracking/include(src)/ClicTrackingValidate.h(cc)
+  - Processor to validate the tracking using MCParticle information at particle and hit level
+  - Checks the misassociated hits (from wrong MCParticle) and the missed hits
+
+* 2018-04-26 Andre Sailer ([PR#67](https://github.com/ilcsoft/ClicPerformance/pull/67))
+  - Reconstruction: add all parameters for DDMarlinPandora, fixes #66 
+  - Reconstruction: DDMarlinPandora increase D0 and Z0 cut offs
+  - Reconstruction: Add MCPhysicsParticles to DST output file
+
+* 2018-04-24 Emilia Leogrande ([PR#76](https://github.com/ilcsoft/ClicPerformance/pull/76))
+  - clicReconstruction.xml: Config.TrackingConformal runs the ConformalTracking + ClonesAndSplitTracksFinder, BUT with the option of mergeSplitTracks = false
+  - mergeSplitTracks = true would enable also the merging of close tracks, which is still work in progress
+  - same implementation updated also for fccReconstruction.xml
+
+* 2018-04-19 Emilia Leogrande ([PR#75](https://github.com/ilcsoft/ClicPerformance/pull/75))
+  - clicReconstruction.xml : edited AIDAprocessor root output file name
+  - fccReconstruction.xml: edited AIDAprocessor root output file name, set new detector model and conformal tracking as default
+
+* 2018-04-19 Andre Sailer ([PR#74](https://github.com/ilcsoft/ClicPerformance/pull/74))
+  - CLICReco: ConformalTracking: add the new parameters for collection names in VXDBarrel/Endcap and MainTracker
+  - FCCReco: ConformalTracking: add the new parameters for collection names in VXDBarrel/Endcap and MainTracker
+
+* 2018-04-17 Andre Sailer ([PR#73](https://github.com/ilcsoft/ClicPerformance/pull/73))
+  - ClicReconstruction: drop ConformalTracking+Extrapolator option for Tracking
+  - FCCReconstruction: drop ConformalTracking+Extrapolator option for Tracking
+  - ClicRecoConfig: drop alternative and broken Config names
+  - FCCReconstruction: use correct TrackingChoices
+
+* 2018-03-23 Andre Sailer ([PR#72](https://github.com/ilcsoft/ClicPerformance/pull/72))
+  -  ClicReconstruction::Overlay: correct the eventsPerBX numbers for L*=6m overlay instances
+
+* 2018-03-09 Nacho Garcia ([PR#71](https://github.com/ilcsoft/ClicPerformance/pull/71))
+  - Code to run the flavour-tagging training and produce performance plots.
+
+* 2018-03-05 Andre Sailer ([PR#70](https://github.com/ilcsoft/ClicPerformance/pull/70))
+  - Reconstruction: add overlay for 350GeV, 380GeV, and 3TeV L*=6m layout and L*=4.3m, keep CDR values in separate processors
+
+* 2018-03-02 Emilia Leogrande ([PR#69](https://github.com/ilcsoft/ClicPerformance/pull/69))
+  - examples/clicReconstruction.xml: added configuration for ClonesAndSplitTracksFinder
+  - the processor is included in the Config.TrackingConformal condition, to run automatically after the conformal tracking
+  - the output track collection from ClonesAndSplitTracksFinder is given as input to RefitFinal
+  - analogous for fccReconstruction.xml
+
+* 2018-02-07 Emilia Leogrande ([PR#61](https://github.com/ilcsoft/ClicPerformance/pull/61))
+  - Tests/CMakeLists.txt: Added 3 tests for FCCee_o1_v02:
+  - sim
+  - reco_truth
+  - reco_conformal
+
+* 2018-02-06 Emilia Leogrande ([PR#65](https://github.com/ilcsoft/ClicPerformance/pull/65))
+  - **fcc_steer.py**: Lorentz boost set to 0.015 rad [NB: to be used on pairs files only if those have been produced without crossing angle. If this is not the case, set the Lorentz boost to 0.0]
+  - **fccReconstruction.xml**: adjusted Overlay parameters to FCCee (number of BX, Delta_t, integration time windows per subdetector, number of events to overlay = 1 -- not Poissonian -- given that the gen files from GuineaPig contain 1 evt per file) and removed BeamCalReco (not available for FCCee yet)
+  - **CLICRecoConfig.h**: added two options for FCCee background overlay (91GeV, 365GeV)
+
+* 2018-02-06 Andre Sailer ([PR#64](https://github.com/ilcsoft/ClicPerformance/pull/64))
+  - Simulation: add Lorentz boost for the crossing angle to clic_steer.py
+
+* 2018-02-02 Andre Sailer ([PR#63](https://github.com/ilcsoft/ClicPerformance/pull/63))
+  - Reconstruction: add subClusterEnergyID to LumiCalReco and BeamCalReco
+
+* 2018-01-29 Andre Sailer ([PR#62](https://github.com/ilcsoft/ClicPerformance/pull/62))
+  - Use BeamCalReco for LumiCal reconstruction
+  - Merge Cluster collections and feed all to RecoMCTruthLiner
+  - Merge ReconstructedParticle collections and feed all o RecoMCTruthLinker
+  - Only gives physics particles to RecoMCTruthLinker
+  - Switch Tests to CLIC_o3_v14
+
+* 2018-01-18 Andre Sailer ([PR#60](https://github.com/ilcsoft/ClicPerformance/pull/60))
+  - Reconstruction: DST Files: add low energy Selected PFO collection
+  - Fix typo in LE_TightSelectedPandoraPFOs
+
+* 2017-12-21 Emilia Leogrande ([PR#59](https://github.com/ilcsoft/ClicPerformance/pull/59))
+  - Updated steering files clicReconstruction.xml and fccReconstruction.xml
+  - Single point resolutions in the tracker (inner and outer, barrel and endcap): 7um x 90um
+  - all layers except 1st inner tracker endcap: still 5um x 5um
+
+* 2017-12-12 Andre Sailer ([PR#57](https://github.com/ilcsoft/ClicPerformance/pull/57))
+  - Refactoring Config Processor: allow extending options via parameters, easier to add new options
+  - Add 380GeV BeamCalBackground file based on 380GeV L*=6m (http://clic-beam-beam.web.cern.ch/clic-beam-beam/380gev_l6_bx8mm.html)
+  - Waiting for ilcsoft/Marlin#28 to be deployed to optimize selection of processors, which makes the Config processor obsolete and command line arguments would would be `--constant....` instead of `--Config...`
+
+* 2017-12-07 Matthias ([PR#56](https://github.com/ilcsoft/ClicPerformance/pull/56))
+  - new calibration constants for detector model CLIC_o3_v13
+  - new photonlikelihood file, now derived in 12 instead of 9 energy bins
+  - CLIC specific compensation weights, extend range and tuning in energy and energy density. Weights are derived from a sum of single particle neutron and K0L events (ratio 1:1), energy points from 2 GeV up to 1000 GeV
+
+* 2017-12-07 Andre Sailer ([PR#55](https://github.com/ilcsoft/ClicPerformance/pull/55))
+  - CLIC Reconstruction:
+    - Add SiTracks_Refitted to DST Output, add LumiCal and BeamCal Cluster and RecoParticle to DST Output
+    - Note that BeamCalReconstruction output collections have changed names to be consistent with LumiCalOutput
+    - Add new options to ConformalTracking (iLCSoft/ConformalTracking#28, iLCSoft/ConformalTracking#29)
+    - add call for running vtune on reconstruction (only works in CERN intranet)
+       `ctest  -C PROF -R t_test_CLIC_o3_v13_reco_conformal_zuds_overlay_profile -V`
+
+* 2017-12-06 Oleksandr Viazlo ([PR#54](https://github.com/ilcsoft/ClicPerformance/pull/54))
+  - Pandora settings for FCC-ee detector (no software compensation)
+
+* 2017-12-05 Emilia Leogrande ([PR#50](https://github.com/ilcsoft/ClicPerformance/pull/50))
+  - `clicReconstruction.xml`: removed unused processor (`DDCellsAutomatonMV`)
+  - `fccReconstruction.xml`: new steering file for reconstruction with the FCCee detector (conformal tracking parameters are different than for CLIC)
+
+* 2017-12-04 Marko Petric ([PR#53](https://github.com/ilcsoft/ClicPerformance/pull/53))
+  - Update field stepping to Geant4 defaults
+
+* 2017-11-27 Emilia Leogrande ([PR#51](https://github.com/ilcsoft/ClicPerformance/pull/51))
+  - ClicEfficiencyCalculator: `perftree` copied from `TrackChecker` 
+  - `trueVertexR` info added
+  - innermost hit Radius added
+
+* 2017-11-08 Emilia Leogrande ([PR#49](https://github.com/ilcsoft/ClicPerformance/pull/49))
+  - ClicEfficiencyCalculator: fixed storing of track purity: now done with a std::list<std::pair<MCParticle*,double>>, which stores the MCParticle associated to the track and the track purity
+
+* 2017-11-08 Emilia Leogrande ([PR#48](https://github.com/ilcsoft/ClicPerformance/pull/48))
+  - ClicEfficiencyCalculator: added 'isSignal' flag for MCPhysicsParticles
+  - MCPhysicsParticles collection is the output of the Overlay Processor
+  - in case of no overlay, the MCParticle collection is used instead
+  - clicReconstruction.xml: MCPhysicsParticles collection as input
+
+* 2017-10-20 Emilia Leogrande ([PR#47](https://github.com/ilcsoft/ClicPerformance/pull/47))
+  - ClicEfficiencyCalculator: enabled simpleOutput tree (very important for efficiency plots)
+
+* 2017-10-18 Emilia Leogrande ([PR#45](https://github.com/ilcsoft/ClicPerformance/pull/45))
+  - ClicEfficiencyCalculator: updated ILDLike cuts to accept unique hits only, i.e. hits from different subdetector layers, as in the default NHits cuts
+
+* 2017-10-18 Andre Sailer ([PR#44](https://github.com/ilcsoft/ClicPerformance/pull/44))
+  - Updated Tests to CLIC_o3_v13
+  - Added tests running Z_uds events if EOS is available
+  - Added more tests running valgrind (memcheck and massif), only if enabled
+
+* 2017-10-13 Emilia Leogrande ([PR#43](https://github.com/ilcsoft/ClicPerformance/pull/43))
+  Updated parameters for Conformal Tracking in clicReconstruction.xml
+  - ThetaRange: from 0.03 to 0.05
+  - MinClustersOnTrack: from 6 to 4
+  - MaxChi2: from 50 to 100
+
+* 2017-10-06 Andre Sailer ([PR#42](https://github.com/ilcsoft/ClicPerformance/pull/42))
+  - Drop unused and no longer existing header includes AidaSoft/DD4hep#241
+
+* 2017-10-02 Emilia Leogrande ([PR#41](https://github.com/ilcsoft/ClicPerformance/pull/41))
+  - ClicEfficiencyCalculator: added min distance between MCParticles in the simplifiedEfficiencyTree output
+  - The distance is computed as the angular separation DeltaR = sqrt( DeltaEta^2 + DeltaPhi^2 )
+
+* 2017-09-15 Emilia Leogrande ([PR#40](https://github.com/ilcsoft/ClicPerformance/pull/40))
+  - Removed purity selection on reconstructed tracks to compute efficiency. This makes tracking efficiency independent on purity.
+  - Added purity info in simplifiedEfficiencyTree: can be used to cut offline on the purity.
+
+* 2017-09-14 Emilia Leogrande ([PR#39](https://github.com/ilcsoft/ClicPerformance/pull/39))
+  - TrackChecker: added MCParticle PDG info in checktree
+
+* 2017-08-31 Andre Sailer ([PR#38](https://github.com/ilcsoft/ClicPerformance/pull/38))
+  - CLICEfficiency/HitResiduals/TrackChecker: use streamlog instead of cout
+
+* 2017-08-25 Andre Sailer ([PR#37](https://github.com/ilcsoft/ClicPerformance/pull/37))
+  - HitResiduals: protect against missing trackstate
+  - HitResiduals: use AtIP instead of AtFirstHit
+  - Reconstruction: fix typo in parameter value for RefitFinal (inconsequential as using default value anyway)
+  - Reconstruction: use SiTracks_Refitted for HitResiduals and CLICEfficiencyCalculator
+
+* 2017-08-24 Emilia Leogrande ([PR#35](https://github.com/ilcsoft/ClicPerformance/pull/35))
+  * CLICRecoConfig: Updated Config for Tracking: Truth, ConformalPlusExtrapolator, Conformal
+
+* 2017-08-23 Matthias ([PR#36](https://github.com/ilcsoft/ClicPerformance/pull/36))
+  - Update in PandoraSettingsDefault, enable SoftwareCompensation, including new cleaning of clusters
+  - change calibration constants in clicReconstruction to reflect changes in new Pandora default settings as well as switch to model CLIC_o3_v13, effectively removing the MaxHCalHitHadronicEnergy cut, used to scale hot hadrons with the previous PandoraSettings
+  - newly adapted PhotonLikelihoodFile
+
+* 2017-08-22 Andre Sailer ([PR#34](https://github.com/ilcsoft/ClicPerformance/pull/34))
+  - Reco: add refit processor after the track reconstruction
+
+* 2017-08-21 Andre Sailer ([PR#33](https://github.com/ilcsoft/ClicPerformance/pull/33))
+  - Overlay processors now in a group to avoid duplicating parameters
+  - Add overlay parameters for 350, 420, 500, and 1.4TeV
+
+* 2017-07-24 Andre Sailer ([PR#32](https://github.com/ilcsoft/ClicPerformance/pull/32))
+  - Add processor printing out current event number
+  - overlay: add parameters for 380GeV
+  - overlay: change Number of BX to overlay to 30 fitting the time interval
+
 # v02-00-00
 
 * 2017-04-21 Andre Sailer ([PR#10](https://github.com/ilcsoft/CLICPerformance/pull/10))
