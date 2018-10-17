@@ -8,7 +8,8 @@ The flavour tagging analysis is based on the [LCFIPlus](https://github.com/lcfip
 
 ## Content and usage
 
-1. [vtx_makentp.xml](https://github.com/nachogargar/CLICPerformance/blob/add_flavtag_files/Flavour_tagging/vtx_makentp.xml): Steering file that performs the vertex reconstruction, the jet clustering and produce ntuples with the required information for the flavour-tagging training (impact parameters, vertex and jet properties).
+1. [vtx_makentp.xml](https://github.com/nachogargar/CLICPerformance/blob/add_flavtag_files/Flavour_tagging/vtx_makentp.xml): Steering file that performs the vertex reconstruction, the jet clustering and produce ntuples with the required information for the flavour-tagging training (impact parameters, vertex and jet properties). 
+- Update: vertex reconstruction is now included in main reconstruction steering file (clicConfig/clicReconstruction.xml). If using LCIO files produced with the new clicReconstruction.xml, comment the VertexFinder processor in vtx_makentp.xml.
 - **Input**: output LCIO file from [clicReconstruction.xml](https://github.com/iLCSoft/CLICPerformance/blob/master/examples/clicReconstruction.xml)
 - **Output**: 1. LCIO file with MCParticle, PandoraPFOs and Primary/Secondary Vertex information; 2. Ntuple ready for the training. *Repeat this step for each jet flavour (b, c and light flavour)*
 
