@@ -1629,6 +1629,12 @@
       BeamCalRecoParticles
       MergedRecoParticles
       MergedClusters
+      buVx
+      buVx_RP
+      buVx_V0
+      buVx_V0_RP
+      pVx
+      pVx_RP
     </parameter>
     <parameter name="LCIOWriteMode" type="string" value="WRITE_NEW"/>
     <parameter name="Verbosity" type="string">WARNING </parameter>
