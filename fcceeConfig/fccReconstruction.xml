@@ -768,7 +768,7 @@
     <!--Whether can form pfos from unmatched tracks that start at vertex-->
     <parameter name="UseUnmatchedVertexTracks" type="int">1 </parameter>
     <!--Track z0 cut used to determine whether track can be used to form pfo-->
-    <parameter name="Z0TrackCut" type="float">50 </parameter>
+    <parameter name="Z0TrackCut" type="float">200 </parameter>
     <!--z0 cut used to determine whether unmatched vertex track can form pfo-->
     <parameter name="Z0UnmatchedVertexTrackCut" type="float">5 </parameter>
     <!--Non vtx track z cut to determine whether track can be used to form pfo-->
@@ -780,7 +780,7 @@
     <!--Constant relating track curvature in b field to momentum-->
     <parameter name="CurvatureToMomentumFactor" type="float">0.00015 </parameter>
     <!--Track d0 cut used to determine whether track can be used to form pfo-->
-    <parameter name="D0TrackCut" type="float">50 </parameter>
+    <parameter name="D0TrackCut" type="float">200 </parameter>
     <!--d0 cut used to determine whether unmatched vertex track can form pfo-->
     <parameter name="D0UnmatchedVertexTrackCut" type="float">5 </parameter>
 
@@ -820,7 +820,7 @@
     <parameter name="TrackStateTolerance" type="float">0 </parameter>
 
     <!--Track cut on distance from BarrelTracker inner r to id whether track can form pfo-->
-    <parameter name="MaxBarrelTrackerInnerRDistance" type="float">50 </parameter>
+    <parameter name="MaxBarrelTrackerInnerRDistance" type="float">200 </parameter>
 
     <!--The minimum correction to on ecal hit in Pandora energy correction-->
     <parameter name="MinCleanCorrectedHitEnergy" type="float">0.1 </parameter>
