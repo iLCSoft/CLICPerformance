@@ -43,11 +43,14 @@ protected:
   const Choices m_overlayPossibleOptions{"False", "91GeV", "350GeV", "365GeV",  "380GeV", "420GeV", "500GeV", "1.4TeV", "3TeV"};
   // BeamCal
   const Choices m_beamcalPossibleOptions{"3TeV", "380GeV"};
+  // VertexUnconstrained
+  const Choices m_vertexUnconstrainedPossibleOptions{"ON","OFF"};
 
   std::vector<std::tuple<std::string, std::string, Choices>> m_allOptions =
     {{"Tracking", "Conformal", m_trackingPossibleOptions},
      {"BeamCal",  "3TeV", m_beamcalPossibleOptions},
-     {"Overlay",  "False", m_overlayPossibleOptions}};
+     {"Overlay",  "False", m_overlayPossibleOptions},
+     {"VertexUnconstrained", "OFF", m_vertexUnconstrainedPossibleOptions}};
 
 
 protected:

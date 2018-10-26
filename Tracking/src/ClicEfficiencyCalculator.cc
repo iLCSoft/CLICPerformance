@@ -613,7 +613,6 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     nReconstructable++;
     m_thetaPtMCParticle->Fill(mcTheta,mcPt);
     std::vector<TrackerHit*> trackHits = particleHits[particle];
-    int uniqueHits = getUniqueHits(trackHits,m_encoder);
     //int nHitsOnTrack(0);
 
     // Check if it was reconstructed
