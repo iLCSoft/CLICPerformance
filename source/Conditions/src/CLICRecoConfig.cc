@@ -39,6 +39,7 @@ void CLICRecoConfig::init() {
     checkOptions(choice, choices);
     for (auto& option: choices ) {
       m_options[name+option] = (choice == option);
+      m_options[name + "Not" + option] = (choice != option);
     }
   }
 
