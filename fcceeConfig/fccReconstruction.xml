@@ -46,22 +46,34 @@
     <processor name="MyDDMarlinPandora"/> 
     <processor name="LumiCalReco"/>
 
-    <!-- ========== vertexing  ========== -->
-    <processor name="VertexFinder"/>
-    <if condition="Config.VertexUnconstrainedON">
-      <processor name="VertexFinderUnconstrained"/>
-      <processor name="JetClusteringAndRefiner"/>
-    </if>
-
     <!-- ========== monitoring  ========== -->
     <processor name="MyClicEfficiencyCalculator"/>
     <processor name="MyRecoMCTruthLinker"/>
     <processor name="MyTrackChecker"/>
     <Xprocessor name="MyHitResiduals"/> <!-- please uncomment the use of this processor only if needed -->
 
-    <!-- ========== output  ========== -->
-
+    <!-- ========== PFO Selector  ========== -->
     <group name="PfoSelector" />
+
+    <!-- ========== vertexing and jet clustering========== -->
+
+    <if condition="Config.OverlayFalse">
+      <processor name="RenameCollection"/>
+    </if>
+
+    <if condition="Config.OverlayNotFalse">
+      <processor name="MyFastJetProcessor"/>
+    </if>
+
+    <processor name="VertexFinder"/>
+    <processor name="JetClusteringAndRefiner"/>
+
+    <if condition="Config.VertexUnconstrainedON">
+      <processor name="VertexFinderUnconstrained"/>
+    </if> 
+    
+
+    <!-- ========== output  ========== -->
 
     <processor name="Output_REC"/>
     <processor name="Output_DST"/>
@@ -1217,6 +1229,27 @@
 
   </group>
 
+  <!-- ========== Rename collection (to have same output collection name as FastJet ================================== -->
+
+  <processor name="RenameCollection" type="MergeCollections">
+    <parameter name="CollectionParameterIndex" type="int">0 </parameter>
+    <parameter name="InputCollectionIDs" type="IntVec"> </parameter>
+    <parameter name="InputCollections" type="StringVec"> PandoraPFOs </parameter>
+    <parameter name="OutputCollection" type="string"> PFOsFromJets </parameter>
+  </processor>
+
+  <!-- ========== Jet clustering for gg->hadrons removal ================================== -->
+  <processor name="MyFastJetProcessor" type="FastJetProcessor">
+    <parameter name="algorithm" type="StringVec"> ValenciaPlugin 1.2 1.0 0.7 </parameter>
+    <parameter name="clusteringMode" type="StringVec"> ExclusiveNJets 2 </parameter>
+    <parameter name="recombinationScheme" type="string">E_scheme </parameter>
+    <parameter name="recParticleIn" type="string" lcioInType="ReconstructedParticle"> TightSelectedPandoraPFOs </parameter>
+    <parameter name="jetOut" type="string" lcioOutType="ReconstructedParticle">JetsAfterGamGamRemoval </parameter>
+    <parameter name="storeParticlesInJets" type="boolean" > true </parameter>
+    <parameter name="recParticleOut" type="string" lcioOutType="ReconstructedParticle"> PFOsFromJets </parameter>
+  </processor>
+
+  <!-- ========== Vertexing for flavour tagging (constrained) and vertex resolutions (unconstrained) ================================== -->
   <group name="Vertexing">
     <parameter name="Algorithms" type="stringVec"> PrimaryVertexFinder BuildUpVertex </parameter>
     <parameter name="ReadSubdetectorEnergies" type="int" value="0"/> <!-- true for ILD -->
@@ -1224,7 +1257,6 @@
     <parameter name="TrackHitOrdering" type="int" value="2"/> <!-- Track hit ordering: 0=ILD-LOI (default), 1=ILD-DBD, 2=CLICdet -->
     <parameter name="PrintEventNumber" type="int" value="1"/> <!-- 0 for not printing event number, n for printing every n events -->
     <!-- specify input collection names -->
-    <parameter name="PFOCollection" type="string" value="PandoraPFOs" />
     <parameter name="UseMCP" type="int" value="0" /> <!-- MC info not used -->
     <parameter name="MCPCollection" type="string" value="MCParticle" />
     <parameter name="MCPFORelation" type="string" value="RecoMCTruthLink" />
@@ -1262,6 +1294,7 @@
     <!-- Primary and Secondary vertex finder ================================================ -->
     <processor name="VertexFinder" type="LcfiplusProcessor">
       <!-- run primary and secondary vertex finders -->
+      <parameter name="PFOCollection" type="string" value="PFOsFromJets" />
       <parameter name="PrimaryVertexCollectionName" type="string" value="pVx" />
       <parameter name="BuildUpVertexCollectionName" type="string" value="buVx" />
       <parameter name="BuildUpVertex.V0VertexCollectionName" type="string" value="buVx_V0" />
@@ -1269,13 +1302,14 @@
     </processor>
 
     <!-- Primary and Secondary vertex finder for resolutions ================================= --> 
-       <processor name="VertexFinderUnconstrained" type="LcfiplusProcessor">
-	 <!-- run primary and secondary vertex finders -->
-	 <parameter name="PrimaryVertexCollectionName" type="string" value="pVx_res" />
-	 <parameter name="BuildUpVertexCollectionName" type="string" value="buVx_res" />
-	 <parameter name="BuildUpVertex.V0VertexCollectionName" type="string" value="buVx_V0_res" />
-	 <parameter name="PrimaryVertexFinder.BeamspotConstraint" type="bool">0 </parameter>
-       </processor>
+    <processor name="VertexFinderUnconstrained" type="LcfiplusProcessor">
+      <!-- run primary and secondary vertex finders -->
+      <parameter name="PFOCollection" type="string" value="TightSelectedPandoraPFOs" />
+      <parameter name="PrimaryVertexCollectionName" type="string" value="pVx_res" />
+      <parameter name="BuildUpVertexCollectionName" type="string" value="buVx_res" />
+      <parameter name="BuildUpVertex.V0VertexCollectionName" type="string" value="buVx_V0_res" />
+      <parameter name="PrimaryVertexFinder.BeamspotConstraint" type="bool">0 </parameter>
+    </processor>
 
   </group>
 
@@ -1285,7 +1319,7 @@
     <parameter name="Algorithms" type="stringVec"> JetClustering JetVertexRefiner </parameter>
 
     <!-- general parameters -->
-    <parameter name="PFOCollection" type="string" value="PandoraPFOs" /> <!-- input PFO collection -->
+    <parameter name="PFOCollection" type="string" value="PFOsFromJets" /> <!-- input PFO collection -->
     <parameter name="UseMCP" type="int" value="0" /> <!-- MC info not used -->
     <parameter name="MCPCollection" type="string" value="MCParticle" />
     <parameter name="MCPFORelation" type="string" value="RecoMCTruthLink" />
@@ -1296,8 +1330,8 @@
     <parameter name="MagneticField" type="float" value="4.0"/> <!-- ILC and CLIC detectors have different values -->
 
     <!-- jet clustering parameters -->
-    <parameter name="JetClustering.InputVertexCollectionName" type="string" value="buVx_res" /> <!-- vertex collections to be used in JC -->
-    <parameter name="JetClustering.OutputJetCollectionName" type="stringVec" value="Vx_res" /> <!-- output collection name, may be multiple -->
+    <parameter name="JetClustering.InputVertexCollectionName" type="string" value="buVx" /> <!-- vertex collections to be used in JC -->
+    <parameter name="JetClustering.OutputJetCollectionName" type="stringVec" value="Vx" /> <!-- output collection name, may be multiple -->
     <parameter name="JetClustering.NJetsRequested" type="intVec" value="2" /> <!-- Multiple NJets can be specified -->
 
     <parameter name="JetClustering.YCut" type="doubleVec" value="0." /> <!-- specify 0 if not used -->
@@ -1312,12 +1346,12 @@
 
 
     <!-- vertex refiner parameters -->
-    <parameter name="JetVertexRefiner.InputJetCollectionName" type="string" value="Vx_res" />
-    <parameter name="JetVertexRefiner.OutputJetCollectionName" type="string" value="RefJets_res" />
-    <parameter name="JetVertexRefiner.PrimaryVertexCollectionName" type="string" value="pVx_res" />
-    <parameter name="JetVertexRefiner.InputVertexCollectionName" type="string" value="buVx_res" />
-    <parameter name="JetVertexRefiner.V0VertexCollectionName" type="string" value="buVx_V0_res" />
-    <parameter name="JetVertexRefiner.OutputVertexCollectionName" type="string" value="RefVx_res" />
+    <parameter name="JetVertexRefiner.InputJetCollectionName" type="string" value="Vx" />
+    <parameter name="JetVertexRefiner.OutputJetCollectionName" type="string" value="RefJets" />
+    <parameter name="JetVertexRefiner.PrimaryVertexCollectionName" type="string" value="pVx" />
+    <parameter name="JetVertexRefiner.InputVertexCollectionName" type="string" value="buVx" />
+    <parameter name="JetVertexRefiner.V0VertexCollectionName" type="string" value="buVx_V0" />
+    <parameter name="JetVertexRefiner.OutputVertexCollectionName" type="string" value="RefVx" />
     <parameter name="JetVertexRefiner.MinPosSingle" type="double" value="0.3" />
     <parameter name="JetVertexRefiner.MaxPosSingle" type="double" value="30." />
     <parameter name="JetVertexRefiner.MinEnergySingle" type="double" value="1." />
