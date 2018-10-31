@@ -80,7 +80,7 @@ ADD_TEST( NAME t_${test_name}
   COMMAND "run_test_lcgeo.sh"
   ddsim
   --compactFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
-  --runType=batch -G -N=100
+  --runType=batch --inputFile ../Tests/yyxyev_000.stdhep -N 2
   --outputFile=test${CLIC_DETECTOR_MODEL}.slcio
   --gun.isotrop=true
   --steeringFile=${CMAKE_CURRENT_SOURCE_DIR}/../clicConfig/clic_steer.py
@@ -95,10 +95,11 @@ ADD_TEST( NAME t_${test_name}
   --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
   --global.LCIOInputFiles=test${CLIC_DETECTOR_MODEL}.slcio clicReconstruction.xml
   --Config.Tracking=Truth
-  --global.MaxRecordNumber=4
+  --global.MaxRecordNumber=2
   --Output_REC.LCIOOutputFile=reco_truth_${CLIC_DETECTOR_MODEL}_rec.slcio
   --Output_DST.LCIOOutputFile=reco_truth_${CLIC_DETECTOR_MODEL}_dst.slcio
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../clicConfig/
+  CONFIGURATIONS TRUTH
   )
 SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error" )
 
@@ -110,29 +111,12 @@ ADD_TEST( NAME t_${test_name}
   --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
   --global.LCIOInputFiles=test${CLIC_DETECTOR_MODEL}.slcio clicReconstruction.xml
   --Config.Tracking=Conformal
-  --global.MaxRecordNumber=4
+  --global.MaxRecordNumber=2
   --Output_REC.LCIOOutputFile=reco_conformal_${CLIC_DETECTOR_MODEL}_rec.slcio
   --Output_DST.LCIOOutputFile=reco_conformal_${CLIC_DETECTOR_MODEL}_dst.slcio
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../clicConfig/
   )
 SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error" )
-
-SET( test_name "test_${CLIC_DETECTOR_MODEL}_reco_overlay" )
-ADD_TEST( NAME t_${test_name}
-  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/../Tests/bin/MarlinTests.sh
-  ${CMAKE_INSTALL_PREFIX}/lib/libClicPerformance.so  Marlin
-  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
-  --global.LCIOInputFiles=test${CLIC_DETECTOR_MODEL}.slcio clicReconstruction.xml
-  --Config.Tracking=Truth
-  --Config.Overlay=3TeV
-  --Overlay3TeV.BackgroundFileNames=test${CLIC_DETECTOR_MODEL}.slcio
-  --global.MaxRecordNumber=4
-  --Output_REC.LCIOOutputFile=reco_overlay_${CLIC_DETECTOR_MODEL}_rec.slcio
-  --Output_DST.LCIOOutputFile=reco_overlay_${CLIC_DETECTOR_MODEL}_dst.slcio
-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../clicConfig/
-  )
-SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error" )
-
 
 SET( test_name "test_${CLIC_DETECTOR_MODEL}_reco_real_overlay" )
 ADD_TEST( NAME t_${test_name}
@@ -436,7 +420,9 @@ SET(FCCee_DETECTOR_MODEL FCCee_o1_v02)
 SET( test_name "test_${FCCee_DETECTOR_MODEL}_sim" )
 ADD_TEST( NAME t_${test_name}
   COMMAND "run_test_lcgeo.sh"
-  ddsim --compactFile=$ENV{lcgeo_DIR}/FCCee/compact/${FCCee_DETECTOR_MODEL}/${FCCee_DETECTOR_MODEL}.xml --runType=batch -G -N=100 --outputFile=test${FCCee_DETECTOR_MODEL}.slcio --gun.isotrop=true --steeringFile=${CMAKE_CURRENT_SOURCE_DIR}/../fcceeConfig/fcc_steer.py
+  ddsim --compactFile=$ENV{lcgeo_DIR}/FCCee/compact/${FCCee_DETECTOR_MODEL}/${FCCee_DETECTOR_MODEL}.xml
+  --runType=batch --inputFiles ../Tests/yyxyev_000.stdhep -N 2
+  --outputFile=test${FCCee_DETECTOR_MODEL}.slcio --gun.isotrop=true --steeringFile=${CMAKE_CURRENT_SOURCE_DIR}/../fcceeConfig/fcc_steer.py
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../fcceeConfig/
   )
 SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;ERROR;Error" )
@@ -452,6 +438,7 @@ ADD_TEST( NAME t_${test_name}
   --Output_REC.LCIOOutputFile=reco_truth_rec.slcio
   --Output_DST.LCIOOutputFile=reco_truth_dst.slcio
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../fcceeConfig/
+  CONFIGURATIONS TRUTH
   )
 SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error" )
  
