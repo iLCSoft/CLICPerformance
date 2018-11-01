@@ -1647,6 +1647,7 @@
     <parameter name="PrintEventNumber" type="int" value="1"/> <!-- 0 for not printing event number, n for printing every n events -->
     <parameter name="MagneticField" type="float" value="4.0"/> <!-- ILC and CLIC detectors have different values -->
     <!-- jet clustering parameters -->
+    <parameter name="JetClustering.PrimaryVertexCollectionName" type="string" value="pVx" /> <!-- Needed for post 00.06.09 -->
     <parameter name="JetClustering.InputVertexCollectionName" type="string" value="buVx" /> <!-- vertex collections to be used in JC -->
     <parameter name="JetClustering.OutputJetCollectionName" type="stringVec" value="Vx" /> <!-- output collection name, may be multiple -->
     <parameter name="JetClustering.NJetsRequested" type="intVec" value="2" /> <!-- Multiple NJets can be specified -->
