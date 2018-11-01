@@ -1582,10 +1582,10 @@
     <parameter name="UseMCP" type="int" value="0" /> <!-- MC info not used -->
     <parameter name="MCPCollection" type="string" value="MCParticle" />
     <parameter name="MCPFORelation" type="string" value="RecoMCTruthLink" />
-    <parameter name="MagneticField" type="float" value="4.0"/> <!-- ILC and CLIC detectors have different values -->
-    <parameter name="BeamSizeX" type="float" value="639.E-6"/> <!-- XYZ need to be checked and corrected to CLIC values -->
-    <parameter name="BeamSizeY" type="float" value="5.7E-6"/>
-    <parameter name="BeamSizeZ" type="float" value="9.13E-2"/>
+    <parameter name="MagneticField" type="float" value="4.0"/> <!-- CLIC B field -->
+    <parameter name="BeamSizeX" type="float" value="40.E-6"/> <!-- CLIC beam sizes from CDR -->
+    <parameter name="BeamSizeY" type="float" value="1.0E-6"/>
+    <parameter name="BeamSizeZ" type="float" value="44E-3"/>
     <!-- parameters for primary vertex finder -->
     <parameter name="PrimaryVertexFinder.TrackMaxD0" type="double" value="20." />
     <parameter name="PrimaryVertexFinder.TrackMaxZ0" type="double" value="20." />
