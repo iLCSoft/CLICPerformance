@@ -65,6 +65,22 @@
   <parameter name="DrawDetectorID" type="int">0 </parameter>
   <!--draw a helix for PFO objects (usefull for Si tracker): 0: disabled, 1: enabled-->
   <parameter name="DrawHelixForPFOs" type="int">1 </parameter>
+  <!-- Color recunstructed particle by energy -->
+  <parameter name="ColorByEnergy" type="bool">true</parameter>
+  <!-- Minimal value for energy which will be represented as blue -->
+  <parameter name="ColorByEnergyMin" type="double">0.0</parameter>
+  <!-- Maximal value for energy which will be represented as red -->
+  <parameter name="ColorByEnergyMax" type="double">35.0</parameter>
+  <!-- Hue value that will be used to determine the pallete -->
+  <parameter name="ColorByEnergySaturation" type="double">1.0</parameter>
+  <!-- Brigtness value that will be used to determine the pallete -->
+  <parameter name="ColorByEnergyBrightness" type="double">1.0</parameter>
+  <!-- Automatically adjust event by event the blue to min energy and red to max energy of event -->
+  <parameter name="ColorByEnergyAutoColor" type="bool">true</parameter>
+  <!-- Scale line thickness of drawn helixes, usefull for image dumps -->
+  <parameter name="ScaleLineThickness" type="double">12</parameter>
+  <!-- Scale marker size of cluster markers, usefull for image dumps -->
+  <parameter name="ScaleMarkerSize" type="double">1</parameter>
   <!--draw a helix for Track objects: -1: none, 0: default, 1: atIP, 2: atFirstHit, 3: atLastHit, 4: atCalorimeter-->
   <parameter name="DrawHelixForTrack" type="int">0 </parameter>
   <!--Max R (mm) Extent for drawing Helix if UseTPCForLimitsOfHelix false-->

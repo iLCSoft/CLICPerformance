@@ -220,7 +220,7 @@
     </detectors>
     
     <detectors>
-        <detector id="DetID_IT_Endcap" name="InnerTrackerEndcap" type="TrackerEndcap_o1_v02" readout="InnerTrackerEndcapCollection" reflect="true">
+        <detector id="DetID_IT_Endcap" name="InnerTrackerEndcap" type="TrackerEndcap_o1_v02" readout="InnerTrackerEndcapCollection" reflect="true" vis="OTVis">
             <envelope vis="OTVis">
                 <shape type="Assembly"/>
             </envelope>
