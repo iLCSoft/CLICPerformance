@@ -207,7 +207,7 @@
     
     
     <display>
-        <vis name="VXDVis"   alpha="1.0" r="0.20" g="0.20"  b="0.2"  showDaughters="true"  visible="true"/>
+        <vis name="VXDVis"   alpha="1.0" r="0.96" g="0.42"  b="0.13"  showDaughters="true"  visible="true"/>
         <vis name="OTVis"    alpha="1.0" r="0.90" g="0.80"  b="0.0"  showDaughters="true"  visible="true"/>
         <vis name="ECALVis"  alpha="1.0" r="0.00" g="0.50"  b="0.05" showDaughters="true"  visible="true"/>
         <vis name="SOLVis"   alpha="1.0" r="0.75" g="0.73"  b="0.70" showDaughters="true"  visible="true"/>
@@ -220,12 +220,9 @@
     
     <include ref="Materials_v01.xml"/>
     
-    <include ref="Beampipe_o1_v01_01.xml"/>
-    
-    <include ref="Vertex_o2_v02_01.xml"/>
+    <include ref="Vertex_o2_v06_01.xml"/>
     
     <include ref="InnerTracker_o2_v01_01.xml"/>
-    <!--include ref="OuterTracker_o2_v01_01.xml"/-->
     
     <include ref="ECalBarrel_o2_v01_01.xml"/>
     <include ref="ECalEndcap_o2_v01_01.xml"/>
@@ -251,8 +248,8 @@
         <field name="GlobalSolenoid" type="solenoid"
             inner_field="4.0*tesla"
             outer_field="-1.5*tesla"
-            zmax="SolenoidCoilOuterZ"
-            outer_radius="SolenoidalFieldRadius">
+            zmax="Solenoid_Coil_half_length"
+            outer_radius="Solenoid_Coil_radius">
         </field>
     </fields>
 </lccdd>

@@ -1,72 +1,66 @@
 <lccdd>
-    
-    
     <define>
-        <constant name="SolenoidBarrelInnerRadius" value="Solenoid_inner_radius"/>
-        
-        <constant name="SolenoidBarrelInnerCryostatThickness" value="3.0*cm"/>
-        <constant name="SolenoidBarrelInnerAirgapThickness" value="11.0*cm"/>
-        <constant name="SolenoidBarrelAlConductorThickness" value="38.4*cm"/>
-        <constant name="SolenoidBarrelQuenchbackThickness" value="5.0*cm"/>
-        <constant name="SolenoidBarrelOuterAirgapThickness" value="18.7*cm"/>
-        <constant name="SolenoidBarrelOuterCryostatThickness" value="4.0*cm"/>
-        <constant name="SolenoidEndcapCryostatThickness" value="6.0*cm"/>
-        <constant name="SolenoidEndcapAirgapThickness" value="12.0*cm"/>
-        <constant name="SolenoidBarrelOuterZ" value="Solenoid_half_length"/>
-        <constant name="SolenoidCoilOuterZ" value="SolenoidBarrelOuterZ- SolenoidEndcapAirgapThickness"/>
-        <constant name="SolenoidBarrelConductorInnerRadius" value="SolenoidBarrelInnerRadius + SolenoidBarrelInnerCryostatThickness + SolenoidBarrelInnerAirgapThickness"/>
-        <constant name="SolenoidBarrelOuterCryostatInnerRadius" value="SolenoidBarrelConductorInnerRadius + SolenoidBarrelAlConductorThickness + SolenoidBarrelQuenchbackThickness"/>
-        <constant name="SolenoidBarrelOuterRadius" value="SolenoidBarrelOuterCryostatInnerRadius + SolenoidBarrelOuterAirgapThickness + SolenoidBarrelOuterCryostatThickness"/>
-        <constant name="SolenoidalFieldRadius" value="(SolenoidBarrelConductorInnerRadius + SolenoidBarrelAlConductorThickness / 2.0)"/>
+        <constant name="SolenoidVacuumTank_thickness" value="40*mm"/>
+        <constant name="SolenoidCoil_thickness" value="344*mm"/>
     </define>
-    
-    
     <display>
         <vis name="SolenoidBarrelLayerVis" alpha="1" r="0"    g="0.3"  b="0.3" showDaughters="false" visible="true"/>
         <vis name="SolenoidCoilEndsVis"    alpha="1" r="0"    g="0.9"  b="0.9" showDaughters="false" visible="true"/>
-        <vis name="AntiSolenoidVis"        alpha="1" r="0.3"  g="1"    b="1"   showDaughters="false" visible="true"/>
+        <vis name="SolenoidVacuum"         alpha="0" r="1"    g="1"    b="1"   showDaughters="false" visible="true"/>
     </display>
-    
-    
-    
+
+    <comment>Solenoid</comment>
+    <detectors>
+        <detector name="Solenoid" type="DD4hep_SubdetectorAssembly" vis="SOLVis">
+            <shape type="Tube" rmin="Solenoid_inner_radius-2*env_safety" rmax="Solenoid_outer_radius+2*env_safety" dz="Solenoid_half_length+2*env_safety" material="Vacuum"/>
+            <composite name="SolenoidBarrel"/>
+            <composite name="SolenoidEndcaps"/>
+        </detector>
+    </detectors>
+
     <detectors>
         
-        <detector name="Solenoid" type="Solenoid_o1_v01" id="0" insideTrackingVolume="false" reflect="true" vis="SOLVis" >
-            
-            
+        <detector name="SolenoidBarrel" type="DD4hep_Solenoid_o1_v01" id="0" reflect="true">
+            <type_flags type=" DetType_COIL"/>
             <envelope vis="SOLVis">
-                <shape type="Tube" rmin="Solenoid_inner_radius-2*env_safety" rmax="Solenoid_outer_radius+2*env_safety" dz="Solenoid_half_length+2*env_safety" material="Air"/>
+                <shape type="Assembly"/>
             </envelope>
             
-            <!-- only needed if we decide to pass these to reco structure -->
-            <!--<dimensions rmin="Solenoid_inner_radius" z="SolenoidBarrelOuterZ"/> -->
-            
-            
-            <layer id="1" inner_r="SolenoidBarrelInnerRadius" outer_z="SolenoidBarrelOuterZ" vis="SolenoidBarrelLayerVis">
-                <slice material="Steel235" thickness="SolenoidBarrelInnerCryostatThickness" />
-                <slice material="Vacuum"   thickness="SolenoidBarrelInnerAirgapThickness" />
+            <layer id="1" inner_r="Solenoid_inner_radius" outer_z="Solenoid_half_length" vis="SOLVis">
+                <slice material="Steel235" thickness="SolenoidVacuumTank_thickness" vis="SOLVis"/>
             </layer>
-            <layer id="2" inner_r="SolenoidBarrelConductorInnerRadius" outer_z="SolenoidCoilOuterZ" vis="SolenoidBarrelLayerVis">
-                <slice material="Aluminum" thickness="SolenoidBarrelAlConductorThickness" />
-                <slice material="Aluminum" thickness="SolenoidBarrelQuenchbackThickness" />
+
+            <layer id="3" inner_r="Solenoid_outer_radius-SolenoidVacuumTank_thickness" outer_z="Solenoid_half_length" vis="SOLVis">
+                <slice material="Steel235" thickness="SolenoidVacuumTank_thickness"/>
             </layer>
-            <layer id="3" inner_r="SolenoidBarrelOuterCryostatInnerRadius" outer_z="SolenoidBarrelOuterZ" vis="SolenoidBarrelLayerVis">
-                <slice material="Vacuum"   thickness="SolenoidBarrelOuterAirgapThickness" />
-                <slice material="Steel235" thickness="SolenoidBarrelOuterCryostatThickness" />
-            </layer>
-            
-            
         </detector>
-        
+
+        <detector name="SolenoidBarrel2" type="DD4hep_Solenoid_o1_v01" id="0" reflect="true">
+            <type_flags type=" DetType_COIL"/>
+            <envelope vis="SOLVis2">
+                <shape type="Assembly"/>
+            </envelope>
+            <layer id="2" inner_r="Solenoid_Coil_radius-SolenoidCoil_thickness/2.0" outer_z="Solenoid_Coil_half_length" vis="SOLVis2">
+                <slice material="Steel235" thickness="SolenoidCoil_thickness" vis="SOLVis2"/>
+            </layer>
+
+        </detector>
+
+        <detector id="0" name="SolenoidBarrel3" type="TrackerEndcap_o1_v02" readout="InnerTrackerEndcapCollection" reflect="true" vis="SOLVis">
+            <envelope vis="SOLVis">
+                <shape type="Assembly"/>
+            </envelope>
+            <comment>Silicon Outer Tracker Endcaps</comment>
+            
+            <module name="Module0" vis="InnerTrackerModuleVis">
+		<trd x1="1*m" x2="1*m" z="(Solenoid_outer_radius-Solenoid_inner_radius-2*SolenoidVacuumTank_thickness)/2.0" />
+                <module_component thickness="SolenoidVacuumTank_thickness"   material="Copper" />
+            </module>
+            
+            <layer id="0">
+                <ring r="Solenoid_inner_radius+(Solenoid_outer_radius-Solenoid_inner_radius)/2.0" zstart="Solenoid_half_length-SolenoidVacuumTank_thickness" nmodules="36" dz="1.75*mm" module="Module0" />
+            </layer>
+        </detector>
     </detectors>
-    
-
-    
-    
-    
-    
-    
-    
 </lccdd>
-
 
