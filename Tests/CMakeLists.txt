@@ -416,7 +416,7 @@ SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES
   TIMEOUT 300000
   )
 
-SET(FCCee_DETECTOR_MODEL FCCee_o1_v02)
+SET(FCCee_DETECTOR_MODEL FCCee_o1_v04)
 SET( test_name "test_${FCCee_DETECTOR_MODEL}_sim" )
 ADD_TEST( NAME t_${test_name}
   COMMAND "run_test_lcgeo.sh"

@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <marlin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ilcsoft.desy.de/marlin/marlin.xsd">
+
+  <constants>
+    <!-- CalorimeterIntegrationTimeWindow in ns: 10 or 400 -->
+    <constant name="CalorimeterIntegrationTimeWindow"> 10 </constant>
+  </constants>
+
   <execute>
 
     <!-- ========== setup  ========== -->
@@ -41,9 +47,9 @@
     <processor name="Refit" />
 
     <!-- === calorimeter digitization and pandora reco === -->
-    <processor name="MyDDCaloDigi"/>
+    <processor name="MyDDCaloDigi_${CalorimeterIntegrationTimeWindow}ns"/>
     <processor name="MyDDSimpleMuonDigi"/> 
-    <processor name="MyDDMarlinPandora"/> 
+    <processor name="MyDDMarlinPandora_${CalorimeterIntegrationTimeWindow}ns"/> 
     <processor name="LumiCalReco"/>
 
     <!-- ========== monitoring  ========== -->
@@ -99,7 +105,7 @@
     <!--Name of the DD4hep compact xml file to load-->
     <parameter name="EncodingStringParameter"> GlobalTrackerReadoutID </parameter>
     <parameter name="DD4hepXMLFile" type="string">
-      /cvmfs/clicdp.cern.ch/iLCSoft/builds/nightly/x86_64-slc6-gcc62-opt/lcgeo/HEAD/FCCee/compact/FCCee_o1_v02/FCCee_o1_v02.xml
+      /cvmfs/clicdp.cern.ch/iLCSoft/builds/nightly/x86_64-slc6-gcc62-opt/lcgeo/HEAD/FCCee/compact/FCCee_o1_v04/FCCee_o1_v04.xml
     </parameter>
   </processor>
 
@@ -180,30 +186,6 @@
       <!--Number of bunches in a bunch train-->
       <parameter name="NBunchtrain" type="int" value="3"/>
       <!--Integration time per subdetector: at the moment 10us (from ALICE?) - 3369ns (Physics is at 1st BX) -->
-      <parameter name="Collection_IntegrationTimes" type="StringVec" >
-	VertexBarrelCollection        6631
-	VertexEndcapCollection        6631
-
-	InnerTrackerBarrelCollection  6631
-	InnerTrackerEndcapCollection  6631
-
-	OuterTrackerBarrelCollection  6631
-	OuterTrackerEndcapCollection  6631
-
-	ECalBarrelCollection          6631
-	ECalEndcapCollection          6631
-	ECalPlugCollection            6631
-
-	HCalBarrelCollection          6631
-	HCalEndcapCollection          6631
-	HCalRingCollection            6631
-
-	YokeBarrelCollection          6631
-	YokeEndcapCollection          6631
-
-	LumiCalCollection             6631
-	BeamCalCollection             6631
-      </parameter>
       <parameter name="NumberBackground" type="float" value="1."/>
     </processor>
   </group>
@@ -528,8 +510,7 @@
     <parameter name="Verbosity" type="string"> MESSAGE </parameter>
   </processor>
 
-
-  <processor name="MyDDCaloDigi" type="DDCaloDigi">
+  <group name="MyDDCaloDigi">
     <!--Performs simple digitization of sim calo hits...-->
 
     <!--Hit times histograms-->
@@ -542,9 +523,7 @@
     <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
     <!--parameter name="Verbosity" type="string">DEBUG </parameter-->
 
-
     <!-- ECAL -->
-
     <!--ECAL Collection Names-->
     <parameter name="ECALCollections" type="StringVec" lcioInType="SimCalorimeterHit">ECalBarrelCollection ECalEndcapCollection ECalPlugCollection </parameter>
     <!--ECAL Collection of real Hits-->
@@ -564,14 +543,10 @@
 
     <!--calibration to convert ECAL deposited energy to MIPs-->
     <parameter name="CalibECALMIP" type="float">0.0001 </parameter>
-    <!--Calibration coefficients for ECAL-->
-    <parameter name="CalibrECAL" type="FloatVec">37.5227197175 37.5227197175</parameter>
     <!--Threshold for ECAL Hits in GeV-->
     <parameter name="ECALThreshold" type="float">5e-05 </parameter>
     <!--Unit for ECAL Threshold. Can be "GeV", "MIP" or "px". MIP and px need properly set calibration constants-->
     <parameter name="ECALThresholdUnit" type="string">GeV </parameter>
-    <!--Energy correction for ECAL endcap-->
-    <parameter name="ECALEndcapCorrectionFactor" type="float">1.03245503522</parameter>
     <!--Correct for ECAL gaps-->
     <parameter name="ECALGapCorrection" type="int">1 </parameter>
     <!--Factor applied to gap correction-->
@@ -614,10 +589,6 @@
     <parameter name="ECALCorrectTimesForPropagation" type="int">1 </parameter>
     <!--ECAL Time Window minimum time in ns-->
     <parameter name="ECALTimeWindowMin" type="float">-1 </parameter>
-    <!--ECAL BarrelTime Window maximum time in ns-->
-    <parameter name="ECALBarrelTimeWindowMax" type="float">10 </parameter>
-    <!--ECAL Endcap Time Window maximum time in ns-->
-    <parameter name="ECALEndcapTimeWindowMax" type="float">10 </parameter>
     <!--Use simple time window cut on hit times? If false: use original hit-time clustering algorithm. If true: use time window defined by ECALBarrelTimeWindowMin and ECALBarrelTimeWindowMax-->
     <parameter name="ECALSimpleTimingCut" type="bool">true </parameter>
     <!--ECAL Minimum Delta Time in ns for resolving two hits--> <!-- used only if ECALSimpleTimingCut is false -->
@@ -625,9 +596,7 @@
     <!--ECAL Time Resolution used to smear hit times-->
     <parameter name="ECALTimeResolution" type="float">10 </parameter>
 
-
     <!-- HCAL -->
-    
     <!--HCAL Collection Names-->
     <parameter name="HCALCollections" type="StringVec" lcioInType="SimCalorimeterHit">HCalBarrelCollection HCalEndcapCollection HCalRingCollection </parameter>
     <!--HCAL Collection of real Hits-->
@@ -643,12 +612,6 @@
 
     <!--calibration to convert HCAL deposited energy to MIPs-->
     <parameter name="CalibHCALMIP" type="float">0.0001 </parameter>
-    <!--Calibration coefficients for Barrel HCAL-->
-    <parameter name="CalibrHCALBarrel" type="FloatVec">45.9956826061</parameter>
-    <!--Calibration coefficients for EndCap HCAL-->
-    <parameter name="CalibrHCALEndcap" type="FloatVec">46.9252540291</parameter>
-    <!--Calibration coefficients for Other (Ring) HCAL-->
-    <parameter name="CalibrHCALOther" type="FloatVec">57.4588011802</parameter>
     <!--Threshold for HCAL Hits in GeV-->
     <parameter name="HCALThreshold" type="FloatVec">0.00025  </parameter>
     <!--Unit for HCAL Threshold. Can be "GeV", "MIP" or "px". MIP and px need properly set calibration constants-->
@@ -691,10 +654,6 @@
     <parameter name="HCALCorrectTimesForPropagation" type="int">1 </parameter>
     <!--HCAL Time Window minimum time in ns-->
     <parameter name="HCALTimeWindowMin" type="float">-1 </parameter>
-    <!--HCAL Time Window maximum time in ns-->
-    <parameter name="HCALBarrelTimeWindowMax" type="float">10 </parameter>
-    <!--HCAL Time Window maximum time in ns-->
-    <parameter name="HCALEndcapTimeWindowMax" type="float">10 </parameter>
     <!--Use simple time window cut on hit times? If false: use original hit-time clustering algorithm. If true: use time window defined by HCALBarrelTimeWindowMin and HCALBarrelTimeWindowMax-->
     <parameter name="HCALSimpleTimingCut" type="bool">true </parameter>
     <!--HCAL Minimum Delta Time in ns for resolving two hits--> <!-- used only if HCALSimpleTimingCut is false --> 
@@ -702,13 +661,54 @@
     <!--HCAL Time Resolution used to smear hit times-->
     <parameter name="HCALTimeResolution" type="float">10 </parameter>
 
-  </processor>
+    <processor name="MyDDCaloDigi_10ns" type="DDCaloDigi">
+      <!--Calibration coefficients for ECAL-->
+      <parameter name="CalibrECAL" type="FloatVec">37.5227197175 37.5227197175</parameter>
+      <!--Energy correction for ECAL endcap-->
+      <parameter name="ECALEndcapCorrectionFactor" type="float">1.03245503522</parameter>
+      <!--ECAL BarrelTime Window maximum time in ns-->
+      <parameter name="ECALBarrelTimeWindowMax" type="float"> 10 </parameter>
+      <!--ECAL Endcap Time Window maximum time in ns-->
+      <parameter name="ECALEndcapTimeWindowMax" type="float"> 10 </parameter>
 
+      <!--Calibration coefficients for Barrel HCAL-->
+      <parameter name="CalibrHCALBarrel" type="FloatVec">45.9956826061</parameter>
+      <!--Calibration coefficients for EndCap HCAL-->
+      <parameter name="CalibrHCALEndcap" type="FloatVec">46.9252540291</parameter>
+      <!--Calibration coefficients for Other (Ring) HCAL-->
+      <parameter name="CalibrHCALOther" type="FloatVec">57.4588011802</parameter>
+      <!--HCAL Time Window maximum time in ns-->
+      <parameter name="HCALBarrelTimeWindowMax" type="float"> 10 </parameter>
+      <!--HCAL Time Window maximum time in ns-->
+      <parameter name="HCALEndcapTimeWindowMax" type="float"> 10 </parameter>
+    </processor>
 
+    <processor name="MyDDCaloDigi_400ns" type="DDCaloDigi">
+      <!--Calibration coefficients for ECAL-->
+      <parameter name="CalibrECAL" type="FloatVec">37.4591745147 37.4591745147</parameter>
+      <!--Energy correction for ECAL endcap-->
+      <parameter name="ECALEndcapCorrectionFactor" type="float">1.01463983425</parameter>
+      <!--ECAL BarrelTime Window maximum time in ns-->
+      <parameter name="ECALBarrelTimeWindowMax" type="float"> 400 </parameter>
+      <!--ECAL Endcap Time Window maximum time in ns-->
+      <parameter name="ECALEndcapTimeWindowMax" type="float"> 400 </parameter>
 
-  <processor name="MyDDMarlinPandora" type="DDPandoraPFANewProcessor">
-    <parameter name="PandoraSettingsXmlFile" type="String"> PandoraSettingsFCCee/PandoraSettingsDefault.xml </parameter>
-    <parameter name="SoftwareCompensationWeights" type="FloatVec">2.40821 -0.0515852 0.000711414 -0.0254891 -0.0121505 -1.63084e-05 0.062149 0.0690735 -0.223064</parameter>
+      <!--Calibration coefficients for Barrel HCAL-->
+      <parameter name="CalibrHCALBarrel" type="FloatVec">42.544403752</parameter>
+      <!--Calibration coefficients for EndCap HCAL-->
+      <parameter name="CalibrHCALEndcap" type="FloatVec">42.9667604345</parameter>
+      <!--Calibration coefficients for Other (Ring) HCAL-->
+      <parameter name="CalibrHCALOther" type="FloatVec">51.3503963688</parameter>
+      <!--HCAL Time Window maximum time in ns-->
+      <parameter name="HCALBarrelTimeWindowMax" type="float"> 400 </parameter>
+      <!--HCAL Time Window maximum time in ns-->
+      <parameter name="HCALEndcapTimeWindowMax" type="float"> 400 </parameter>
+    </processor>
+
+  </group>
+
+  <group name="MyDDMarlinPandora">
+
     <parameter name="FinalEnergyDensityBin" type="float">110.</parameter>
     <parameter name="MaxClusterEnergyToApplySoftComp" type="float">200.</parameter>
     <!-- Collection names -->
@@ -727,19 +727,6 @@
     <parameter name="V0VertexCollections" type="StringVec">V0Vertices</parameter>
     <parameter name="ClusterCollectionName" type="String">PandoraClusters</parameter>
     <parameter name="PFOCollectionName" type="String">PandoraPFOs</parameter>
-    <!-- Calibration constants -->
-    <parameter name="ECalToMipCalibration" type="float">175.439</parameter>
-    <parameter name="HCalToMipCalibration" type="float">45.6621</parameter>
-    <parameter name="ECalMipThreshold" type="float">0.5</parameter>
-    <parameter name="HCalMipThreshold" type="float">0.3</parameter>
-    <parameter name="ECalToEMGeVCalibration" type="float">1.01776966108</parameter>
-    <parameter name="HCalToEMGeVCalibration" type="float">1.01776966108</parameter>
-    <parameter name="ECalToHadGeVCalibrationBarrel" type="float">1.11490774181</parameter>
-    <parameter name="ECalToHadGeVCalibrationEndCap" type="float">1.11490774181</parameter>
-    <parameter name="HCalToHadGeVCalibration" type="float">1.00565042407</parameter>
-    <parameter name="MuonToMipCalibration" type="float">20703.9</parameter>
-    <parameter name="DigitalMuonHits" type="int">0</parameter>
-    <parameter name="MaxHCalHitHadronicEnergy" type="float">10000000.</parameter>
     <!--Whether to calculate track states manually, rather than copy stored fitter values-->
     <parameter name="UseOldTrackStateCalculation" type="int">0 </parameter>
     <parameter name="NEventsToSkip" type="int">0</parameter>
@@ -891,7 +878,43 @@
     <!--To use strip splitting algorithm, this should be true-->
     <parameter name="StripSplittingOn" type="int">0 </parameter>
 
-  </processor>
+    <processor name="MyDDMarlinPandora_10ns" type="DDPandoraPFANewProcessor">
+      <parameter name="PandoraSettingsXmlFile" type="String"> PandoraSettingsFCCee/PandoraSettingsDefault.xml </parameter>
+      <parameter name="SoftwareCompensationWeights" type="FloatVec">2.40821 -0.0515852 0.000711414 -0.0254891 -0.0121505 -1.63084e-05 0.062149 0.0690735 -0.223064</parameter>
+      <!-- Calibration constants -->
+      <parameter name="ECalToMipCalibration" type="float">175.439</parameter>
+      <parameter name="HCalToMipCalibration" type="float">45.6621</parameter>
+      <parameter name="ECalMipThreshold" type="float">0.5</parameter>
+      <parameter name="HCalMipThreshold" type="float">0.3</parameter>
+      <parameter name="ECalToEMGeVCalibration" type="float">1.01776966108</parameter>
+      <parameter name="HCalToEMGeVCalibration" type="float">1.01776966108</parameter>
+      <parameter name="ECalToHadGeVCalibrationBarrel" type="float">1.11490774181</parameter>
+      <parameter name="ECalToHadGeVCalibrationEndCap" type="float">1.11490774181</parameter>
+      <parameter name="HCalToHadGeVCalibration" type="float">1.00565042407</parameter>
+      <parameter name="MuonToMipCalibration" type="float">20703.9</parameter>
+      <parameter name="DigitalMuonHits" type="int">0</parameter>
+      <parameter name="MaxHCalHitHadronicEnergy" type="float">10000000.</parameter>
+    </processor>
+
+    <processor name="MyDDMarlinPandora_400ns" type="DDPandoraPFANewProcessor">
+      <parameter name="PandoraSettingsXmlFile" type="String"> PandoraSettingsFCCee/PandoraSettingsDefault_400nsCalTimeWindow.xml </parameter>
+      <parameter name="SoftwareCompensationWeights" type="FloatVec">2.43375 -0.0430951 0.000244914 -0.145478 -0.00044577 -8.37222e-05 0.237484 0.243491 -0.0713701</parameter>
+      <!-- Calibration constants -->
+      <parameter name="ECalToMipCalibration" type="float">175.439</parameter>
+      <parameter name="HCalToMipCalibration" type="float">49.7512</parameter>
+      <parameter name="ECalMipThreshold" type="float">0.5</parameter>
+      <parameter name="HCalMipThreshold" type="float">0.3</parameter>
+      <parameter name="ECalToEMGeVCalibration" type="float">1.02513816926</parameter>
+      <parameter name="HCalToEMGeVCalibration" type="float">1.02513816926</parameter>
+      <parameter name="ECalToHadGeVCalibrationBarrel" type="float">1.07276660331</parameter>
+      <parameter name="ECalToHadGeVCalibrationEndCap" type="float">1.07276660331</parameter>
+      <parameter name="HCalToHadGeVCalibration" type="float">1.01147686143</parameter>
+      <parameter name="MuonToMipCalibration" type="float">20703.9</parameter>
+      <parameter name="DigitalMuonHits" type="int">0</parameter>
+      <parameter name="MaxHCalHitHadronicEnergy" type="float">10000000.</parameter>
+    </processor>
+
+  </group>
 
   <processor name="MyDDSimpleMuonDigi" type="DDSimpleMuonDigi">
     <!--Performs simple digitization of sim calo hits...-->
