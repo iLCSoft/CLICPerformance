@@ -1,3 +1,54 @@
+# v02-02
+
+* 2018-11-14 Marko Petric ([PR#103](https://github.com/ilcsoft/ClicPerformance/pull/103))
+  - Changes to colour and layout of the visualization model
+
+* 2018-11-06 Marko Petric ([PR#102](https://github.com/ilcsoft/ClicPerformance/pull/102))
+  - Enable energy coloring in visualization in CLIC visualization template and use new colors for the event display
+
+* 2018-11-01 Emilia Leogrande ([PR#101](https://github.com/ilcsoft/ClicPerformance/pull/101))
+  - CLIC: beam sizes from CDR
+  - FCCee: beam sizes from FCC Week 2018
+
+* 2018-11-01 Andre Sailer ([PR#100](https://github.com/ilcsoft/ClicPerformance/pull/100))
+  - ClicReconstruction::Vertexing add JetClustering.PrimaryVertexCollectionName parameter
+  - CI: simulate and reconstruct some real events
+  - CI: move truth tracking reconstruction to TRUTH configuration
+  - CI: remove overlay test as we don't have an overlay file at the moment
+
+* 2018-10-31 Emilia Leogrande ([PR#99](https://github.com/ilcsoft/ClicPerformance/pull/99))
+  * ClicReconstruction: Setup for running the vertexing and jet clustering
+    - Prior to vertexing, FastJet is run in case of overlay. Without overlay, dummy MergeCollections is used to shallow copy the PandoraPFOs collection and have the same output collection name as in case of overlay
+    - VertexFinder and JetClusteringAndRefiner are run
+    - if VertexUnconstrainedOn, also unconstrained vertex finder is run (for vertex resolutions)
+
+* 2018-10-31 Andre Sailer ([PR#98](https://github.com/ilcsoft/ClicPerformance/pull/98))
+  -  ClicRecoConfig: add Not + option with negative condition,  'Config.OverlayNotFalse' which would be true if the choice is not False (3TeV, etc
+
+* 2018-10-31 Andre Sailer ([PR#95](https://github.com/ilcsoft/ClicPerformance/pull/95))
+  - CI: added -Werror flag to CI compilation
+
+* 2018-10-26 Emilia Leogrande ([PR#97](https://github.com/ilcsoft/ClicPerformance/pull/97))
+  - Two vertexFinder processors defined in a group, one for flavour tagging (beamSpotConstraint = 1), one for vertex resolution (beamSpotConstraint = 0)
+  - Option 'VertexUnconstrained' in CLICRecoConfig, to enable the vertexFinderUnconstrained and the JetClustering. Default is OFF. The vertexFinder constrained is always enabled
+  - Same updates in clicReconstruction.xml and fccReconstruction.xml
+  - Changed LumiCalReco verbosity (from DEBUG0 to WARNING)
+  - Removed unused variable uniqueHits in ClicEfficiencyCalculator.cc
+  - Added 'deg' units in clic_steer.py and fcc_steer.py
+  - Added folder vtxprob/ in Flavour_tagging. Needed to run the makeNtuple
+
+* 2018-10-25 Oleksandr Viazlo ([PR#96](https://github.com/ilcsoft/ClicPerformance/pull/96))
+  - FCCee reconstruction: update track selection cuts (d0, z0, hit radius) to 200mm
+
+* 2018-10-23 Andre Sailer ([PR#93](https://github.com/ilcsoft/ClicPerformance/pull/93))
+  - ClicReco: PandoraPFA: update z0, d0, MaxBarrelTrackerInnerRDistance track cuts to 200 mm
+
+* 2018-10-17 Emilia Leogrande ([PR#92](https://github.com/ilcsoft/ClicPerformance/pull/92))
+  - Added VertexFinder to default clicReconstruction steering file. Relates to #68
+
+* 2018-10-17 Emilia Leogrande ([PR#91](https://github.com/ilcsoft/ClicPerformance/pull/91))
+  - Updated instructions on vertex reconstruction for flavour tagging
+
 # v02-01
 
 * 2018-10-05 Erica Brondolin ([PR#90](https://github.com/ilcsoft/ClicPerformance/pull/90))
