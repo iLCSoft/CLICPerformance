@@ -1350,7 +1350,7 @@
     <parameter name="UpdateVertexRPDaughters" type="int" value="0"/> <!-- false for non-updative PandoraPFOs -->
     <parameter name="TrackHitOrdering" type="int" value="2"/> <!-- Track hit ordering: 0=ILD-LOI (default), 1=ILD-DBD, 2=CLICdet -->
     <parameter name="PrintEventNumber" type="int" value="1"/> <!-- 0 for not printing event number, n for printing every n events -->
-    <parameter name="MagneticField" type="float" value="4.0"/> <!-- ILC and CLIC detectors have different values -->
+    <parameter name="MagneticField" type="float" value="2.0"/> <!-- ILC and CLIC detectors have different values -->
 
     <!-- jet clustering parameters -->
     <parameter name="JetClustering.PrimaryVertexCollectionName" type="string" value="pVx"/> <!-- Needed for post 00.06.09-->
