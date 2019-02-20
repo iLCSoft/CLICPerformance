@@ -1,3 +1,15 @@
+# v02-03
+
+* 2019-02-20 Oleksandr Viazlo ([PR#106](https://github.com/ilcsoft/ClicPerformance/pull/106))
+  - add PandoraSettingsPhotonTraining.xml needed for calorimeter calibration service
+
+* 2019-02-07 Emilia Leogrande ([PR#105](https://github.com/ilcsoft/ClicPerformance/pull/105))
+  - fccReconstruction:: JetClusteringAndRefiner: B field changed from 4 T to 2 T
+
+* 2018-11-19 Oleksandr Viazlo ([PR#104](https://github.com/ilcsoft/ClicPerformance/pull/104))
+  - new calorimeter calibration for CLD detector with 400ns integration time window; 
+  - refactoring of fccReconstruction.xml to enable possibility to switch between settings corresponding to 10ns or 400ns integration time window
+
 # v02-02
 
 * 2018-11-14 Marko Petric ([PR#103](https://github.com/ilcsoft/ClicPerformance/pull/103))
