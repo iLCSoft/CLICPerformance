@@ -1447,6 +1447,8 @@
       pVx_res
       pVx_RP
       pVx_res_RP
+      RefVx
+      RefVx_RP
     </parameter>
     <parameter name="LCIOWriteMode" type="string" value="WRITE_NEW"/>
     <parameter name="Verbosity" type="string">WARNING </parameter>
