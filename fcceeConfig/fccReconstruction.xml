@@ -1431,6 +1431,10 @@
       SelectedPandoraPFOs
       LooseSelectedPandoraPFOs
       TightSelectedPandoraPFOs
+      RefJets
+      RefJets_rel
+      RefJets_vtx
+      RefJets_vtx_RP
       buVx
       buVx_res
       buVx_RP
