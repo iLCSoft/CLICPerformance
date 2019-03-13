@@ -1730,6 +1730,10 @@
       BeamCalRecoParticles
       MergedRecoParticles
       MergedClusters
+      RefJets
+      RefJets_rel
+      RefJets_vtx
+      RefJets_vtx_RP
       buVx
       buVx_res
       buVx_RP
