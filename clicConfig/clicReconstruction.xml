@@ -1670,7 +1670,7 @@
     <parameter name="JetVertexRefiner.PrimaryVertexCollectionName" type="string" value="PrimaryVertices" />
     <parameter name="JetVertexRefiner.InputVertexCollectionName" type="string" value="BuildUpVertices" />
     <parameter name="JetVertexRefiner.V0VertexCollectionName" type="string" value="BuildUpVertices_V0" />
-    <parameter name="JetVertexRefiner.OutputVertexCollectionName" type="string" value="RefVx" />
+    <parameter name="JetVertexRefiner.OutputVertexCollectionName" type="string" value="RefinedVertices" />
     <parameter name="JetVertexRefiner.MinPosSingle" type="double" value="0.3" />
     <parameter name="JetVertexRefiner.MaxPosSingle" type="double" value="30." />
     <parameter name="JetVertexRefiner.MinEnergySingle" type="double" value="1." />
@@ -1750,8 +1750,8 @@
       PrimaryVertices_res
       PrimaryVertices_RP
       PrimaryVertices_res_RP
-      RefVx
-      RefVx_RP
+      RefinedVertices
+      RefinedVertices_RP
     </parameter>
     <parameter name="LCIOWriteMode" type="string" value="WRITE_NEW"/>
     <parameter name="Verbosity" type="string">WARNING </parameter>
