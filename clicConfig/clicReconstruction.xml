@@ -1662,7 +1662,7 @@
     <parameter name="JetClustering.JetAlgorithm" type="string" value="Durham"/> 
     <!-- vertex refiner parameters -->
     <parameter name="JetVertexRefiner.InputJetCollectionName" type="string" value="VertexJets" />
-    <parameter name="JetVertexRefiner.OutputJetCollectionName" type="string" value="RefJets" />
+    <parameter name="JetVertexRefiner.OutputJetCollectionName" type="string" value="RefinedVertexJets" />
     <parameter name="JetVertexRefiner.PrimaryVertexCollectionName" type="string" value="PrimaryVertices" />
     <parameter name="JetVertexRefiner.InputVertexCollectionName" type="string" value="BuildUpVertices" />
     <parameter name="JetVertexRefiner.V0VertexCollectionName" type="string" value="BuildUpVertices_V0" />
@@ -1730,10 +1730,10 @@
       BeamCalRecoParticles
       MergedRecoParticles
       MergedClusters
-      RefJets
-      RefJets_rel
-      RefJets_vtx
-      RefJets_vtx_RP
+      RefinedVertexJets
+      RefinedVertexJets_rel
+      RefinedVertexJets_vtx
+      RefinedVertexJets_vtx_RP
       BuildUpVertices
       BuildUpVertices_res
       BuildUpVertices_RP
