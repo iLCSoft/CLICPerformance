@@ -1617,7 +1617,7 @@
     <processor name="VertexFinder" type="LcfiplusProcessor">
       <!-- run primary and secondary vertex finders -->
       <parameter name="PFOCollection" type="string" value="PFOsFromJets" />
-      <parameter name="PrimaryVertexCollectionName" type="string" value="pVx" />
+      <parameter name="PrimaryVertexCollectionName" type="string" value="PrimaryVertices" />
       <parameter name="BuildUpVertexCollectionName" type="string" value="buVx" />
       <parameter name="BuildUpVertex.V0VertexCollectionName" type="string" value="buVx_V0" />
       <parameter name="PrimaryVertexFinder.BeamspotConstraint" type="bool">1 </parameter>
@@ -1627,7 +1627,7 @@
     <processor name="VertexFinderUnconstrained" type="LcfiplusProcessor">
       <!-- run primary and secondary vertex finders -->
       <parameter name="PFOCollection" type="string" value="TightSelectedPandoraPFOs" />
-      <parameter name="PrimaryVertexCollectionName" type="string" value="pVx_res" />
+      <parameter name="PrimaryVertexCollectionName" type="string" value="PrimaryVertices_res" />
       <parameter name="BuildUpVertexCollectionName" type="string" value="buVx_res" />
       <parameter name="BuildUpVertex.V0VertexCollectionName" type="string" value="buVx_V0_res" />
       <parameter name="PrimaryVertexFinder.BeamspotConstraint" type="bool">0 </parameter>
@@ -1647,7 +1647,7 @@
     <parameter name="PrintEventNumber" type="int" value="1"/> <!-- 0 for not printing event number, n for printing every n events -->
     <parameter name="MagneticField" type="float" value="4.0"/> <!-- ILC and CLIC detectors have different values -->
     <!-- jet clustering parameters -->
-    <parameter name="JetClustering.PrimaryVertexCollectionName" type="string" value="pVx" /> <!-- Needed for post 00.06.09 -->
+    <parameter name="JetClustering.PrimaryVertexCollectionName" type="string" value="PrimaryVertices" /> <!-- Needed for post 00.06.09 -->
     <parameter name="JetClustering.InputVertexCollectionName" type="string" value="buVx" /> <!-- vertex collections to be used in JC -->
     <parameter name="JetClustering.OutputJetCollectionName" type="stringVec" value="Vx" /> <!-- output collection name, may be multiple -->
     <parameter name="JetClustering.NJetsRequested" type="intVec" value="2" /> <!-- Multiple NJets can be specified -->
@@ -1663,7 +1663,7 @@
     <!-- vertex refiner parameters -->
     <parameter name="JetVertexRefiner.InputJetCollectionName" type="string" value="Vx" />
     <parameter name="JetVertexRefiner.OutputJetCollectionName" type="string" value="RefJets" />
-    <parameter name="JetVertexRefiner.PrimaryVertexCollectionName" type="string" value="pVx" />
+    <parameter name="JetVertexRefiner.PrimaryVertexCollectionName" type="string" value="PrimaryVertices" />
     <parameter name="JetVertexRefiner.InputVertexCollectionName" type="string" value="buVx" />
     <parameter name="JetVertexRefiner.V0VertexCollectionName" type="string" value="buVx_V0" />
     <parameter name="JetVertexRefiner.OutputVertexCollectionName" type="string" value="RefVx" />
@@ -1742,10 +1742,10 @@
       buVX_V0_res
       buVx_V0_RP
       buVX_V0_res_RP
-      pVx
-      pVx_res
-      pVx_RP
-      pVx_res_RP
+      PrimaryVertices
+      PrimaryVertices_res
+      PrimaryVertices_RP
+      PrimaryVertices_res_RP
       RefVx
       RefVx_RP
     </parameter>
