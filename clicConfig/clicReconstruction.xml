@@ -1653,7 +1653,7 @@
     <!-- jet clustering parameters -->
     <parameter name="JetClustering.PrimaryVertexCollectionName" type="string" value="PrimaryVertices" /> <!-- Needed for post 00.06.09 -->
     <parameter name="JetClustering.InputVertexCollectionName" type="string" value="BuildUpVertices" /> <!-- vertex collections to be used in JC -->
-    <parameter name="JetClustering.OutputJetCollectionName" type="stringVec" value="Vx" /> <!-- output collection name, may be multiple -->
+    <parameter name="JetClustering.OutputJetCollectionName" type="stringVec" value="VertexJets" /> <!-- output collection name, may be multiple -->
     <parameter name="JetClustering.NJetsRequested" type="intVec" value="2" /> <!-- Multiple NJets can be specified -->
     <parameter name="JetClustering.YCut" type="doubleVec" value="0." /> <!-- specify 0 if not used -->
     <parameter name="JetClustering.UseMuonID" type="int" value="1" /> <!-- jet-muon ID for jet clustering -->
@@ -1665,7 +1665,7 @@
     <parameter name="JetClustering.YAddedForJetLeptonLepton" type="double" value="100"/> <!-- add penalty for combining leptons -->
     <parameter name="JetClustering.JetAlgorithm" type="string" value="Durham"/> 
     <!-- vertex refiner parameters -->
-    <parameter name="JetVertexRefiner.InputJetCollectionName" type="string" value="Vx" />
+    <parameter name="JetVertexRefiner.InputJetCollectionName" type="string" value="VertexJets" />
     <parameter name="JetVertexRefiner.OutputJetCollectionName" type="string" value="RefJets" />
     <parameter name="JetVertexRefiner.PrimaryVertexCollectionName" type="string" value="PrimaryVertices" />
     <parameter name="JetVertexRefiner.InputVertexCollectionName" type="string" value="BuildUpVertices" />
