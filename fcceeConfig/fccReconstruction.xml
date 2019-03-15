@@ -1381,8 +1381,23 @@
     <parameter name="JetClustering.YAddedForJetVertexVertex" type="double" value="100"/> <!-- add penalty for combining vertices -->
     <parameter name="JetClustering.YAddedForJetLeptonVertex" type="double" value="100"/> <!-- add penalty for combining lepton and vertex -->
     <parameter name="JetClustering.YAddedForJetLeptonLepton" type="double" value="100"/> <!-- add penalty for combining leptons -->
-    <parameter name="JetClustering.JetAlgorithm" type="string" value="Durham"/> 
 
+    <parameter name="JetClustering.JetAlgorithm" type="string" value="ValenciaVertex" /> <!-- jet algorithm -->
+    <parameter name="JetClustering.UseBeamJets" type="int" value="1" /> <!-- beam jet rejection -->
+    <parameter name="JetClustering.AlphaParameter" type="double" value="1.0" />
+    <parameter name="JetClustering.BetaParameter" type="double" value="1.0" />
+    <parameter name="JetClustering.GammaParameter" type="double" value="1.0" />
+    <parameter name="JetClustering.RParameter" type="double" value="1.0" />
+    <parameter name="JetClustering.OutputJetStoresVertex" type="int" value="0" />
+    <parameter name="JetClustering.YAddedForJetVertexLepton" type="int" value="0" />
+    <parameter name="JetClustering.MuonIDExternal" type="int" value="0" />
+    <parameter name="JetClustering.MuonIDMinimumEnergy" type="double" value="5.0" />
+    <parameter name="JetClustering.MuonIDMinimumEnergy" type="int" value="0" />
+    <parameter name="JetClustering.MuonIDMinimumD0Significance" type="double" value="5.0" />
+    <parameter name="JetClustering.MuonIDMinimumZ0Significance" type="double" value="5.0" />
+    <parameter name="JetClustering.MuonIDMaximum3DImpactParameter" type="double" value="5.0" />
+    <parameter name="JetClustering.MuonIDMinimumProbability" type="double" value="0.5" />
+    <parameter name="JetClustering.MaxNumberOfJetsForYThreshold" type="int" value="10" />
 
     <!-- vertex refiner parameters -->
     <parameter name="JetVertexRefiner.InputJetCollectionName" type="string" value="VertexJets" />
