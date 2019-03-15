@@ -1295,7 +1295,7 @@
     <parameter name="PrimaryVertexFinder.BeamspotSmearing" type="boolean" value="false" />
     <parameter name="PrimaryVertexFinder.TrackMaxD0" type="double" value="20." />
     <parameter name="PrimaryVertexFinder.TrackMaxZ0" type="double" value="20." />
-    <parameter name="PrimaryVertexFinder.TrackMaxInnermostHitRadius" type="double" value="61" />
+    <parameter name="PrimaryVertexFinder.TrackMaxInnermostHitRadius" type="double" value="61" /><!-- obsolete? -->
     <parameter name="PrimaryVertexFinder.TrackMinVtxFtdHits" type="int" value="1" />
     <parameter name="PrimaryVertexFinder.Chi2Threshold" type="double" value="25." />
 
