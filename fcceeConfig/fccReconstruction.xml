@@ -1333,9 +1333,9 @@
     <processor name="VertexFinder" type="LcfiplusProcessor">
       <!-- run primary and secondary vertex finders -->
       <parameter name="PFOCollection" type="string" value="PFOsFromJets" />
-      <parameter name="PrimaryVertexCollectionName" type="string" value="pVx" />
-      <parameter name="BuildUpVertexCollectionName" type="string" value="buVx" />
-      <parameter name="BuildUpVertex.V0VertexCollectionName" type="string" value="buVx_V0" />
+      <parameter name="PrimaryVertexCollectionName" type="string" value="PrimaryVertices" />
+      <parameter name="BuildUpVertexCollectionName" type="string" value="BuildUpVertices" />
+      <parameter name="BuildUpVertex.V0VertexCollectionName" type="string" value="BuildUpVertices_V0" />
       <parameter name="PrimaryVertexFinder.BeamspotConstraint" type="bool">1 </parameter>
     </processor>
 
@@ -1343,9 +1343,9 @@
     <processor name="VertexFinderUnconstrained" type="LcfiplusProcessor">
       <!-- run primary and secondary vertex finders -->
       <parameter name="PFOCollection" type="string" value="TightSelectedPandoraPFOs" />
-      <parameter name="PrimaryVertexCollectionName" type="string" value="pVx_res" />
-      <parameter name="BuildUpVertexCollectionName" type="string" value="buVx_res" />
-      <parameter name="BuildUpVertex.V0VertexCollectionName" type="string" value="buVx_V0_res" />
+      <parameter name="PrimaryVertexCollectionName" type="string" value="PrimaryVertices_res" />
+      <parameter name="BuildUpVertexCollectionName" type="string" value="BuildUpVertices_res" />
+      <parameter name="BuildUpVertex.V0VertexCollectionName" type="string" value="BuildUpVertices_V0_res" />
       <parameter name="PrimaryVertexFinder.BeamspotConstraint" type="bool">0 </parameter>
     </processor>
 
@@ -1368,9 +1368,9 @@
     <parameter name="MagneticField" type="float" value="2.0"/> <!-- ILC and CLIC detectors have different values -->
 
     <!-- jet clustering parameters -->
-    <parameter name="JetClustering.PrimaryVertexCollectionName" type="string" value="pVx"/> <!-- Needed for post 00.06.09-->
-    <parameter name="JetClustering.InputVertexCollectionName" type="string" value="buVx" /> <!-- vertex collections to be used in JC -->
-    <parameter name="JetClustering.OutputJetCollectionName" type="stringVec" value="Vx" /> <!-- output collection name, may be multiple -->
+    <parameter name="JetClustering.PrimaryVertexCollectionName" type="string" value="PrimaryVertices" /> <!-- Needed for post 00.06.09 -->
+    <parameter name="JetClustering.InputVertexCollectionName" type="string" value="BuildUpVertices" /> <!-- vertex collections to be used in JC -->
+    <parameter name="JetClustering.OutputJetCollectionName" type="stringVec" value="VertexJets" /> <!-- output collection name, may be multiple -->
     <parameter name="JetClustering.NJetsRequested" type="intVec" value="2" /> <!-- Multiple NJets can be specified -->
 
     <parameter name="JetClustering.YCut" type="doubleVec" value="0." /> <!-- specify 0 if not used -->
@@ -1385,12 +1385,12 @@
 
 
     <!-- vertex refiner parameters -->
-    <parameter name="JetVertexRefiner.InputJetCollectionName" type="string" value="Vx" />
-    <parameter name="JetVertexRefiner.OutputJetCollectionName" type="string" value="RefJets" />
-    <parameter name="JetVertexRefiner.PrimaryVertexCollectionName" type="string" value="pVx" />
-    <parameter name="JetVertexRefiner.InputVertexCollectionName" type="string" value="buVx" />
-    <parameter name="JetVertexRefiner.V0VertexCollectionName" type="string" value="buVx_V0" />
-    <parameter name="JetVertexRefiner.OutputVertexCollectionName" type="string" value="RefVx" />
+    <parameter name="JetVertexRefiner.InputJetCollectionName" type="string" value="VertexJets" />
+    <parameter name="JetVertexRefiner.OutputJetCollectionName" type="string" value="RefinedVertexJets" />
+    <parameter name="JetVertexRefiner.PrimaryVertexCollectionName" type="string" value="PrimaryVertices" />
+    <parameter name="JetVertexRefiner.InputVertexCollectionName" type="string" value="BuildUpVertices" />
+    <parameter name="JetVertexRefiner.V0VertexCollectionName" type="string" value="BuildUpVertices_V0" />
+    <parameter name="JetVertexRefiner.OutputVertexCollectionName" type="string" value="RefinedVertices" />
     <parameter name="JetVertexRefiner.MinPosSingle" type="double" value="0.3" />
     <parameter name="JetVertexRefiner.MaxPosSingle" type="double" value="30." />
     <parameter name="JetVertexRefiner.MinEnergySingle" type="double" value="1." />
@@ -1446,24 +1446,24 @@
       SelectedPandoraPFOs
       LooseSelectedPandoraPFOs
       TightSelectedPandoraPFOs
-      RefJets
-      RefJets_rel
-      RefJets_vtx
-      RefJets_vtx_RP
-      buVx
-      buVx_res
-      buVx_RP
-      buVX_res_RP
-      buVx_V0
-      buVX_V0_res
-      buVx_V0_RP
-      buVX_V0_res_RP
-      pVx
-      pVx_res
-      pVx_RP
-      pVx_res_RP
-      RefVx
-      RefVx_RP
+      RefinedVertexJets
+      RefinedVertexJets_rel
+      RefinedVertexJets_vtx
+      RefinedVertexJets_vtx_RP
+      BuildUpVertices
+      BuildUpVertices_res
+      BuildUpVertices_RP
+      BuildUpVertices_res_RP
+      BuildUpVertices_V0
+      BuildUpVertices_V0_res
+      BuildUpVertices_V0_RP
+      BuildUpVertices_V0_res_RP
+      PrimaryVertices
+      PrimaryVertices_res
+      PrimaryVertices_RP
+      PrimaryVertices_res_RP
+      RefinedVertices
+      RefinedVertices_RP
     </parameter>
     <parameter name="LCIOWriteMode" type="string" value="WRITE_NEW"/>
     <parameter name="Verbosity" type="string">WARNING </parameter>
