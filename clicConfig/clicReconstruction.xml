@@ -1587,6 +1587,7 @@
     <parameter name="BeamSizeY" type="float" value="1.0E-6"/>
     <parameter name="BeamSizeZ" type="float" value="44E-3"/>
     <!-- parameters for primary vertex finder -->
+    <parameter name="PrimaryVertexFinder.BeamspotSmearing" type="boolean" value="false" />
     <parameter name="PrimaryVertexFinder.TrackMaxD0" type="double" value="20." />
     <parameter name="PrimaryVertexFinder.TrackMaxZ0" type="double" value="20." />
     <parameter name="PrimaryVertexFinder.TrackMaxInnermostHitRadius" type="double" value="61" />
