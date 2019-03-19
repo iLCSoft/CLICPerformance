@@ -3,6 +3,9 @@
 
 
 <execute>
+
+<processor name="InitDD4hep"/>
+
 <!-- ========== Pre-JetClustering with FastJet to fight gg->hadrons background ========== -->
 <Xprocessor name="MyFastJetProcessor"/>
 <!-- ========== Vertex Finder =========================================================== -->
@@ -25,6 +28,15 @@ input_file.slcio
 <parameter name="Verbosity" options="DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT"> WARNING  </parameter>
 <parameter name="RandomSeed" value="1234567890" />
 </global>
+
+<processor name="InitDD4hep" type="InitializeDD4hep">
+  <!--InitializeDD4hep reads a compact xml file and initializes the DD4hep::LCDD object-->
+  <!--Name of the DD4hep compact xml file to load-->
+  <parameter name="EncodingStringParameter"> GlobalTrackerReadoutID </parameter>
+  <parameter name="DD4hepXMLFile" type="string">
+    /cvmfs/clicdp.cern.ch/iLCSoft/builds/nightly/x86_64-slc6-gcc62-opt/lcgeo/HEAD/CLIC/compact/CLIC_o3_v14/CLIC_o3_v14.xml
+  </parameter>
+</processor>
 
 <!-- ========== Jet clustering for gg->hadrons removal ================================== -->
 <processor name="MyFastJetProcessor" type="FastJetProcessor">
