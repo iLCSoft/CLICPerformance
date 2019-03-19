@@ -118,6 +118,18 @@ ADD_TEST( NAME t_${test_name}
   )
 SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error" )
 
+SET( test_name "test_${CLIC_DETECTOR_MODEL}_vtx_makentp" )
+ADD_TEST( NAME t_${test_name}
+  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/../Tests/bin/MarlinTests.sh
+  ${CMAKE_INSTALL_PREFIX}/lib/libClicPerformance.so  Marlin
+  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
+  --global.LCIOInputFiles=../clicConfig/reco_conformal_${CLIC_DETECTOR_MODEL}_dst.slcio
+  --global.MaxRecordNumber=2
+  vtx_makentp.xml
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../Flavour_tagging/
+  )
+SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error" )
+
 SET( test_name "test_${CLIC_DETECTOR_MODEL}_reco_real_overlay" )
 ADD_TEST( NAME t_${test_name}
   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/../Tests/bin/MarlinTests.sh
