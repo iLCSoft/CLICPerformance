@@ -9,9 +9,9 @@
 <!-- ========== Pre-JetClustering with FastJet to fight gg->hadrons background ========== -->
 <Xprocessor name="MyFastJetProcessor"/>
 <!-- ========== Vertex Finder =========================================================== -->
-<processor name="VertexFinder"/>
+<Xprocessor name="VertexFinder"/>
 <!-- ========== Jet Clustering and Vertex Refiner ======================================= -->
-<processor name="jets"/>
+<Xprocessor name="jets"/>
 <!-- ========== Make Ntuples for the training  ========================================== -->
 <processor name="MakeNtuple"/>
 <!-- ========== LCIO Output  ============================================================ -->
@@ -116,6 +116,7 @@ input_file.slcio
 <parameter name="MagneticField" type="float" value="4.0"/> <!-- ILC and CLIC detectors have different values -->
 
 <!-- jet clustering parameters -->
+<parameter name="JetClustering.PrimaryVertexCollectionName" type="string" value="PrimaryVertices" /> <!-- Needed for post 00.06.09 -->
 <parameter name="JetClustering.InputVertexCollectionName" type="string" value="BuildUpVertices" /> <!-- vertex collections to be used in JC -->
 <parameter name="JetClustering.OutputJetCollectionName" type="stringVec" value="VertexJets" /> <!-- output collection name, may be multiple -->
 <parameter name="JetClustering.NJetsRequested" type="intVec" value="2" /> <!-- Multiple NJets can be specified -->
