@@ -353,6 +353,10 @@
     <parameter name="SiTrackCollectionName" type="string" lcioOutType="Track">SiTracksCT </parameter>
     <!--Debug hits Collection Name-->
     <parameter name="DebugHits" type="string" lcioOutType="TrackerHitPlane"> DebugHits </parameter>
+    <!--Maximum number of track hits to try the inverted fit-->
+    <parameter name="MaxHitInvertedFit" type="int">0 </parameter>
+    <!--Final minimum number of track clusters-->
+    <parameter name="MinClustersOnTrackAfterFit" type="int">4 </parameter>
 
     <!--enable debug plots -->
     <parameter name="DebugPlots" type="bool"> false </parameter>
