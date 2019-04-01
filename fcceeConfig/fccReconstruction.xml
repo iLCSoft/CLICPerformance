@@ -447,6 +447,8 @@
     <!--parameter name="Verbosity" type="string"> DEBUG </parameter-->
     <!--if true extrapolation in the forward direction (in-out), otherwise backward (out-in)-->
     <parameter name="extrapolateForward" type="bool"> true </parameter>
+    <!--Final minimum number of track clusters-->
+    <parameter name="MinClustersOnTrackAfterFit" type="int">4 </parameter>
   </processor>
 
 
