@@ -223,6 +223,7 @@ SIM.physics.pdgfile = os.path.join( os.environ.get("DD4HEP"), "DDG4/examples/par
 ##     
 SIM.physics.rangecut = 0.7*mm
 
+SIM.physics.rejectPDGs = {1,2,3,4,5,6,21,23,24,25}
 
 ################################################################################
 ## Properties for the random number generator 
