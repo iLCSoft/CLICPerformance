@@ -356,7 +356,7 @@
     <!--Maximum number of track hits to try the inverted fit-->
     <parameter name="MaxHitInvertedFit" type="int">0 </parameter>
     <!--Final minimum number of track clusters-->
-    <parameter name="MinClustersOnTrackAfterFit" type="int">4 </parameter>
+    <parameter name="MinClustersOnTrackAfterFit" type="int">3 </parameter>
 
     <!--enable debug plots -->
     <parameter name="DebugPlots" type="bool"> false </parameter>
@@ -448,7 +448,7 @@
     <!--if true extrapolation in the forward direction (in-out), otherwise backward (out-in)-->
     <parameter name="extrapolateForward" type="bool"> true </parameter>
     <!--Final minimum number of track clusters-->
-    <parameter name="MinClustersOnTrackAfterFit" type="int">4 </parameter>
+    <parameter name="MinClustersOnTrackAfterFit" type="int">3 </parameter>
   </processor>
 
 
