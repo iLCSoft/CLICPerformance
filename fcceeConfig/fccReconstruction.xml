@@ -1430,6 +1430,9 @@
     <parameter name="FullSubsetCollections" type="StringVec"> EfficientMCParticles InefficientMCParticles </parameter>
     <parameter name="LCIOWriteMode" type="string" value="WRITE_NEW"/>
     <parameter name="Verbosity" type="string">WARNING </parameter>
+    <parameter name="DropCollectionNames" type="StringVec">  </parameter>
+    <parameter name="DropCollectionTypes" type="StringVec">  </parameter>
+    <parameter name="KeepCollectionNames" type="StringVec">  </parameter>
   </processor>
 
   <processor name="Output_DST" type="LCIOOutputProcessor">
@@ -1482,6 +1485,7 @@
       RefinedVertices
       RefinedVertices_RP
     </parameter>
+    <parameter name="DropCollectionNames" type="StringVec">  </parameter>
     <parameter name="LCIOWriteMode" type="string" value="WRITE_NEW"/>
     <parameter name="Verbosity" type="string">WARNING </parameter>
   </processor>
