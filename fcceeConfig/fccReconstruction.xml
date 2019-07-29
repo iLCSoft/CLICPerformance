@@ -360,6 +360,10 @@
 
     <!--enable debug plots -->
     <parameter name="DebugPlots" type="bool"> false </parameter>
+    <!--Purity value used for checking if tracks are real or not-->
+    <parameter name="trackPurity" type="double">0.7 </parameter>
+    <!--Print out time recording - for some, verbosity must be enable-->
+    <parameter name="DebugTiming" type="bool">false </parameter>
     <!--retry with tightened parameters, when too many tracks are being created-->
     <parameter name="RetryTooManyTracks" type="bool">false </parameter>
     <!--sort results from kdtree search-->
@@ -399,8 +403,10 @@
       @Functions : CombineCollections, BuildNewTracks
     </parameter>
 
-    <parameter name="trackPurity" type="double">0.7 </parameter>
+    <!--Angular range for initial cell seeding-->
     <parameter name="ThetaRange" type="double"> 0.05 </parameter>
+    <!--Cut on the slope in the r-z plane for seeding-->
+    <parameter name="SlopeZRange" type="double">10 </parameter>
  
     <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
     <!--parameter name="Verbosity" type="string">DEBUG </parameter-->
