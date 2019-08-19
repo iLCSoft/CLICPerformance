@@ -668,6 +668,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
         // m_mcCat.pop_back();
         m_mcCat.push_back(2);
       }else{
+        m_vec_is_reconstructed.push_back(false);
         // m_mcCat.pop_back();
         m_mcCat.push_back(1);
       }
