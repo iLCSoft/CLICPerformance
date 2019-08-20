@@ -362,7 +362,7 @@
     <parameter name="DebugPlots" type="bool"> false </parameter>
     <!--Purity value used for checking if tracks are real or not-->
     <parameter name="trackPurity" type="double">0.7 </parameter>
-    <!--Print out time recording - for some, verbosity must be enable-->
+    <!--Print out time profile - for some, verbosity must be enable-->
     <parameter name="DebugTiming" type="bool">false </parameter>
     <!--retry with tightened parameters, when too many tracks are being created-->
     <parameter name="RetryTooManyTracks" type="bool">false </parameter>
