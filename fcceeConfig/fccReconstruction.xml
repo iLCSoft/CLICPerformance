@@ -366,6 +366,8 @@
     <parameter name="DebugTiming" type="bool">false </parameter>
     <!--retry with tightened parameters, when too many tracks are being created-->
     <parameter name="RetryTooManyTracks" type="bool">false </parameter>
+    <!--Number of tracks that is considered too many-->
+    <parameter name="TooManyTracks" type="int">5e5 </parameter>
     <!--sort results from kdtree search-->
     <parameter name="SortTreeResults" type="bool">true </parameter>
 
