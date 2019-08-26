@@ -82,7 +82,7 @@ SIM.field.eps_min = 5e-05*mm
 SIM.field.equation = "Mag_UsualEqRhs"
 SIM.field.largest_step = 10.0*m
 SIM.field.min_chord_step = 0.01*mm
-SIM.field.stepper = "G4ClassicalRK4"
+SIM.field.stepper = "ClassicalRK4"
 
 
 ################################################################################
