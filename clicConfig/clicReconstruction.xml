@@ -113,12 +113,20 @@
     </if>
 
     <processor name="VertexFinder"/>
-    <processor name="JetClusteringAndRefiner"/>
 
     <if condition="Config.VertexUnconstrainedON">
       <processor name="VertexFinderUnconstrained"/>
     </if>
 
+    <if condition="Config.SkimmingSecondaryVerticesOFF">
+      <processor name="RenameVertexCollection"/>
+    </if>
+
+    <if condition="Config.SkimmingSecondaryVerticesON">
+      <processor name="MySkimSecondaryVertices"/>
+    </if>
+
+    <processor name="JetClusteringAndRefiner"/>
 
     <!-- ========== output  ========== -->
 
@@ -168,6 +176,10 @@
     <parameter name="VertexUnconstrained" type="string">OFF </parameter>
     <!--Possible values and conditions for option Tracking-->
     <parameter name="VertexUnconstrainedChoices" type="StringVec">ON OFF  </parameter>
+    <!--Which option to use for SkimmingSecondaryVertiecs: ON, OFF. Then use, e.g., Config.SkimmingSecondaryVerticesOFF in the condition-->
+    <parameter name="SkimmingSecondaryVertices" type="string">OFF </parameter>
+    <!--Possible values and conditions for option SkimmingSecondaryVertices-->
+    <parameter name="SkimmingSecondaryVerticesChoices" type="StringVec">ON OFF  </parameter>
     <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
   </processor>
 
@@ -1650,6 +1662,22 @@
       <parameter name="PrimaryVertexFinder.BeamspotConstraint" type="bool">0 </parameter>
     </processor>
   </group>
+
+  <!-- ========== Rename vertex collection (to have same output collection name as SkimSecondaryVertices ================================== -->
+
+  <processor name="RenameVertexCollection" type="MergeCollections">
+    <parameter name="CollectionParameterIndex" type="int">0 </parameter>
+    <parameter name="InputCollectionIDs" type="IntVec"> </parameter>
+    <parameter name="InputCollections" type="StringVec"> BuildUpVertices </parameter>
+    <parameter name="OutputCollection" type="string"> BuildUpVerticesSkimmed </parameter>
+  </processor>
+
+  <processor name="MySkimSecondaryVertices" type="SkimSecondaryVertices">
+    <parameter name="BuildUpVertices" type="string"> BuildUpVertices </parameter>
+    <parameter name="BuildUpVerticesSkimmed" type="string"> BuildUpVerticesSkimmed </parameter>
+    <parameter name="Verbosity" type="string"> MESSAGE </parameter>
+  </processor>
+
 
   <processor name="JetClusteringAndRefiner" type="LcfiplusProcessor">
     <parameter name="Algorithms" type="stringVec"> JetClustering JetVertexRefiner </parameter>
