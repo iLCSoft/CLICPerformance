@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ILCSOFT=/cvmfs/clicdp.cern.ch/iLCSoft/builds/current/CI_${COMPILER}
+ILCSOFT=/cvmfs/clicdp.cern.ch/iLCSoft/builds/2019-07-09/${ARCH}
 source $ILCSOFT/init_ilcsoft.sh
 
 cd /Package
