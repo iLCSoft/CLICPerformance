@@ -45,12 +45,15 @@ protected:
   const Choices m_beamcalPossibleOptions{"3TeV", "380GeV"};
   // VertexUnconstrained
   const Choices m_vertexUnconstrainedPossibleOptions{"ON","OFF"};
+  // SkimmingSecondaryVertices
+  const Choices m_skimmingSecondaryVerticesPossibleOptions{"ON","OFF"};
 
   std::vector<std::tuple<std::string, std::string, Choices>> m_allOptions =
     {{"Tracking", "Conformal", m_trackingPossibleOptions},
      {"BeamCal",  "3TeV", m_beamcalPossibleOptions},
      {"Overlay",  "False", m_overlayPossibleOptions},
-     {"VertexUnconstrained", "OFF", m_vertexUnconstrainedPossibleOptions}};
+     {"VertexUnconstrained", "OFF", m_vertexUnconstrainedPossibleOptions},
+     {"SkimmingSecondaryVertices","OFF",m_skimmingSecondaryVerticesPossibleOptions}};
 
 
 protected:
