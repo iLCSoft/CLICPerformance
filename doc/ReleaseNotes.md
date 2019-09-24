@@ -1,3 +1,37 @@
+# v02-04
+
+* 2019-07-08 Andre Sailer ([PR#114](https://github.com/ilcsoft/clicperformance/pull/114))
+  - FCC/ClicReco: add optional parameters for Output_REC, Output_DST so that they can be overwritten via the command line
+
+* 2019-06-24 Erica Brondolin ([PR#113](https://github.com/ilcsoft/clicperformance/pull/113))
+  - CLICReconstruction/FCCReconstruction: ConformalTracking+Refit: 
+      - Set the number of minimum hits on a track to 3 after the fit to recover efficiency loss seen in the case of single isolated muons. Previously this was set to 4 to reduce the number of fakes in the complex events which is still acceptable using a threshold at 3 hits.
+
+* 2019-06-07 Andre Sailer ([PR#112](https://github.com/ilcsoft/clicperformance/pull/112))
+  - CLICSimulation: set physics.decays = False
+  - FCCSimulation: set physics.decays = False
+
+* 2019-04-15 Marko Petric ([PR#111](https://github.com/ilcsoft/clicperformance/pull/111))
+  - Explicitly list the rejected PDG codes for simulation
+    - DD4hep default did not reject Higgs PDG code 25
+
+* 2019-04-01 Emilia Leogrande ([PR#110](https://github.com/ilcsoft/clicperformance/pull/110))
+  - CLIC FCC Reconstruction: RefitFinal: Added parameter MinClustersOnTrackAfterFit=4 
+    - Parameter implementation in iLCSoft/MarlinTrkProcessors#42
+
+* 2019-03-21 Erica Brondolin ([PR#109](https://github.com/ilcsoft/clicperformance/pull/109))
+  - Add final minimum number of track clusters, after KF and set it to 4, needs ilcsoft/conformaltracking#52
+  - Include maximum number of track hits to try the inverted fit and set it to 0
+
+* 2019-03-21 Andre Sailer ([PR#108](https://github.com/ilcsoft/clicperformance/pull/108))
+  - CLIC/FCC Reconstruction: add default values for lcfiplus processors, fix inconsistencies
+  - CLIC/FCC Reconstruction: rename collections from vertexing and flavourtagging
+
+* 2019-03-13 Andre Sailer ([PR#107](https://github.com/ilcsoft/clicperformance/pull/107))
+  - ClicReconstruction: add RefJets collections explicitely to DST Output, RefJets ReconstructedParticle collection was missing, and is needed for FlavourTagging NTuple Maker
+  
+  - FccReconstruction: add RefJets collections explicitely to DST Output, RefJets ReconstructedParticle collection was missing, and is needed for FlavourTagging NTuple Maker
+
 # v02-03
 
 * 2019-02-20 Oleksandr Viazlo ([PR#106](https://github.com/ilcsoft/ClicPerformance/pull/106))
