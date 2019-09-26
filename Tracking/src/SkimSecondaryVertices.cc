@@ -177,7 +177,7 @@ void SkimSecondaryVertices::init(){
                                 << "\n zOffsetSensitive: " << disk.zOffsetSensitive / dd4hep::mm
                                 << "\t widthInnerSensitive: " << disk.widthInnerSensitive / dd4hep::mm
                                 << "\t widthOuterSensitive: " << disk.widthOuterSensitive / dd4hep::mm
-                                << "\t lengthSensitive: " << disk.lengthSensitive << std::endl;  
+                                << "\t lengthSensitive: " << disk.lengthSensitive / dd4hep::mm << std::endl;  
 
         _endcap_z.push_back(disk.zPosition / dd4hep::mm);
 
