@@ -128,12 +128,19 @@ void SkimSecondaryVertices::init(){
         ZPlanarData::LayerLayout layer = layers[l];
         streamlog_out( DEBUG0 ) << "***BARREL LAYER " << l << std::endl;
        
-        streamlog_out( DEBUG0 ) << "distanceSupport: " << layer.distanceSupport << "\t thicknessSupport: " << layer.thicknessSupport
-                  << "\n offsetSupport: " << layer.offsetSupport << "\t widthSupport: " << layer.widthSupport << "\t zHalfSupport: " << layer.zHalfSupport
-                  << "\n distanceSensitive:  " << layer.distanceSensitive << "\t thicknessSensitive: " << layer.thicknessSensitive
-                  << "\n offsetSensitive: " << layer.offsetSensitive << "\t widthSensitive: " << layer.widthSensitive << "\t zHalfSensitive: " << layer.zHalfSensitive << std::endl;
-        _barrel_radii.push_back(layer.distanceSupport);
-        _barrel_halfLength = layer.zHalfSupport;
+        streamlog_out( DEBUG0 ) << "distanceSupport: " << layer.distanceSupport / dd4hep::mm
+                                << "\t thicknessSupport: " << layer.thicknessSupport / dd4hep::mm
+                                << "\n offsetSupport: " << layer.offsetSupport / dd4hep::mm
+                                << "\t widthSupport: " << layer.widthSupport / dd4hep::mm
+                                << "\t zHalfSupport: " << layer.zHalfSupport / dd4hep::mm
+                                << "\n distanceSensitive:  " << layer.distanceSensitive / dd4hep::mm
+                                << "\t thicknessSensitive: " << layer.thicknessSensitive / dd4hep::mm
+                                << "\n offsetSensitive: " << layer.offsetSensitive / dd4hep::mm
+                                << "\t widthSensitive: " << layer.widthSensitive / dd4hep::mm
+                                << "\t zHalfSensitive: " << layer.zHalfSensitive / dd4hep::mm
+                                << std::endl;
+        _barrel_radii.push_back(layer.distanceSupport / dd4hep::mm);
+        _barrel_halfLength = layer.zHalfSupport / dd4hep::mm ;
 
       }
     } catch (std::exception &e) {
@@ -158,13 +165,21 @@ void SkimSecondaryVertices::init(){
       for(unsigned int d=0; d<disks.size(); d++){
         ZDiskPetalsData::LayerLayout disk = disks[d];
         streamlog_out( DEBUG0 ) << "***ENDCAP LAYER " << d << std::endl;
-        streamlog_out( DEBUG0 ) << "zPosition: " << disk.zPosition << std::endl;
-        streamlog_out( DEBUG0 ) << "distanceSupport: " << disk.distanceSupport << "\t thicknessSupport: " << disk.thicknessSupport
-                  << "\n zOffsetSupport: " << disk.zOffsetSupport << "\t widthInnerSupport: " << disk.widthInnerSupport << "\t widthOuterSupport: " << disk.widthOuterSupport <<"\t lengthSupport: " << disk.lengthSupport
-                  << "\n distanceSensitive:  " << disk.distanceSensitive << "\t thicknessSensitive: " << disk.thicknessSensitive
-                  << "\n zOffsetSensitive: " << disk.zOffsetSensitive << "\t widthInnerSensitive: " << disk.widthInnerSensitive << "\t widthOuterSensitive: " << disk.widthOuterSensitive << "\t lengthSensitive: " << disk.lengthSensitive << std::endl;  
+        streamlog_out( DEBUG0 ) << "zPosition: " << disk.zPosition / dd4hep::mm << std::endl;
+        streamlog_out( DEBUG0 ) << "distanceSupport: " << disk.distanceSupport  / dd4hep::mm
+                                << "\t thicknessSupport: " << disk.thicknessSupport / dd4hep::mm
+                                << "\n zOffsetSupport: " << disk.zOffsetSupport  / dd4hep::mm
+                                << "\t widthInnerSupport: " << disk.widthInnerSupport / dd4hep::mm
+                                << "\t widthOuterSupport: " << disk.widthOuterSupport / dd4hep::mm
+                                <<"\t lengthSupport: " << disk.lengthSupport / dd4hep::mm
+                                << "\n distanceSensitive:  " << disk.distanceSensitive / dd4hep::mm
+                                << "\t thicknessSensitive: " << disk.thicknessSensitive / dd4hep::mm
+                                << "\n zOffsetSensitive: " << disk.zOffsetSensitive / dd4hep::mm
+                                << "\t widthInnerSensitive: " << disk.widthInnerSensitive / dd4hep::mm
+                                << "\t widthOuterSensitive: " << disk.widthOuterSensitive / dd4hep::mm
+                                << "\t lengthSensitive: " << disk.lengthSensitive << std::endl;  
 
-        _endcap_z.push_back(disk.zPosition);
+        _endcap_z.push_back(disk.zPosition / dd4hep::mm);
 
       }
 
