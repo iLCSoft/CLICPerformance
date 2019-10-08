@@ -87,7 +87,7 @@ void TrueMCintoRecoForJets::processEvent( LCEvent* evt ) {
       for(int m=0;m<nMCP;m++){
 	MCParticle *mcp = static_cast<MCParticle*>(mcColl->getElementAt(m));
 	//in order to catch events where the lepton branches off an FSR photon
-	if(m_vetoBosonLeptons && abs(mcp->getPDG())==24 && mcp->getDaughters().size()>1 && (abs(mcp->getDaughters()[0]->getPDG())>6 && abs(mcp->getDaughters()[0]->getPDG())<17)){
+	if(m_vetoBosonLeptons && (abs(mcp->getPDG())==24 || mcp->getPDG()==23) && mcp->getDaughters().size()>1 && (abs(mcp->getDaughters()[0]->getPDG())>6 && abs(mcp->getDaughters()[0]->getPDG())<17)){
 	  fillStableDaughterSet(mcp, boson_daughtersFunc);
 	}
 	if(mcp->getGeneratorStatus()!=1){
