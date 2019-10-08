@@ -100,7 +100,7 @@ void TrueMCintoRecoForJets::processEvent( LCEvent* evt ) {
 	  }
 	  continue;
 	}
-	if(m_ignoreNeutrinosInMCJets && fabs(mcp->getPDG())==12 || fabs(mcp->getPDG())==14 || fabs(mcp->getPDG())==16){
+	if(m_ignoreNeutrinosInMCJets && (fabs(mcp->getPDG())==12 || fabs(mcp->getPDG())==14 || fabs(mcp->getPDG())==16)){
 	  continue;
 	}
 	ReconstructedParticleImpl* truePartIntoReco = new ReconstructedParticleImpl;
