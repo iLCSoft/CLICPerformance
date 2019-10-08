@@ -42,6 +42,11 @@ TrueMCintoRecoForJets::TrueMCintoRecoForJets() : Processor("TrueMCintoRecoForJet
 			       m_vetoBosonLeptonsOnReco,
 			       bool("false"));
 
+    registerProcessorParameter("ignoreNeutrinosInMCJets",
+			       "remove neutrinos prior to MC Jet Clustering",
+			       m_ignoreNeutrinosInMCJets,
+			       bool("true"));
+
     registerInputCollection( LCIO::RECONSTRUCTEDPARTICLE,
                             "RecoParticleInputCollectionName",
                             "Name of the RecoParticle input collection",
@@ -95,7 +100,7 @@ void TrueMCintoRecoForJets::processEvent( LCEvent* evt ) {
 	  }
 	  continue;
 	}
-	if(fabs(mcp->getPDG())==12 || fabs(mcp->getPDG())==14 || fabs(mcp->getPDG())==16){
+	if(m_ignoreNeutrinosInMCJets && fabs(mcp->getPDG())==12 || fabs(mcp->getPDG())==14 || fabs(mcp->getPDG())==16){
 	  continue;
 	}
 	ReconstructedParticleImpl* truePartIntoReco = new ReconstructedParticleImpl;
