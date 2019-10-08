@@ -54,6 +54,7 @@ protected:
 
     bool m_vetoBosonLeptons=false;
     bool m_vetoBosonLeptonsOnReco=false;
+    bool m_ignoreNeutrinosInMCJets=true;
     void fillStableDaughterSet(MCParticle*, std::set<MCParticle*> &);
 
 } ;
