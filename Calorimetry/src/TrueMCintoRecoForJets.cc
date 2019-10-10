@@ -35,17 +35,21 @@ TrueMCintoRecoForJets::TrueMCintoRecoForJets() : Processor("TrueMCintoRecoForJet
     registerProcessorParameter("vetoBosonLeptons",
 			       "leptons from boson veto flag for MC truth",
 			       m_vetoBosonLeptons,
-			       bool("false"));
+			       bool(false));
 
     registerProcessorParameter("vetoBosonLeptonsOnReco",
 			       "leptons from boson veto flag for Reco",
 			       m_vetoBosonLeptonsOnReco,
-			       bool("false"));
+			       bool(false));
 
     registerProcessorParameter("ignoreNeutrinosInMCJets",
 			       "remove neutrinos prior to MC Jet Clustering",
 			       m_ignoreNeutrinosInMCJets,
-			       bool("true"));
+			       bool(true));
+    registerProcessorParameter("cosAngle_pfo_lepton",
+			       "remove neutrinos prior to MC Jet Clustering",
+			       m_cosAngle_pfo_lepton,
+			       float(0.995));
 
     registerInputCollection( LCIO::RECONSTRUCTEDPARTICLE,
                             "RecoParticleInputCollectionName",
@@ -82,7 +86,8 @@ void TrueMCintoRecoForJets::processEvent( LCEvent* evt ) {
       
       std::set<MCParticle*> boson_daughtersFunc;
  
-      int ind_MCLep=-1;
+      int ind_MCLep=-1;//semi leptonically decaying W-lepton (e,mu), or first lepton (e,mu) for Z
+      int ind_MCLep2=-1;// in case of Z second lepton (e,mu)
 
       for(int m=0;m<nMCP;m++){
 	MCParticle *mcp = static_cast<MCParticle*>(mcColl->getElementAt(m));
@@ -95,8 +100,11 @@ void TrueMCintoRecoForJets::processEvent( LCEvent* evt ) {
 	}
 	if (boson_daughtersFunc.count(mcp) != 0)
 	{
-	  if(abs(mcp->getPDG())==11 || abs(mcp->getPDG())==13){
+	  if(ind_MCLep==-1 && (abs(mcp->getPDG())==11 || abs(mcp->getPDG())==13)){
 	    ind_MCLep=m;	   
+	  }
+	  if(ind_MCLep2==-1 && (abs(mcp->getPDG())==11 || abs(mcp->getPDG())==13)){
+	    ind_MCLep2=m;	   
 	  }
 	  continue;
 	}
@@ -127,7 +135,20 @@ void TrueMCintoRecoForJets::processEvent( LCEvent* evt ) {
 	  //take true MC lepton direction, veto all reconstructed particles around that direction within acos(alpha)>0.90
 	  TLorentzVector recoVec(0,0,0,0);
 	  recoVec.SetPxPyPzE(reco->getMomentum()[0],reco->getMomentum()[1],reco->getMomentum()[2],reco->getEnergy());
-	  if(cos(recoVec.Angle(trueLep.Vect()))>0.9 && m_vetoBosonLeptonsOnReco){
+	  if(cos(recoVec.Angle(trueLep.Vect()))>m_cosAngle_pfo_lepton && m_vetoBosonLeptonsOnReco){
+	    continue;
+	  }
+	}
+	if( ind_MCLep2!=-1){
+	  MCParticle *mcpLep2 = static_cast<MCParticle*>(mcColl->getElementAt(ind_MCLep2));
+	  TLorentzVector trueLep2(0,0,0,0);
+	  trueLep2.SetPxPyPzE(mcpLep2->getMomentum()[0],mcpLep2->getMomentum()[1],mcpLep2->getMomentum()[2],mcpLep2->getEnergy());	   
+	  //we don't want to check lepton reconstruction/lepton finders
+	  //veto particles close to the true lepton from the bosons, ignore tau's for now
+	  //take true MC lepton direction, veto all reconstructed particles around that direction within acos(alpha)>0.90
+	  TLorentzVector recoVec(0,0,0,0);
+	  recoVec.SetPxPyPzE(reco->getMomentum()[0],reco->getMomentum()[1],reco->getMomentum()[2],reco->getEnergy());
+	  if(cos(recoVec.Angle(trueLep2.Vect()))>m_cosAngle_pfo_lepton && m_vetoBosonLeptonsOnReco){
 	    continue;
 	  }
 	}
