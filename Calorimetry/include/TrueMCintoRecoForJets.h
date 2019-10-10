@@ -57,6 +57,8 @@ protected:
     bool m_ignoreNeutrinosInMCJets=true;
     void fillStableDaughterSet(MCParticle*, std::set<MCParticle*> &);
 
+    float m_cosAngle_pfo_lepton = 0.995;//corresponds to 5.73 degrees
+
 } ;
 
 
