@@ -22,53 +22,51 @@ using namespace marlin ;
 JetAnalyzer aJetAnalyzer;
 
 JetAnalyzer::JetAnalyzer() : Processor("JetAnalyzer") {
-    
-    // modify processor description
-    _description = "JetAnalyzer calculates properties of calorimeter showers" ;
+  
+  // modify processor description
+  _description = "JetAnalyzer calculates properties of calorimeter showers" ;
    
 
-    registerInputCollection( LCIO::MCPARTICLE,
-                            "MCParticleCollectionName",
-                            "Name of the MCParticle input collection",
-                            m_inputMCParticleCollection,
-                            std::string("MCPhysicsParticles"));
-    
-    registerProcessorParameter( "OutputRootFileName",
-                                "ROOT File name to collect plots",
-                                m_rootFileName,
-                                std::string("JetAnalyzer.root"));
+  registerInputCollection( LCIO::MCPARTICLE,
+              "MCParticleCollectionName",
+              "Name of the MCParticle input collection",
+              m_inputMCParticleCollection,
+              std::string("MCPhysicsParticles"));
+  
+  registerProcessorParameter( "OutputRootFileName",
+              "ROOT File name to collect plots",
+              m_rootFileName,
+              std::string("JetAnalyzer.root"));
 
-    registerInputCollection( LCIO::RECONSTRUCTEDPARTICLE,
-                            "RECOParticleCollectionName",
-                            "Name of the RECOParticle input collection",
-                            m_inputRECOParticleCollection,
-                            std::string("PandoraPFOs"));
+  registerInputCollection( LCIO::RECONSTRUCTEDPARTICLE,
+              "RECOParticleCollectionName",
+              "Name of the RECOParticle input collection",
+              m_inputRECOParticleCollection,
+              std::string("PandoraPFOs"));
 
-    registerInputCollection( LCIO::RECONSTRUCTEDPARTICLE,
-			     "GenJetCollection" ,  
-			     "Name of the GenJet collection"  ,
-			     m_genjetColName,
-			     std::string("GenJet_VLC")
-			     );
+  registerInputCollection( LCIO::RECONSTRUCTEDPARTICLE,
+              "GenJetCollection" ,  
+              "Name of the GenJet collection",
+              m_genjetColName,
+              std::string("GenJet_VLC"));
 
+  registerInputCollection( LCIO::RECONSTRUCTEDPARTICLE,
+              "RecoJetCollection" ,  
+              "Name of the RecoJet collection",
+              m_recojetColName,
+              std::string("RecoJet_VLC"));
 
-    registerInputCollection( LCIO::RECONSTRUCTEDPARTICLE,
-			     "RecoJetCollection" ,  
-			     "Name of the RecoJet collection"  ,
-			     m_recojetColName,
-			     std::string("RecoJet_VLC")
-			     );
-    registerProcessorParameter("doDiBosonChecks",
-			       "MC truth diboson checks for on-shell bosons",
-			       m_performDiBosonChecks,
-			       bool(false)
-			       );
-    registerProcessorParameter(
-			       "fillMEInfo" , 
-			       "save matrix element information",
-			       m_fillMEInfo,
-			       bool(false)			       
-			       );
+  registerProcessorParameter("doDiBosonChecks",
+              "MC truth diboson checks for on-shell bosons",
+              m_performDiBosonChecks,
+              bool(false));
+
+  registerProcessorParameter(
+              "fillMEInfo" , 
+              "save matrix element information",
+              m_fillMEInfo,
+              bool(false));
+
 }  
 
 
@@ -120,16 +118,16 @@ void JetAnalyzer::init() {
   m_pz_totPFO = 0;
 
   m_d1_mcPDGID = 0;
-  m_d1_mcE     = 0;
-  m_d1_mcPx    = 0;
-  m_d1_mcPy    = 0;
-  m_d1_mcPz    = 0;
+  m_d1_mcE   = 0;
+  m_d1_mcPx  = 0;
+  m_d1_mcPy  = 0;
+  m_d1_mcPz  = 0;
   
   m_d2_mcPDGID = 0;
-  m_d2_mcE     = 0;
-  m_d2_mcPx    = 0;
-  m_d2_mcPy    = 0;
-  m_d2_mcPz    = 0;
+  m_d2_mcE   = 0;
+  m_d2_mcPx  = 0;
+  m_d2_mcPy  = 0;
+  m_d2_mcPz  = 0;
 
   m_genJet_E ->clear(); 
   m_genJet_Px ->clear(); 
@@ -203,7 +201,7 @@ void JetAnalyzer::init() {
 
 
 void JetAnalyzer::processRunHeader( LCRunHeader*) {
-	++m_runNumber ;
+    ++m_runNumber ;
 }
 
 void JetAnalyzer::processEvent( LCEvent* evt ) {
@@ -263,73 +261,73 @@ void JetAnalyzer::processEvent( LCEvent* evt ) {
 
   bool pass_W_boson_mass=true;
   bool pass_Z_boson_mass=true;
-  if(mcColl!=NULL){
+    if(mcColl!=NULL){
     int boson_counter=0;
     int ind_second_boson=-1;
     for(int m =0; m< mcColl->getNumberOfElements(); m++){
       MCParticle* mcp= dynamic_cast<MCParticle*>( mcColl->getElementAt(m) ) ;
       //boson checks have to be done for WW,WZ and ZZ configurations
       if(m_performDiBosonChecks){
-	if(abs(mcp->getPDG())==24 || mcp->getPDG()==23){
-	  boson_counter+=1;
-	  if(abs(mcp->getPDG())==24 && boson_counter<3){
-	    if(fabs(mcp->getMass()-80.4)>20.0){
-	      pass_W_boson_mass=false;
-	    }
-	  }
-	  if(mcp->getPDG()==23 && boson_counter<3){
-	    if(fabs(mcp->getMass()-91.2)>20.0){
-	      pass_Z_boson_mass=false;
-	    }
-	  }
-	}
+        if(abs(mcp->getPDG())==24 || mcp->getPDG()==23){
+          boson_counter+=1;
+          if(abs(mcp->getPDG())==24 && boson_counter<3){
+            if(fabs(mcp->getMass()-80.4)>20.0){
+              pass_W_boson_mass=false;
+            }
+          }
+          if(mcp->getPDG()==23 && boson_counter<3){
+            if(fabs(mcp->getMass()-91.2)>20.0){
+              pass_Z_boson_mass=false;
+            }
+          }
+        }
       }
       //first boson is the index immediately in front of the first boson
       if(boson_counter==2 && pass_W_boson_mass && ind_second_boson==-1 && m_fillMEInfo){//for ZZ passed anyway, for WW or WZ passsed if real W
-	ind_second_boson=m;
-	MCParticle* mcp_1st= dynamic_cast<MCParticle*>( mcColl->getElementAt(ind_second_boson-1) ) ;
-	m_trueME_E->push_back(mcp_1st->getEnergy());
-	m_trueME_Px->push_back(mcp_1st->getMomentum()[0]);
-	m_trueME_Py->push_back(mcp_1st->getMomentum()[1]);
-	m_trueME_Pz->push_back(mcp_1st->getMomentum()[2]);
-	m_trueME_PDGID->push_back(mcp->getPDG());
+        ind_second_boson=m;
+        MCParticle* mcp_1st= dynamic_cast<MCParticle*>( mcColl->getElementAt(ind_second_boson-1) ) ;
+        m_trueME_E->push_back(mcp_1st->getEnergy());
+        m_trueME_Px->push_back(mcp_1st->getMomentum()[0]);
+        m_trueME_Py->push_back(mcp_1st->getMomentum()[1]);
+        m_trueME_Pz->push_back(mcp_1st->getMomentum()[2]);
+        m_trueME_PDGID->push_back(mcp->getPDG());
       }
       //save all boson daughters
       if(ind_second_boson>-1 && m<(ind_second_boson+5)){
-	m_trueME_E->push_back(mcp->getEnergy());
-	m_trueME_Px->push_back(mcp->getMomentum()[0]);
-	m_trueME_Py->push_back(mcp->getMomentum()[1]);
-	m_trueME_Pz->push_back(mcp->getMomentum()[2]);
-	m_trueME_PDGID->push_back(mcp->getPDG());
+        m_trueME_E->push_back(mcp->getEnergy());
+        m_trueME_Px->push_back(mcp->getMomentum()[0]);
+        m_trueME_Py->push_back(mcp->getMomentum()[1]);
+        m_trueME_Pz->push_back(mcp->getMomentum()[2]);
+        m_trueME_PDGID->push_back(mcp->getPDG());
       }
       //fill first quark anti quark pair which appears in the history
-      //this IS the hadronic W and Z (in case of a mixed di-boson event)
+    //this IS the hadronic W and Z (in case of a mixed di-boson event)
       if(abs(mcp->getPDG())<7 && m_d1_mcE<0) {
-	m_d1_mcPDGID=mcp->getPDG();
-	m_d1_mcE=mcp->getEnergy();
-	m_d1_mcPx=mcp->getMomentum()[0];
-	m_d1_mcPy=mcp->getMomentum()[1];
-	m_d1_mcPz=mcp->getMomentum()[2];
+        m_d1_mcPDGID=mcp->getPDG();
+        m_d1_mcE=mcp->getEnergy();
+        m_d1_mcPx=mcp->getMomentum()[0];
+        m_d1_mcPy=mcp->getMomentum()[1];
+        m_d1_mcPz=mcp->getMomentum()[2];
       }
       if(m_d2_mcE<0 && (abs(mcp->getPDG())<7 && mcp->getPDG()==(-m_d1_mcPDGID))){
-	m_d2_mcPDGID=mcp->getPDG();
-	m_d2_mcE=mcp->getEnergy();
-	m_d2_mcPx=mcp->getMomentum()[0];
-	m_d2_mcPy=mcp->getMomentum()[1];
-	m_d2_mcPz=mcp->getMomentum()[2];
+        m_d2_mcPDGID=mcp->getPDG();
+        m_d2_mcE=mcp->getEnergy();
+        m_d2_mcPx=mcp->getMomentum()[0];
+        m_d2_mcPy=mcp->getMomentum()[1];
+        m_d2_mcPz=mcp->getMomentum()[2];
       }
       if(mcp->getGeneratorStatus()==1){//visible sum of stable particles --> take neutrinos out
-	if(abs(mcp->getPDG())!=12 && abs(mcp->getPDG())!=14 &&  abs(mcp->getPDG())!=16){
-	  m_E_trueAll+=mcp->getEnergy();
-	  m_px_trueAll+=mcp->getMomentum()[0];
-	  m_py_trueAll+=mcp->getMomentum()[1];
-	  m_pz_trueAll+=mcp->getMomentum()[2];
-	}else{
-	  m_E_trueInv+=mcp->getEnergy();
-	  m_px_trueInv+=mcp->getMomentum()[0];
-	  m_py_trueInv+=mcp->getMomentum()[1];
-	  m_pz_trueInv+=mcp->getMomentum()[2];
-	}
+        if(abs(mcp->getPDG())!=12 && abs(mcp->getPDG())!=14 && abs(mcp->getPDG())!=16){
+          m_E_trueAll+=mcp->getEnergy();
+          m_px_trueAll+=mcp->getMomentum()[0];
+          m_py_trueAll+=mcp->getMomentum()[1];
+          m_pz_trueAll+=mcp->getMomentum()[2];
+        }else{
+          m_E_trueInv+=mcp->getEnergy();
+          m_px_trueInv+=mcp->getMomentum()[0];
+          m_py_trueInv+=mcp->getMomentum()[1];
+          m_pz_trueInv+=mcp->getMomentum()[2];
+        }
       }
     }
   }
@@ -382,7 +380,6 @@ void JetAnalyzer::getCollection(LCCollection* &collection, std::string collectio
     collection = evt->getCollection( collectionName ) ;
   }
   catch(DataNotAvailableException &e){
-    
     streamlog_out( DEBUG5 )<<"- cannot get collection. Collection " << collectionName.c_str() << " is unavailable" << std::endl;
     return;
   }
@@ -393,7 +390,7 @@ void JetAnalyzer::check(LCEvent*){
 }
 
 void JetAnalyzer::end(){
-    
+  
   m_rootFile->cd();  
  
   m_rootFile->Write();
