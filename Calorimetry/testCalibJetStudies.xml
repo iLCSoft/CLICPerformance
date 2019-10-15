@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!-- ?xml-stylesheet type="text/xsl" href="http://ilcsoft.desy.de/marlin/marlin.xsl"? -->
+<!-- ?xml-stylesheet type="text/xsl" href="marlin.xsl"? -->
+
+<!-- Loading shared library : /scratch1/DD4hepDetCalibration/ClicPerformance/lib/libClicPerformance.so.1.0.0 (libClicPerformance.so)-->
+
+<!--##########################################
+    #                                        #
+    #     Example steering file for marlin   #
+    #                                        #
+    ##########################################-->
+
+
+<marlin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ilcsoft.desy.de/marlin/marlin.xsd">
+ <execute>
+   <processor name="MyTrueMCintoRecoForJets"/>     
+   <processor name="MyFastGenJetProcessor"/>  
+   <processor name="MyFastRecoJetProcessor"/>  
+   <processor name="MyJetAnalyzer"/>
+ </execute>
+
+<processor name="MyJetAnalyzer" type="JetAnalyzer">
+  <!--Reco particles, include also isolated leptons here, should be of same type as the one used as jet clusteringg input-->
+  <parameter name="RECOParticleCollectionName" type="string" lcioInType="ReconstructedParticle">TightSelectedPandoraPFOs</parameter>
+  <!--Name of the MCParticle input collection, also considers isolated leptons and neutrinos-->
+  <parameter name="MCParticleCollectionName" type="string" lcioInType="McParticle">MCPhysicsParticles</parameter>
+  <!--Name of the GenJet input collection-->
+  <parameter name="GenJetCollection" type="string" lcioInType="ReconstructedParticle">GenJet_VLC</parameter>
+  <!--Name of the RecoJet input collection-->
+  <parameter name="RecoJetCollection" type="string" lcioInType="ReconstructedParticle">RecoJet_VLC</parameter>
+  <!--flag to fill all first MC particles in decay chain, saves di-boson decay-->
+  <parameter name="fillMEInfo" type="bool">false</parameter>
+  <!--check on MC truth for on-shell bosons-->
+  <parameter name="doDiBosonChecks" type="bool">false</parameter>
+  <parameter name="OutputRootFileName" type="string">JetStudy_WW1000_11814_CLIC_o3_v14_CT_TightSelectedPandoraPFOs_withbosoncheck_fillMCHistory_RecoLepVeto_noNeutrinoVetoOfAll_VBosonLepVeto.root
+  </parameter>
+</processor>
+
+<global>
+  <parameter name="LCIOInputFiles">
+/eos/experiment/clicdp/grid/ilc/prod/clic/1tev/WW/CLIC_o3_v14/DST/00011814/000/WW_dst_11814_1.slcio /eos/experiment/clicdp/grid/ilc/prod/clic/1tev/WW/CLIC_o3_v14/DST/00011814/000/WW_dst_11814_2.slcio /eos/experiment/clicdp/grid/ilc/prod/clic/1tev/WW/CLIC_o3_v14/DST/00011814/000/WW_dst_11814_3.slcio /eos/experiment/clicdp/grid/ilc/prod/clic/1tev/WW/CLIC_o3_v14/DST/00011814/000/WW_dst_11814_4.slcio
+  </parameter>
+  <!-- limit the number of processed records (run+evt): -->  
+  <parameter name="MaxRecordNumber" value="-1"/>   
+  <parameter name="SkipNEvents" value="0" />  
+  <parameter name="SupressCheck" value="false" />  
+  <parameter name="AllowToModifyEvent" value="false" />  
+  <!--<parameter name="GearXMLFile"> /afs/cern.h/user/w/weberma2/public/CLIC_o3_v08_gear.xml </parameter>  -->
+  <parameter name="Verbosity" options="DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT"> WARNING  </parameter> 
+  <parameter name="RandomSeed" value="1234567890" />
+  <!-- optionally limit the collections that are read from the input file: -->  
+  <!--parameter name="LCIOReadCollectionNames">MCParticle PandoraPFOs</parameter-->
+ </global>
+
+<processor name="MyTrueMCintoRecoForJets" type="TrueMCintoRecoForJets">
+  <!--name of the pseudo RecoParticleCollection made from MCParticles-->
+  <parameter name="RECOParticleCollectionName" type="string" lcioInType="ReconstructedParticle">MCParticlePandoraPFOs</parameter>
+  <!--Name of the MCParticle input collection-->
+  <parameter name="MCParticleInputCollectionName" type="string" lcioInType="McParticle">MCPhysicsParticles</parameter>
+  <!-- flag to ignore all neutrinos for GenJet filling-->
+  <parameter name="ignoreNeutrinosInMCJets" type="bool">true</parameter>
+  <!-- flag to veto all stable daughters of all vector boson leptons including neutrinos before MCTruthJet filling-->
+  <parameter name="vetoBosonLeptons" type="bool">false</parameter>
+  <!-- flag to veto PFOs angularly matched to MC e,mu's from vector bosons on RECO level, only then recoparticle jet collection will be filled-->
+  <parameter name="vetoBosonLeptonsOnReco" type="bool">false</parameter>
+  <!-- cosAngle for matching checks of PFOs and gen e and mu's from MC vector bosons, 0.995 corresponds to an angle of 5.7 degrees, veto-cone of 0.10 rad-->
+  <parameter name="cosAngle_pfo_lepton" type="float">0.995</parameter>
+  <!--name of the RecoParticleCollection removingleptons-->
+  <parameter name="RecoParticleNoLeptonCollectionName" type="string" lcioInType="ReconstructedParticle">PandoraPFOsNoLeptons</parameter>
+  <!--Name of the MCParticle input collection-->
+  <parameter name="RecoParticleInputCollectionName" type="string" lcioInType="ReconstructedParticle">TightSelectedPandoraPFOs</parameter>
+</processor>
+
+
+<processor name="MyFastGenJetProcessor" type="FastJetProcessor">
+  <parameter name="recParticleIn" type="string" lcioInType="ReconstructedParticle"> MCParticlePandoraPFOs </parameter>
+  <!--parameters are R, beta, gamma -->
+  <parameter name="algorithm" type="StringVec"> ValenciaPlugin 0.7 1 1 </parameter>
+  <parameter name="clusteringMode" type="StringVec"> ExclusiveNJets 2 </parameter>
+  <parameter name="recombinationScheme" type="string">E_scheme </parameter>
+  <parameter name="jetOut" type="string" lcioOutType="ReconstructedParticle">GenJet_VLC</parameter>
+  <parameter name="storeParticlesInJets" type="bool">false</parameter>
+  <parameter name="recParticleOut" type="string" lcioOutType="ReconstructedParticle">MCParticlePandoraPFOsInJet </parameter>
+</processor>
+
+<processor name="MyFastRecoJetProcessor" type="FastJetProcessor">
+  <parameter name="recParticleIn" type="string" lcioInType="ReconstructedParticle"> PandoraPFOsNoLeptons </parameter>
+  <!--parameters are R, beta, gamma -->
+  <parameter name="algorithm" type="StringVec"> ValenciaPlugin 0.7 1 1 </parameter>
+  <parameter name="clusteringMode" type="StringVec"> ExclusiveNJets 2 </parameter>
+  <parameter name="recombinationScheme" type="string">E_scheme </parameter>
+  <parameter name="jetOut" type="string" lcioOutType="ReconstructedParticle">RecoJet_VLC</parameter>
+  <parameter name="storeParticlesInJets" type="bool">false</parameter>
+  <parameter name="recParticleOut" type="string" lcioOutType="ReconstructedParticle"> PandoraPFOsNoLeptonsInJets </parameter>
+</processor>
+
+<processor name="MyLCIOOutputProcessor" type="LCIOOutputProcessor">
+ <!--Writes the current event to the specified LCIO outputfile.eeds to be the last ActiveProcessor.-->
+  <!--drops the named collections from the event-->
+  <!--parameter name="DropCollectionNames" type="StringVec">TPCHits HCalHits  </parameter-->
+  <!--drops all collections of the given type from the event-->
+  <!--parameter name="DropCollectionTypes" type="StringVec">SimTrackerHit SimCalorimeterHit  </parameter-->
+  <!-- write complete objects in subset collections to the file (i.e. ignore subset flag)-->
+  <!--parameter name="FullSubsetCollections" type="StringVec">MCParticlesSkimmed  </parameter-->
+  <!--force keep of the named collections - overrules DropCollectionTypes (and DropCollectionNames)-->
+  <!--parameter name="KeepCollectionNames" type="StringVec">MyPreciousSimTrackerHits  </parameter-->
+  <!-- name of output file -->
+  <parameter name="LCIOOutputFile" type="string">outputfile_testthings.slcio</parameter>
+  <!--write mode for output file:  WRITE_APPEND or WRITE_OLD-->
+  <parameter name="LCIOWriteMode" type="string">WRITE_NEW</parameter>
+  <!--will split output file if size in kB exceeds given value - doesn't work with APPEND and OLD-->
+  <!--parameter name="SplitFileSizekB" type="int">1992294 </parameter-->
+  <!--verbosity level of this processor ("DEBUG0-4,MESSAGE0-4,WARNING0-4,ERROR0-4,SILENT")-->
+  <!--parameter name="Verbosity" type="string">DEBUG </parameter-->
+</processor>
+
+
+</marlin>

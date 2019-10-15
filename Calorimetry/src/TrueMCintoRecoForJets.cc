@@ -14,6 +14,7 @@ using namespace marlin ;
 
 TrueMCintoRecoForJets aTrueMCintoRecoForJets;
 
+
 TrueMCintoRecoForJets::TrueMCintoRecoForJets() : Processor("TrueMCintoRecoForJets") {
   
     // modify processor description
@@ -46,8 +47,9 @@ TrueMCintoRecoForJets::TrueMCintoRecoForJets() : Processor("TrueMCintoRecoForJet
 			       "remove neutrinos prior to MC Jet Clustering",
 			       m_ignoreNeutrinosInMCJets,
 			       bool(true));
+
     registerProcessorParameter("cosAngle_pfo_lepton",
-			       "remove neutrinos prior to MC Jet Clustering",
+			       "matching angle between PFOs and MC leptons from vector bosons",
 			       m_cosAngle_pfo_lepton,
 			       float(0.995));
 
@@ -101,10 +103,11 @@ void TrueMCintoRecoForJets::processEvent( LCEvent* evt ) {
 	if (boson_daughtersFunc.count(mcp) != 0)
 	{
 	  if(ind_MCLep==-1 && (abs(mcp->getPDG())==11 || abs(mcp->getPDG())==13)){
-	    ind_MCLep=m;	   
+	    ind_MCLep=m;	  
 	  }
-	  if(ind_MCLep2==-1 && (abs(mcp->getPDG())==11 || abs(mcp->getPDG())==13)){
-	    ind_MCLep2=m;	   
+	  //only check for second lepton in case it is not already the first lepton
+	  if((ind_MCLep!=m && ind_MCLep2==-1) && (abs(mcp->getPDG())==11 || abs(mcp->getPDG())==13)){
+	    ind_MCLep2=m;
 	  }
 	  continue;
 	}
