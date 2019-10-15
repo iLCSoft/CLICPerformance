@@ -83,24 +83,29 @@ void TrueMCintoRecoForJets::processEvent( LCEvent* evt ) {
     LCCollectionVec *reccolForJets = new LCCollectionVec(LCIO::RECONSTRUCTEDPARTICLE);
     LCCollectionVec *reccolNoLep = new LCCollectionVec(LCIO::RECONSTRUCTEDPARTICLE);
     
-    if( mcColl != 0 ){
-      int nMCP = mcColl->getNumberOfElements();
-      
-      std::set<MCParticle*> boson_daughtersFunc;
- 
-      int ind_MCLep=-1;//semi leptonically decaying W-lepton (e,mu), or first lepton (e,mu) for Z
-      int ind_MCLep2=-1;// in case of Z second lepton (e,mu)
 
-      for(int m=0;m<nMCP;m++){
-	MCParticle *mcp = static_cast<MCParticle*>(mcColl->getElementAt(m));
-	//in order to catch events where the lepton branches off an FSR photon
-	if(m_vetoBosonLeptons && (abs(mcp->getPDG())==24 || mcp->getPDG()==23) && mcp->getDaughters().size()>1 && (abs(mcp->getDaughters()[0]->getPDG())>6 && abs(mcp->getDaughters()[0]->getPDG())<17)){
-	  fillStableDaughterSet(mcp, boson_daughtersFunc);
-	}
-	if(mcp->getGeneratorStatus()!=1){
-	  continue;
-	}
-	if (boson_daughtersFunc.count(mcp) != 0)
+    evt->addCollection(reccolNoLep,m_outputRecoNoLepParticleCollection);
+    evt->addCollection(reccolForJets,m_outputRECOParticleCollection);
+    if( mcColl == nullptr ){
+      return;
+    }
+    int nMCP = mcColl->getNumberOfElements();
+    
+    std::set<MCParticle*> boson_daughtersFunc;
+    
+    int ind_MCLep=-1;//semi leptonically decaying W-lepton (e,mu), or first lepton (e,mu) for Z
+    int ind_MCLep2=-1;// in case of Z second lepton (e,mu)
+    
+    for(int m=0;m<nMCP;m++){
+      MCParticle *mcp = static_cast<MCParticle*>(mcColl->getElementAt(m));
+      //in order to catch events where the lepton branches off an FSR photon
+      if(m_vetoBosonLeptons && (abs(mcp->getPDG())==24 || mcp->getPDG()==23) && mcp->getDaughters().size()>1 && (abs(mcp->getDaughters()[0]->getPDG())>6 && abs(mcp->getDaughters()[0]->getPDG())<17)){
+	fillStableDaughterSet(mcp, boson_daughtersFunc);
+      }
+      if(mcp->getGeneratorStatus()!=1){
+	continue;
+      }
+      if (boson_daughtersFunc.count(mcp) != 0)
 	{
 	  if(ind_MCLep==-1 && (abs(mcp->getPDG())==11 || abs(mcp->getPDG())==13)){
 	    ind_MCLep=m;	  
@@ -111,70 +116,63 @@ void TrueMCintoRecoForJets::processEvent( LCEvent* evt ) {
 	  }
 	  continue;
 	}
-	if(m_ignoreNeutrinosInMCJets && (fabs(mcp->getPDG())==12 || fabs(mcp->getPDG())==14 || fabs(mcp->getPDG())==16)){
+      if(m_ignoreNeutrinosInMCJets && (fabs(mcp->getPDG())==12 || fabs(mcp->getPDG())==14 || fabs(mcp->getPDG())==16)){
+	continue;
+      }
+      ReconstructedParticleImpl* truePartIntoReco = new ReconstructedParticleImpl;
+      truePartIntoReco->setMomentum(mcp->getMomentum());
+      truePartIntoReco->setType(mcp->getPDG());
+      truePartIntoReco->setEnergy(mcp->getEnergy());
+      truePartIntoReco->setMass(mcp->getMass());
+      truePartIntoReco->setCharge(mcp->getCharge());
+      reccolForJets->addElement(truePartIntoReco); 
+    }
+    
+      
+    LCCollection * recoColl =0;
+    getCollection(recoColl,m_inputRecoParticleCollection,evt);
+    int nReco = recoColl->getNumberOfElements();
+    for(int r=0;r<nReco;r++){
+      ReconstructedParticle *reco = static_cast<ReconstructedParticle*>(recoColl->getElementAt(r));
+      if( ind_MCLep!=-1){
+	MCParticle *mcpLep = static_cast<MCParticle*>(mcColl->getElementAt(ind_MCLep));
+	TLorentzVector trueLep(0,0,0,0);
+	trueLep.SetPxPyPzE(mcpLep->getMomentum()[0],mcpLep->getMomentum()[1],mcpLep->getMomentum()[2],mcpLep->getEnergy());	   
+	//we don't want to check lepton reconstruction/lepton finders
+	//veto particles close to the true lepton from the bosons, ignore tau's for now
+	//take true MC lepton direction, veto all reconstructed particles around that direction within acos(alpha)>0.90
+	TLorentzVector recoVec(0,0,0,0);
+	recoVec.SetPxPyPzE(reco->getMomentum()[0],reco->getMomentum()[1],reco->getMomentum()[2],reco->getEnergy());
+	if(cos(recoVec.Angle(trueLep.Vect()))>m_cosAngle_pfo_lepton && m_vetoBosonLeptonsOnReco){
 	  continue;
 	}
-	ReconstructedParticleImpl* truePartIntoReco = new ReconstructedParticleImpl;
-	truePartIntoReco->setMomentum(mcp->getMomentum());
-	truePartIntoReco->setType(mcp->getPDG());
-	truePartIntoReco->setEnergy(mcp->getEnergy());
-	truePartIntoReco->setMass(mcp->getMass());
-	truePartIntoReco->setCharge(mcp->getCharge());
-	reccolForJets->addElement(truePartIntoReco); 
       }
-
-      
-      LCCollection * recoColl =0;
-      getCollection(recoColl,m_inputRecoParticleCollection,evt);
-      int nReco = recoColl->getNumberOfElements();
-      for(int r=0;r<nReco;r++){
-	ReconstructedParticle *reco = static_cast<ReconstructedParticle*>(recoColl->getElementAt(r));
-	if( ind_MCLep!=-1){
-	  MCParticle *mcpLep = static_cast<MCParticle*>(mcColl->getElementAt(ind_MCLep));
-	  TLorentzVector trueLep(0,0,0,0);
-	  trueLep.SetPxPyPzE(mcpLep->getMomentum()[0],mcpLep->getMomentum()[1],mcpLep->getMomentum()[2],mcpLep->getEnergy());	   
-	  //we don't want to check lepton reconstruction/lepton finders
-	  //veto particles close to the true lepton from the bosons, ignore tau's for now
-	  //take true MC lepton direction, veto all reconstructed particles around that direction within acos(alpha)>0.90
-	  TLorentzVector recoVec(0,0,0,0);
-	  recoVec.SetPxPyPzE(reco->getMomentum()[0],reco->getMomentum()[1],reco->getMomentum()[2],reco->getEnergy());
-	  if(cos(recoVec.Angle(trueLep.Vect()))>m_cosAngle_pfo_lepton && m_vetoBosonLeptonsOnReco){
-	    continue;
-	  }
+      if( ind_MCLep2!=-1){
+	MCParticle *mcpLep2 = static_cast<MCParticle*>(mcColl->getElementAt(ind_MCLep2));
+	TLorentzVector trueLep2(0,0,0,0);
+	trueLep2.SetPxPyPzE(mcpLep2->getMomentum()[0],mcpLep2->getMomentum()[1],mcpLep2->getMomentum()[2],mcpLep2->getEnergy());	   
+	//we don't want to check lepton reconstruction/lepton finders
+	//veto particles close to the true lepton from the bosons, ignore tau's for now
+	//take true MC lepton direction, veto all reconstructed particles around that direction within acos(alpha)>0.90
+	TLorentzVector recoVec(0,0,0,0);
+	recoVec.SetPxPyPzE(reco->getMomentum()[0],reco->getMomentum()[1],reco->getMomentum()[2],reco->getEnergy());
+	if(cos(recoVec.Angle(trueLep2.Vect()))>m_cosAngle_pfo_lepton && m_vetoBosonLeptonsOnReco){
+	  continue;
 	}
-	if( ind_MCLep2!=-1){
-	  MCParticle *mcpLep2 = static_cast<MCParticle*>(mcColl->getElementAt(ind_MCLep2));
-	  TLorentzVector trueLep2(0,0,0,0);
-	  trueLep2.SetPxPyPzE(mcpLep2->getMomentum()[0],mcpLep2->getMomentum()[1],mcpLep2->getMomentum()[2],mcpLep2->getEnergy());	   
-	  //we don't want to check lepton reconstruction/lepton finders
-	  //veto particles close to the true lepton from the bosons, ignore tau's for now
-	  //take true MC lepton direction, veto all reconstructed particles around that direction within acos(alpha)>0.90
-	  TLorentzVector recoVec(0,0,0,0);
-	  recoVec.SetPxPyPzE(reco->getMomentum()[0],reco->getMomentum()[1],reco->getMomentum()[2],reco->getEnergy());
-	  if(cos(recoVec.Angle(trueLep2.Vect()))>m_cosAngle_pfo_lepton && m_vetoBosonLeptonsOnReco){
-	    continue;
-	  }
-	}
-	ReconstructedParticleImpl* recoNoLep = new ReconstructedParticleImpl;
-	recoNoLep->setMomentum(reco->getMomentum());
-	recoNoLep->setEnergy(reco->getEnergy());
-	recoNoLep->setType(reco->getType());
-	recoNoLep->setCovMatrix(reco->getCovMatrix());
-	recoNoLep->setMass(reco->getMass());
-	recoNoLep->setCharge(reco->getCharge());
-	recoNoLep->setParticleIDUsed(reco->getParticleIDUsed());
-	recoNoLep->setGoodnessOfPID(reco->getGoodnessOfPID());
-	recoNoLep->setStartVertex(reco->getStartVertex());
-	reccolNoLep->addElement(recoNoLep); 
       }
+      ReconstructedParticleImpl* recoNoLep = new ReconstructedParticleImpl;
+      recoNoLep->setMomentum(reco->getMomentum());
+      recoNoLep->setEnergy(reco->getEnergy());
+      recoNoLep->setType(reco->getType());
+      recoNoLep->setCovMatrix(reco->getCovMatrix());
+      recoNoLep->setMass(reco->getMass());
+      recoNoLep->setCharge(reco->getCharge());
+      recoNoLep->setParticleIDUsed(reco->getParticleIDUsed());
+      recoNoLep->setGoodnessOfPID(reco->getGoodnessOfPID());
+      recoNoLep->setStartVertex(reco->getStartVertex());
+      reccolNoLep->addElement(recoNoLep); 
     }
-    if( mcColl != 0 ){
-      evt->addCollection(reccolNoLep,m_outputRecoNoLepParticleCollection);
-      evt->addCollection(reccolForJets,m_outputRECOParticleCollection);
-      if( mcColl == nullptr ){
-	return;
-      }
-    }
+    
 }
 
 void TrueMCintoRecoForJets::fillStableDaughterSet(MCParticle* mcp, std::set<MCParticle*> &stableDaughterSet){

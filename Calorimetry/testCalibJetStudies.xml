@@ -32,7 +32,7 @@
   <parameter name="fillMEInfo" type="bool">false</parameter>
   <!--check on MC truth for on-shell bosons-->
   <parameter name="doDiBosonChecks" type="bool">false</parameter>
-  <parameter name="OutputRootFileName" type="string">JetStudy_WW1000_11814_CLIC_o3_v14_CT_TightSelectedPandoraPFOs_withbosoncheck_fillMCHistory_RecoLepVeto_noNeutrinoVetoOfAll_VBosonLepVeto.root
+  <parameter name="OutputRootFileName" type="string">JetStudy_WW1000_11814_CLIC_o3_v14_CT_TightSelectedPandoraPFOs_testnew.root
   </parameter>
 </processor>
 
