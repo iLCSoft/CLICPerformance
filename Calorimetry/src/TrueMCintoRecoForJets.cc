@@ -168,10 +168,13 @@ void TrueMCintoRecoForJets::processEvent( LCEvent* evt ) {
 	reccolNoLep->addElement(recoNoLep); 
       }
     }
-    
-    evt->addCollection(reccolNoLep,m_outputRecoNoLepParticleCollection);
-    evt->addCollection(reccolForJets,m_outputRECOParticleCollection);
-    
+    if( mcColl != 0 ){
+      evt->addCollection(reccolNoLep,m_outputRecoNoLepParticleCollection);
+      evt->addCollection(reccolForJets,m_outputRECOParticleCollection);
+      if( mcColl == nullptr ){
+	return;
+      }
+    }
 }
 
 void TrueMCintoRecoForJets::fillStableDaughterSet(MCParticle* mcp, std::set<MCParticle*> &stableDaughterSet){
