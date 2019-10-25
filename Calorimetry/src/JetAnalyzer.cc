@@ -107,10 +107,10 @@ void JetAnalyzer::init() {
   m_py_trueInv = 0;
   m_pz_trueInv = 0;
 
-  m_E_trueAll  = 0;
-  m_px_trueAll = 0;
-  m_py_trueAll = 0;
-  m_pz_trueAll = 0;
+  m_E_trueVis  = 0;
+  m_px_trueVis = 0;
+  m_py_trueVis = 0;
+  m_pz_trueVis = 0;
 
   m_E_totPFO  = 0;
   m_px_totPFO = 0;
@@ -167,13 +167,13 @@ void JetAnalyzer::init() {
   m_outputTree->Branch("d2_mcPy",&m_d2_mcPy,"d2_mcPy/F");
   m_outputTree->Branch("d2_mcPz",&m_d2_mcPz,"d2_mcPz/F");
 
-  //true particle level, exclude neutrinos
-  m_outputTree->Branch("E_trueAll" ,&m_E_trueAll, "E_trueAll/F");
-  m_outputTree->Branch("Px_trueAll",&m_px_trueAll,"Px_trueAll/F");
-  m_outputTree->Branch("Py_trueAll",&m_py_trueAll,"Py_trueAll/F");
-  m_outputTree->Branch("Pz_trueAll",&m_pz_trueAll,"Pz_trueAll/F");
+  //true particle level, exclude neutrinos, true visible content
+  m_outputTree->Branch("E_trueVis" ,&m_E_trueVis, "E_trueVis/F");
+  m_outputTree->Branch("Px_trueVis",&m_px_trueVis,"Px_trueVis/F");
+  m_outputTree->Branch("Py_trueVis",&m_py_trueVis,"Py_trueVis/F");
+  m_outputTree->Branch("Pz_trueVis",&m_pz_trueVis,"Pz_trueVis/F");
 
-  //true particle level, only neutrinos
+  //true particle level, only neutrinos, true invisible content
   m_outputTree->Branch("E_trueInv" ,&m_E_trueInv, "E_trueInv/F");
   m_outputTree->Branch("Px_trueInv",&m_px_trueInv,"Px_trueInv/F");
   m_outputTree->Branch("Py_trueInv",&m_py_trueInv,"Py_trueInv/F");
@@ -214,10 +214,10 @@ void JetAnalyzer::processEvent( LCEvent* evt ) {
   m_py_trueInv = 0;
   m_pz_trueInv = 0;
 
-  m_E_trueAll  = 0;
-  m_px_trueAll = 0;
-  m_py_trueAll = 0;
-  m_pz_trueAll = 0;
+  m_E_trueVis  = 0;
+  m_px_trueVis = 0;
+  m_py_trueVis = 0;
+  m_pz_trueVis = 0;
 
   m_E_totPFO  = 0;
   m_px_totPFO = 0;
@@ -318,10 +318,10 @@ void JetAnalyzer::processEvent( LCEvent* evt ) {
       }
       if(mcp->getGeneratorStatus()==1){//visible sum of stable particles --> take neutrinos out
         if(abs(mcp->getPDG())!=12 && abs(mcp->getPDG())!=14 && abs(mcp->getPDG())!=16){
-          m_E_trueAll+=mcp->getEnergy();
-          m_px_trueAll+=mcp->getMomentum()[0];
-          m_py_trueAll+=mcp->getMomentum()[1];
-          m_pz_trueAll+=mcp->getMomentum()[2];
+          m_E_trueVis+=mcp->getEnergy();
+          m_px_trueVis+=mcp->getMomentum()[0];
+          m_py_trueVis+=mcp->getMomentum()[1];
+          m_pz_trueVis+=mcp->getMomentum()[2];
         }else{
           m_E_trueInv+=mcp->getEnergy();
           m_px_trueInv+=mcp->getMomentum()[0];
