@@ -229,6 +229,8 @@ void ClicEfficiencyCalculator::init() {
                        bufsize_perf, 0);
     m_perfTree->Branch("recoChi2OverNDF", "std::vector<double >",
                        &recoChi2OverNDF, bufsize_perf, 0);
+    m_perfTree->Branch("recoPurity", "std::vector<double >",
+                       &recoPurity, bufsize_perf, 0);
 
     // Tree for MC information
     m_mctree = new TTree(m_mcTreeName.c_str(),m_mcTreeName.c_str());
@@ -368,7 +370,9 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
   
   // Loop over all tracks
   int nTracks = trackCollection->getNumberOfElements();
+  streamlog_out( DEBUG9 ) << nTracks << " reconstructed tracks" << std::endl;
   for(int itTrack=0;itTrack<nTracks;itTrack++){
+    streamlog_out( DEBUG8 ) << "Reconstructed track #" << itTrack << std::endl;
     
     // Get the track
     Track* track = static_cast<Track*>( trackCollection->getElementAt(itTrack) ) ;
@@ -447,19 +451,24 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
       m_vec_purity.push_back(purity);
       m_vec_innermostR.push_back(innermostR);
 
-      recoPt.push_back(0.3 * m_magneticField / (fabs(omtrack) * 1000.));
+      double pt = 0.3 * m_magneticField / (fabs(omtrack) * 1000.); // omega in 1/mm -> transformed in 1/m
+      recoPt.push_back(pt);
       double recoThetaRad = M_PI / 2 - atan(tLtrack);
       recoTheta.push_back(recoThetaRad * 180. / M_PI);
-      recoPhi.push_back(phtrack * 180. / M_PI);
+      double phi = phtrack * 180. / M_PI;
+      recoPhi.push_back(phi);
       recoD0.push_back(d0track);
       recoZ0.push_back(z0track);
       recoP.push_back(recoPt.back() / sin(recoThetaRad));
+      int nhits = track->getTrackerHits().size();
+      recoNhits.push_back(nhits);
 
-      recoNhits.push_back(track->getTrackerHits().size());
       if (track->getNdf() > 0)
         recoChi2OverNDF.push_back(track->getChi2() / track->getNdf());
       else
         recoChi2OverNDF.push_back(-1.);
+
+      recoPurity.push_back(purity);
 
       // If no particle associated to this track
       if (associatedParticle == 0){
@@ -1042,6 +1051,7 @@ void ClicEfficiencyCalculator::clearTreeVar(){
 
   recoNhits.clear();
   recoChi2OverNDF.clear();
+  recoPurity.clear();
 }  
 
 

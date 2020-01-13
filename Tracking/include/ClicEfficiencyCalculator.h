@@ -161,6 +161,7 @@ protected:
   std::vector<double> recoP = {};
   std::vector<int> recoNhits = {};
   std::vector<double> recoChi2OverNDF = {};
+  std::vector<double> recoPurity = {};
 
   TTree *m_simplifiedTree = NULL;
   double m_type = 0.0, m_pt = 0.0, m_theta = 0.0, m_phi = 0.0, m_vertexR = 0.0, m_distClosestMCPart = 0.0,  m_closeTracks = 0.0, m_purity = 0.0;
