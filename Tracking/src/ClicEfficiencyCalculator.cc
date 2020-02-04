@@ -97,7 +97,7 @@ ClicEfficiencyCalculator::ClicEfficiencyCalculator() : Processor("ClicEfficiency
   
   // Flag to decide which definition of reconstructable to use
   registerProcessorParameter( "reconstructableDefinition",
-                             "Set of cuts to define 'reconstractable' particles for eff computation. The options are: NHits, NHitsVXD, ILDLike",
+                             "Set of cuts to define 'reconstructable' particles for eff computation. The options are: NHits, NHitsVXD, ILDLike, Chargino, SoftPi",
                              m_cuts,
                              std::string("NHits"));
   
@@ -899,7 +899,47 @@ bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::str
     
     if (keepParticle) return true;
     
-  }  else if (cut=="SingleMu") {
+  }
+
+  else if (cut=="Chargino") {
+
+    // Same as ILDLike, except for the genStatus requirement => isStable = true always
+    bool isStable = true;
+    bool passPt = false;
+    bool passTheta = false;
+    bool passNHits = false;
+
+    TLorentzVector p;
+    p.SetPxPyPzE(particle->getMomentum()[0], particle->getMomentum()[1], particle->getMomentum()[2], particle->getEnergy());//in GeV
+    if ( p.Pt()>=0.1 ) passPt = true;
+    if ( fabs(cos(p.Theta()))<0.99 ) passTheta = true;
+
+    std::vector<TrackerHit*> trackHits = particleHits[particle];
+    int uniqueHits = getUniqueHits(trackHits,m_encoder);
+    if(uniqueHits >= 4) passNHits = true;
+
+    bool keepParticle = passTheta && passNHits && passPt && isStable; 
+    if (keepParticle) return true;
+  }
+
+  else if (cut=="SoftPi") {
+
+    // Same as Chargino, except for the pT and Nhits requirement => passPt = true and passNhits = true always
+    bool isStable = true;
+    bool passPt = true;
+    bool passTheta = false;
+    bool passNHits = true;
+
+    TLorentzVector p;
+    p.SetPxPyPzE(particle->getMomentum()[0], particle->getMomentum()[1], particle->getMomentum()[2], particle->getEnergy());//in GeV
+    if ( fabs(cos(p.Theta()))<0.99 ) passTheta = true;
+
+    bool keepParticle = passTheta && passNHits && passPt && isStable; 
+    if (keepParticle) return true;
+
+  }
+
+  else if (cut=="SingleMu") {
     
     // Only consider particles: muons (|PDG|=13) with at least 4 hits pass
     
