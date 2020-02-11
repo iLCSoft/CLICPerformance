@@ -97,7 +97,7 @@ ClicEfficiencyCalculator::ClicEfficiencyCalculator() : Processor("ClicEfficiency
   
   // Flag to decide which definition of reconstructable to use
   registerProcessorParameter( "reconstructableDefinition",
-                             "Set of cuts to define 'reconstructable' particles for eff computation. The options are: NHits, NHitsVXD, ILDLike, Chargino, SoftPi",
+                             "Set of cuts to define 'reconstructable' particles for eff computation. The options are: NHits, NHitsVXD, ILDLike, AnyGenStatus, AnyGenStatusLowPt",
                              m_cuts,
                              std::string("NHits"));
   
@@ -612,7 +612,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     if(particleHits.count(particle) == 0) continue;
     
     // Cut on stable particles
-    if(particle->getGeneratorStatus() != 1) continue;
+    //if(particle->getGeneratorStatus() != 1) continue;
     
     // Now decide on criteria for different particle types/classifications
     m_particles["all"]++; // all particles
@@ -804,8 +804,7 @@ int ClicEfficiencyCalculator::getLayer(TrackerHit* hit, UTIL::BitField64 &encode
 
 
 bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::string cut, UTIL::BitField64 &m_encoder){
-  
-  
+    
   if (cut=="NHits") {
     
     // Only make tracks with 6 or more hits
@@ -903,10 +902,11 @@ bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::str
     
   }
 
-  else if (cut=="Chargino") {
-    std::cout << "PDG = " << particle->getPDG() << std::endl;
+  else if (cut=="AnyGenStatus") {
 
-    // Same as ILDLike, except for the genStatus requirement => isStable = true always
+    // Same as ILDLike, except for:
+    // - no requirement on number of hits
+    // - no requirement on genStatus => isStable = true always
     bool isStable = true;
     bool passPt = false;
     bool passTheta = false;
@@ -917,18 +917,13 @@ bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::str
     if ( p.Pt()>=0.1 ) passPt = true;
     if ( fabs(cos(p.Theta()))<0.99 ) passTheta = true;
 
-    /*std::vector<TrackerHit*> trackHits = particleHits[particle];
-    int uniqueHits = getUniqueHits(trackHits,m_encoder);
-    if(uniqueHits >= 4) passNHits = true;
-    */
-
     bool keepParticle = passTheta && passNHits && passPt && isStable; 
     if (keepParticle) return true;
   }
 
-  else if (cut=="SoftPi") {
+  else if (cut=="AnyGenStatusLowPt") {
 
-    // Same as Chargino, except for the pT and Nhits requirement => passPt = true and passNhits = true always
+    // Same as AnyGenStatus, without pT requirement
     bool isStable = true;
     bool passPt = true;
     bool passTheta = false;
