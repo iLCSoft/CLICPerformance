@@ -255,6 +255,7 @@ void ClicEfficiencyCalculator::init() {
     m_simplifiedTree = new TTree("simplifiedEfficiencyTree","simplifiedEfficiencyTree");
     m_simplifiedTree->Branch("m_signal",&m_signal,"m_signal/O");
     m_simplifiedTree->Branch("m_type", &m_type, "m_type/D");
+    m_simplifiedTree->Branch("m_genStatus", &m_genStatus, "m_genStatus/D");
     m_simplifiedTree->Branch("m_pt", &m_pt, "m_pt/D");
     m_simplifiedTree->Branch("m_theta", &m_theta, "m_theta/D");
     m_simplifiedTree->Branch("m_phi", &m_phi, "m_phi/D");
@@ -712,6 +713,7 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     if(m_simpleOutput){
       m_signal = isSignal;
       m_type = particle->getPDG();
+      m_genStatus = particle->getGeneratorStatus();
       m_pt = mcPt;
       m_theta = mcTheta;
       m_phi = mcPhi;
@@ -902,21 +904,23 @@ bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::str
   }
 
   else if (cut=="Chargino") {
+    std::cout << "PDG = " << particle->getPDG() << std::endl;
 
     // Same as ILDLike, except for the genStatus requirement => isStable = true always
     bool isStable = true;
     bool passPt = false;
     bool passTheta = false;
-    bool passNHits = false;
+    bool passNHits = true;
 
     TLorentzVector p;
     p.SetPxPyPzE(particle->getMomentum()[0], particle->getMomentum()[1], particle->getMomentum()[2], particle->getEnergy());//in GeV
     if ( p.Pt()>=0.1 ) passPt = true;
     if ( fabs(cos(p.Theta()))<0.99 ) passTheta = true;
 
-    std::vector<TrackerHit*> trackHits = particleHits[particle];
+    /*std::vector<TrackerHit*> trackHits = particleHits[particle];
     int uniqueHits = getUniqueHits(trackHits,m_encoder);
     if(uniqueHits >= 4) passNHits = true;
+    */
 
     bool keepParticle = passTheta && passNHits && passPt && isStable; 
     if (keepParticle) return true;
