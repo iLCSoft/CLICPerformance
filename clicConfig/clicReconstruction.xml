@@ -566,7 +566,7 @@
     <parameter name="MCParticleNotReco" type="string" lcioOutType="MCParticle">MCParticleNotReco </parameter>
     <!--If true additional plots (n of hits per subdetector per mc particle, mc theta, mc pt, info if the particle is decayed in the tracker) will be added to the Ntuple mctree-->
     <parameter name="morePlots" type="bool">false </parameter>
-    <!--Set of cuts to define 'reconstractable' particles for eff computation. The options are: NHits, NHitsVXD, ILDLike-->
+    <!--Set of cuts to define 'reconstractable' particles for eff computation. The options are: NHits, NHitsVXD, ILDLike, AnyGenStatus, AnyGenStatusLowPt, SingleMu-->
     <parameter name="reconstructableDefinition" type="string">ILDLike </parameter>
     <!--Detector element ID for the vertex Barrel-->
     <parameter name="vertexBarrelID" type="int">1 </parameter>  <!-- obsolete -->
