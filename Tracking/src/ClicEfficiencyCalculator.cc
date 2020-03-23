@@ -97,7 +97,7 @@ ClicEfficiencyCalculator::ClicEfficiencyCalculator() : Processor("ClicEfficiency
   
   // Flag to decide which definition of reconstructable to use
   registerProcessorParameter( "reconstructableDefinition",
-                             "Set of cuts to define 'reconstructable' particles for eff computation. The options are: NHits, NHitsVXD, ILDLike, AnyGenStatus, AnyGenStatusLowPt",
+                             "Set of cuts to define 'reconstructable' particles for eff computation. The options are: NHits, NHitsVXD, ILDLike, AnyGenStatus, AnyGenStatusLowPt, SingleMu",
                              m_cuts,
                              std::string("NHits"));
   
@@ -611,9 +611,6 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     // No hits in the input collections
     if(particleHits.count(particle) == 0) continue;
     
-    // Cut on stable particles
-    //if(particle->getGeneratorStatus() != 1) continue;
-    
     // Now decide on criteria for different particle types/classifications
     m_particles["all"]++; // all particles
     
@@ -807,12 +804,28 @@ bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::str
     
   if (cut=="NHits") {
     
+    bool isStable = false;
+    bool passNHits = false;
+
+    // Cut on stable particles
+    if(particle->getGeneratorStatus() != 1) isStable = true;
+    
     // Only make tracks with 6 or more hits
     std::vector<TrackerHit*> trackHits = particleHits[particle];
     int uniqueHits = getUniqueHits(trackHits,m_encoder);
-    if(uniqueHits >= 4) return true;
+    if(uniqueHits >= 4) passNHits = true;
+
+    bool keepParticle = passNHits && isStable; 
+    if (keepParticle) return true;
+    
     
   } else if (cut=="NHitsVXD") {
+    
+    bool isStable = false;
+    bool passNHits = false;
+
+    // Cut on stable particles
+    if(particle->getGeneratorStatus() != 1) isStable = true;
     
     // Only make tracks with 4 or more hits in the vertex detector
     std::vector<TrackerHit*> trackHits = particleHits[particle];
@@ -822,10 +835,12 @@ bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::str
       int subdetector = getSubdetector(trackHits.at(ihit), encoder);
       if (subdetector==1 || subdetector==2) nVXDHits++;
     }
-    if (nVXDHits >= 4) return true;
+    if (nVXDHits >= 4) passNHits = true;
+
+    bool keepParticle = passNHits && isStable; 
+    if (keepParticle) return true;
     
   } else if (cut=="ILDLike") {
-    
     
     // Only consider particles: charged, stable, pT>0.1GeV, cosTheta<0.89, nHits>=4, IP in 10 cm
     //(a.t.m. cut in cosTheta is up to 0.89 instead of the usal 0.99 for cutting also particles in the vertex endcap region)
@@ -941,8 +956,9 @@ bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::str
   else if (cut=="SingleMu") {
     
     // Only consider particles: muons (|PDG|=13) with at least 4 hits pass
-    
+
     bool isMu = false;
+    bool isStable = false;
     bool passNHits = false;
     bool passPt = false;
     bool passTheta = false;
@@ -950,6 +966,9 @@ bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::str
     bool passEndPoint = false;
     //bool passVertexHits = false;
     bool isNotLoop = true;
+    
+    // Cut on stable particles
+    if(particle->getGeneratorStatus() != 1) isStable = true;
     
     double pdg = fabs(particle->getPDG());
     if (pdg==13) isMu = true;
@@ -997,7 +1016,7 @@ bool ClicEfficiencyCalculator::isReconstructable(MCParticle*& particle, std::str
     if ( fabs(cos(p.Theta()))<0.99 ) passTheta = true;
     
     //bool keepParticle = isMu && passNHits && passTheta && passPt && passIP && passEndPoint && passVertexHits && isNotLoop;
-    bool keepParticle = isMu && passNHits && passTheta && passPt && passIP && passEndPoint && isNotLoop;
+    bool keepParticle = isMu && isStable && passNHits && passTheta && passPt && passIP && passEndPoint && isNotLoop;
     if (keepParticle) return true;
     
   } else {
