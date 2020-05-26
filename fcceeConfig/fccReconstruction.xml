@@ -419,10 +419,16 @@
     <parameter name="EnergyLossOn" type="bool"> true </parameter>
     <parameter name="SmoothOn" type="bool"> false </parameter>
     <parameter name="extrapolateForward" type="bool"> true </parameter>
-    <parameter name="maxDeltaTheta" type="double"> 0.59 </parameter>
-    <parameter name="maxDeltaPhi" type="double"> 0.99 </parameter>
-    <parameter name="maxDeltaPt" type="double"> 0.69 </parameter>
-    <parameter name="mergeSplitTracks" type="bool"> false </parameter>
+    <!--if true, the merging of split tracks is performed-->
+    <parameter name="mergeSplitTracks" type="bool">false </parameter>
+    <!--minimum track pt for merging (in GeV/c)-->
+    <parameter name="minTrackPt" type="double">1 </parameter>
+    <!--maximum significance separation in phi-->
+    <parameter name="maxSignificancePhi" type="double">3 </parameter>
+    <!--maximum significance separation in pt-->
+    <parameter name="maxSignificancePt" type="double">2 </parameter>
+    <!--maximum significance separation in tanLambda-->
+    <parameter name="maxSignificanceTheta" type="double">3 </parameter>
   </processor>
 
   <processor name="Refit" type="RefitFinal">
