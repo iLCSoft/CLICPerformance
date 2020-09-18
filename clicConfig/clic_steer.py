@@ -210,7 +210,7 @@ SIM.physics.list = "FTFP_BERT"
 
 ##  location of particle.tbl file containing extra particles and their lifetime information
 ##     
-SIM.physics.pdgfile = os.path.join( os.environ.get("DD4HEP"), "DDG4/examples/particle.tbl" )
+SIM.physics.pdgfile = os.path.join( os.environ.get("DD4hepINSTALL"), "examples/DDG4/examples/particle.tbl" )
 
 ##  The global geant4 rangecut for secondary production
 ## 
