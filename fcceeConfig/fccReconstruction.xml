@@ -89,7 +89,7 @@
 
   <global>
     <parameter name="LCIOInputFiles">
-      /afs/cern.ch/work/e/eleogran/public/mu_sim/mu_validation_50kevents.slcio
+      /run/simulation/with/ctest/to/create/a/file.slcio
     </parameter>
     <!-- Limit the number of processed records (run+evt): -->
     <parameter name="MaxRecordNumber" value="-1" />
