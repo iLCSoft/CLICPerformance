@@ -130,7 +130,7 @@
 
   <global>
     <parameter name="LCIOInputFiles">
-      /eos/experiment/clicdp/grid/ilc/user/w/webermat/ddsimstdhep/ILC17-11-09_gcc62_CLIC_o3_v13/Zuds3000_split100/ddsim_ILC171109_gcc62_Zuds3000_CLIC_o3_v13_00_0.slcio
+      /run/simulation/with/ctest/to/create/a/file.slcio
     </parameter>
     <!-- Limit the number of processed records (run+evt): -->
     <parameter name="MaxRecordNumber" value="-1" />
@@ -146,7 +146,7 @@
     <!--Name of the DD4hep compact xml file to load-->
     <parameter name="EncodingStringParameter"> GlobalTrackerReadoutID </parameter>
     <parameter name="DD4hepXMLFile" type="string">
-      /cvmfs/clicdp.cern.ch/iLCSoft/builds/nightly/x86_64-slc6-gcc62-opt/lcgeo/HEAD/CLIC/compact/CLIC_o3_v13/CLIC_o3_v13.xml
+      /cvmfs/clicdp.cern.ch/iLCSoft/builds/nightly/x86_64-slc6-gcc62-opt/lcgeo/HEAD/CLIC/compact/CLIC_o3_v14/CLIC_o3_v14.xml
     </parameter>
   </processor>
 
