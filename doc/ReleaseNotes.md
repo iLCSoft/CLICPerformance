@@ -1,3 +1,55 @@
+# v02-04-01
+
+* 2020-09-21 Andre Sailer ([PR#132](https://github.com/iLCSoft/ClicPerformance/pull/132))
+  - CLIC Simulation: change the path to the particle.tbl file
+  - FCC Simulation: change the path to the particle.tbl file
+  - CLIC Reconstruction: change path of default detector and input file, fixes #131 
+  - FCC Reconstruction: change path of default  input file, fixes #131
+
+* 2020-06-03 Erica Brondolin ([PR#130](https://github.com/iLCSoft/ClicPerformance/pull/130))
+  - Adapt `fcc-` and `clicReconstruction.xml` according to the [PR#45 in MarlinTrkProcessors](https://github.com/iLCSoft/MarlinTrkProcessors/pull/45)
+  - `mergeSplitTracks` is set to true in the case of `clicReconstruction.xml`
+
+* 2020-03-31 Emilia Leogrande ([PR#128](https://github.com/iLCSoft/ClicPerformance/pull/128))
+  - New cuts for new definitions of reconstructability added to ClicEfficiencyCalculator
+  - Cut "AnyGenStatus" is optimized for charginos (no requirement on number of hits and on stability)
+  - Cut "AnyGenStatusLowPt" is optimized for soft pions from chargino decays (like "AnyGenStatus" but without requirement on pt)
+
+* 2020-02-07 Andre Sailer ([PR#127](https://github.com/iLCSoft/ClicPerformance/pull/127))
+  - ClicReconstruction: Reduce ConformalTracking.TooManyTracks to 100k from 500k
+  - FccReconstruction: Reduce ConformalTracking.TooManyTracks to 100k from 500k
+
+* 2020-02-05 Erica Brondolin ([PR#126](https://github.com/iLCSoft/ClicPerformance/pull/126))
+  - Add track purity in perfTree for tracking validation (already present in purTree)
+
+* 2020-01-24 Matthias Artur Weber ([PR#125](https://github.com/iLCSoft/ClicPerformance/pull/125))
+  - 1. JetAnalyzer for Jet and missing (transverse) energy studies
+  - 2. TrueMCintoRecoForJets MCParticle and ReconstructedParticle for jets selector, giving functionality to select different input particles
+      a) options for MC particles: stable particles, including all neutrinos, including all neutrinos from hadronic decays
+     b) remove reconstructed particles after angular matching to leptons from vector boson decays
+
+* 2019-10-04 Erica Brondolin ([PR#124](https://github.com/iLCSoft/ClicPerformance/pull/124))
+  - CLIC Reco: ConformalTracking: Set HighPTCut to 0
+      - According to a study on the conformal tracking fit for the ExtendTracks step, the quadratic term in the fit is not needed for the low-pT tracks. Results for ttbar w/o and w/ overlay shows unchanged level of tracking efficiency, slightly increase of fakerate, and reduction CPU time of 13%. Full set of results [here](https://indico.cern.ch/event/848916/contributions/3567053/attachments/1909256/3154418/EricaBrondolin_20190917_LowPtStudies.pdf).
+
+* 2019-10-02 Andre Sailer ([PR#123](https://github.com/iLCSoft/ClicPerformance/pull/123))
+  - FCC/CLICReco:  fix 'spelling' of TooManyTracks parameter value
+
+* 2019-09-13 Andre Sailer ([PR#119](https://github.com/iLCSoft/ClicPerformance/pull/119))
+  - clic_steer, fcc_steer: use g4units instead of dropped SystemOfUnits
+
+* 2019-08-26 Andre Sailer ([PR#118](https://github.com/iLCSoft/ClicPerformance/pull/118))
+  - DDSim Steer: fix spelling of ClassicalRK4 for magnetic field stepper, this is also the geant4 default
+
+* 2019-08-26 Erica Brondolin ([PR#115](https://github.com/iLCSoft/ClicPerformance/pull/115))
+  - Update xml file with z cut on ConformalTracking (https://github.com/iLCSoft/ConformalTracking/pull/53)
+
+* 2019-08-19 Emilia Leogrande ([PR#117](https://github.com/iLCSoft/ClicPerformance/pull/117))
+  - ClicEfficiencyCalculator: fixed m_vec_is_reconstructed branch for not reconstructed tracks in trackTree, fixes #116
+
+* 2019-07-08 Andre Sailer ([PR#114](https://github.com/iLCSoft/ClicPerformance/pull/114))
+  - FCC/ClicReco: add optional parameters for Output_REC, Output_DST so that they can be overwritten via the command line
+
 # v02-03
 
 * 2019-02-20 Oleksandr Viazlo ([PR#106](https://github.com/ilcsoft/ClicPerformance/pull/106))
