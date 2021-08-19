@@ -1011,7 +1011,7 @@
     <processor name="MergeClusters" type="MergeCollections">
       <parameter name="CollectionParameterIndex" type="int">0 </parameter>
       <parameter name="InputCollectionIDs" type="IntVec"> </parameter>
-      <parameter name="InputCollections" type="StringVec"> PandoraClusters LumiCalClusterer BeamCalClusters </parameter>
+      <parameter name="InputCollections" type="StringVec"> PandoraClusters LumiCalClusters BeamCalClusters </parameter>
       <parameter name="OutputCollection" type="string"> MergedClusters </parameter>
     </processor>
   </group>
