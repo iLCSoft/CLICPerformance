@@ -218,7 +218,7 @@ void HitResiduals::processEvent( LCEvent * evt ) {
 
       for( EVENT::TrackerHitVec::iterator it = trkHits.begin(); it != trkHits.end(); ++it ){
 
-	dd4hep::long64 id = (*it)->getCellID0() ;
+	const dd4hep::CellID id = (*it)->getCellID0() ;
 	cellid_decoder.setValue( id ) ;
 	streamlog_out(DEBUG1) << "id = " << id << std::endl;
 
