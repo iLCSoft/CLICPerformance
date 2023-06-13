@@ -1,5 +1,5 @@
 # CLICPerformance
-[![Build Status](https://travis-ci.org/iLCSoft/CLICPerformance.svg?branch=master)](https://travis-ci.org/iLCSoft/CLICPerformance)
+[![linux](https://github.com/iLCSoft/CLICPerformance/actions/workflows/linux.yml/badge.svg)](https://github.com/iLCSoft/CLICPerformance/actions/workflows/linux.yml)
 [![Build Status](https://scan.coverity.com/projects/12340/badge.svg)](https://scan.coverity.com/projects/ilcsoft-clicperformance)
 
 Package containing processors and configurations to determine the performance of the CLIC detector model
