@@ -432,7 +432,7 @@ SET(FCCee_DETECTOR_MODEL FCCee_o1_v04)
 SET( test_name "test_${FCCee_DETECTOR_MODEL}_sim" )
 ADD_TEST( NAME t_${test_name}
   COMMAND "run_test_lcgeo.sh"
-  ddsim --compactFile=$ENV{lcgeo_DIR}/FCCee/compact/${FCCee_DETECTOR_MODEL}/${FCCee_DETECTOR_MODEL}.xml
+  ddsim --compactFile=$ENV{lcgeo_DIR}/FCCee/CLD/compact/${FCCee_DETECTOR_MODEL}/${FCCee_DETECTOR_MODEL}.xml
   --runType=batch --inputFiles ../Tests/yyxyev_000.stdhep -N 2
   --outputFile=test${FCCee_DETECTOR_MODEL}.slcio --gun.isotrop=true --steeringFile=${CMAKE_CURRENT_SOURCE_DIR}/../fcceeConfig/fcc_steer.py
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../fcceeConfig/
@@ -443,7 +443,7 @@ SET( test_name "test_${FCCee_DETECTOR_MODEL}_reco_truth" )
 ADD_TEST( NAME t_${test_name}
   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/../Tests/bin/MarlinTests.sh
   ${CMAKE_INSTALL_PREFIX}/lib/libClicPerformance.so  Marlin
-  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/FCCee/compact/${FCCee_DETECTOR_MODEL}/${FCCee_DETECTOR_MODEL}.xml
+  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/FCCee/CLD/compact/${FCCee_DETECTOR_MODEL}/${FCCee_DETECTOR_MODEL}.xml
   --global.LCIOInputFiles=test${FCCee_DETECTOR_MODEL}.slcio fccReconstruction.xml
   --Config.Tracking=Truth
   --global.MaxRecordNumber=3
@@ -458,7 +458,7 @@ SET( test_name "test_${FCCee_DETECTOR_MODEL}_reco_conformal" )
 ADD_TEST( NAME t_${test_name}
   COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/../Tests/bin/MarlinTests.sh
   ${CMAKE_INSTALL_PREFIX}/lib/libClicPerformance.so  Marlin
-  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/FCCee/compact/${FCCee_DETECTOR_MODEL}/${FCCee_DETECTOR_MODEL}.xml
+  --InitDD4hep.DD4hepXMLFile=$ENV{lcgeo_DIR}/FCCee/CLD/compact/${FCCee_DETECTOR_MODEL}/${FCCee_DETECTOR_MODEL}.xml
   --global.LCIOInputFiles=test${FCCee_DETECTOR_MODEL}.slcio fccReconstruction.xml
   --Config.Tracking=Conformal
   --global.MaxRecordNumber=3
