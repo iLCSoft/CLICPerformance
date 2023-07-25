@@ -9,7 +9,7 @@ source /cvmfs/projects.cern.ch/intelsw/psxe/linux/all-setup.sh
 #----- parse command line - first argument is the
 #      test to run
 ## Drop existing ClicPerformance from MARLIN_DLL
-MARLIN_DLL=`echo $MARLIN_DLL | sed -e 's/:\?[-a-z0-9A-Z_/.=]*libClicPerformance.so[.0-9]*:\?/:/'`
+MARLIN_DLL=`echo $MARLIN_DLL | sed -E 's/(:?)[^:]*libClicPerformance\.so:?/\1/'`
 export MARLIN_DLL=$1:$MARLIN_DLL
 command=$2
 theargs=""
