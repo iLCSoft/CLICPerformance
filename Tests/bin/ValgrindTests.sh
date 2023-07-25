@@ -10,7 +10,7 @@
 #----- parse command line - first argument is the
 #      test to run
 ## Drop existing ClicPerformance from MARLIN_DLL
-MARLIN_DLL=`echo $MARLIN_DLL | sed -E 's/(:?)[^:]*libClicPerformance\.so:?/\1/'`
+MARLIN_DLL=`echo $MARLIN_DLL | sed -E 's/(:?)[^:]*libClicPerformance\.so[.\d]*:?/\1/'`
 export MARLIN_DLL=$1:$MARLIN_DLL
 export VALGRIND_LIB=$2
 command=$3
