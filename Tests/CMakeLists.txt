@@ -1,6 +1,6 @@
 SET( test_name "test_CLIC_o2_v04_sim" )
 ADD_TEST( NAME t_${test_name}
-  COMMAND "run_test_lcgeo.sh"
+  COMMAND "run_test_k4geo.sh"
   ddsim --compactFile=$ENV{lcgeo_DIR}/CLIC/compact/CLIC_o2_v04/CLIC_o2_v04.xml --runType=batch -G -N=100 --outputFile=testCLIC_o2_v04.slcio --gun.isotrop=true --steeringFile=${CMAKE_CURRENT_SOURCE_DIR}/../clicConfig/clic_steer.py
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../clicConfig/ CONFIGURATIONS o2_v04
   )
@@ -77,7 +77,7 @@ SET(EOS_BACKGROUND_FILE /eos/experiment/clicdp/grid/ilc/prod/clic/3tev/gghad/CLI
 SET(CLIC_DETECTOR_MODEL CLIC_o3_v14)
 SET( test_name "test_${CLIC_DETECTOR_MODEL}_sim" )
 ADD_TEST( NAME t_${test_name}
-  COMMAND "run_test_lcgeo.sh"
+  COMMAND "run_test_k4geo.sh"
   ddsim
   --compactFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
   --runType=batch --inputFile ../Tests/yyxyev_000.stdhep -N 2
@@ -223,7 +223,7 @@ SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  "Except
 
 SET( test_name "test_${CLIC_DETECTOR_MODEL}_sim_zuds" )
 ADD_TEST( NAME t_${test_name}
-  COMMAND "run_test_lcgeo.sh"
+  COMMAND "run_test_k4geo.sh"
   ddsim
   --compactFile=$ENV{lcgeo_DIR}/CLIC/compact/${CLIC_DETECTOR_MODEL}/${CLIC_DETECTOR_MODEL}.xml
   --runType=batch -N=4
@@ -431,7 +431,7 @@ SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES
 SET(FCCee_DETECTOR_MODEL FCCee_o1_v04)
 SET( test_name "test_${FCCee_DETECTOR_MODEL}_sim" )
 ADD_TEST( NAME t_${test_name}
-  COMMAND "run_test_lcgeo.sh"
+  COMMAND "run_test_k4geo.sh"
   ddsim --compactFile=$ENV{lcgeo_DIR}/FCCee/CLD/compact/${FCCee_DETECTOR_MODEL}/${FCCee_DETECTOR_MODEL}.xml
   --runType=batch --inputFiles ../Tests/yyxyev_000.stdhep -N 2
   --outputFile=test${FCCee_DETECTOR_MODEL}.slcio --gun.isotrop=true --steeringFile=${CMAKE_CURRENT_SOURCE_DIR}/../fcceeConfig/fcc_steer.py
