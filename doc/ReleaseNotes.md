@@ -1,3 +1,23 @@
+# v02-05
+
+* 2023-11-21 Andre Sailer ([PR#138](https://github.com/ilcsoft/CLICPerformance/pull/138))
+  - Tests: adapt, following the renaming of lcgeo to k4geo
+
+* 2023-08-07 Leonhard Reichenbach ([PR#137](https://github.com/ilcsoft/CLICPerformance/pull/137))
+  - Tests: add "=" to possible MARLIN_DLL paths as the newer key4hep nightlies contain that character
+
+* 2023-07-08 Andre Sailer ([PR#136](https://github.com/ilcsoft/CLICPerformance/pull/136))
+  - FCCee tests: change to new location of CLD in k4geo
+
+* 2023-06-13 tmadlener ([PR#134](https://github.com/ilcsoft/CLICPerformance/pull/134))
+  - Switch to `dd4hep::CellID` to be compatible with DD4hep after [AIDASoft/DD4hep#1125](https://github.com/AIDASoft/DD4hep/pull/1125)
+  - Remove deprecated and unused functionality
+  - Add github actions based CI workflows
+  - Remove travis-ci based CI workflows
+
+* 2021-08-20 Placido Fernandez Declara ([PR#133](https://github.com/ilcsoft/CLICPerformance/pull/133))
+  - Fix naming for MergeClusters collection name for LumiCalClusters
+
 # v02-04-01
 
 * 2020-09-21 Andre Sailer ([PR#132](https://github.com/iLCSoft/ClicPerformance/pull/132))
