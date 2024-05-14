@@ -437,7 +437,10 @@ ADD_TEST( NAME t_${test_name}
   --outputFile=test${FCCee_DETECTOR_MODEL}.slcio --gun.isotrop=true --steeringFile=${CMAKE_CURRENT_SOURCE_DIR}/../fcceeConfig/fcc_steer.py
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../fcceeConfig/
   )
-SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;ERROR;Error" )
+SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES
+  FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;ERROR;Error"
+  DEPENDS test_${FCCee_DETECTOR_MODEL}_sim
+)
  
 SET( test_name "test_${FCCee_DETECTOR_MODEL}_reco_truth" )
 ADD_TEST( NAME t_${test_name}
@@ -452,7 +455,10 @@ ADD_TEST( NAME t_${test_name}
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../fcceeConfig/
   CONFIGURATIONS TRUTH
   )
-SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error" )
+SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES
+  FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error"
+  DEPENDS test_${FCCee_DETECTOR_MODEL}_sim
+)
  
 SET( test_name "test_${FCCee_DETECTOR_MODEL}_reco_conformal" )
 ADD_TEST( NAME t_${test_name}
@@ -466,4 +472,7 @@ ADD_TEST( NAME t_${test_name}
   --Output_DST.LCIOOutputFile=reco_conformal_dst.slcio
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../fcceeConfig/
   )
-SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error" )
+SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES
+  FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error"
+  DEPENDS test_${FCCee_DETECTOR_MODEL}_sim
+)
