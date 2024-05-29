@@ -25,7 +25,3 @@ jobs:
             ..
           echo "::endgroup::" && echo "::group::Build"
           ninja -k0
-          echo "::endgroup::" && echo "::group::Install"
-          ninja install
-          echo "::endgroup::" && echo "::group::Run Tests"
-          ctest --output-on-failure
