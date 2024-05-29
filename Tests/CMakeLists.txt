@@ -135,7 +135,7 @@ ADD_TEST( NAME t_${test_name}
   )
 SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES
   FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;\\[ ERROR;Error"
-  DEPENDS t_test_${CLIC_DETECTOR_MODEL}_sim
+  DEPENDS t_test_${CLIC_DETECTOR_MODEL}_reco_conformal
 )
 
 SET( test_name "test_${CLIC_DETECTOR_MODEL}_reco_real_overlay" )
