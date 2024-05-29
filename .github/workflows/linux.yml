@@ -12,7 +12,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - uses: cvmfs-contrib/github-action-cvmfs@v3
+    - uses: cvmfs-contrib/github-action-cvmfs@v4
     - uses: aidasoft/run-lcg-view@v4
       with:
         view-path: "/cvmfs/clicdp.cern.ch/iLCSoft/lcg/${{ matrix.LCG }}/nightly/x86_64-centos7-${{ matrix.COMPILER }}-opt"
