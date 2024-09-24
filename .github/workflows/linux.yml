@@ -7,15 +7,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        COMPILER: [gcc11]
-        LCG: [104]
+        COMPILER: [gcc13]
+        LCG: [106]
 
     steps:
     - uses: actions/checkout@v4
     - uses: cvmfs-contrib/github-action-cvmfs@v4
     - uses: aidasoft/run-lcg-view@v4
       with:
-        view-path: "/cvmfs/clicdp.cern.ch/iLCSoft/lcg/${{ matrix.LCG }}/nightly/x86_64-centos7-${{ matrix.COMPILER }}-opt"
+        view-path: "/cvmfs/clicdp.cern.ch/iLCSoft/lcg/${{ matrix.LCG }}/nightly/x86_64-el9-${{ matrix.COMPILER }}-opt"
         setup-script: "init_ilcsoft.sh"
         run: |
           mkdir build
