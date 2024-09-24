@@ -2,7 +2,7 @@ name: linux
 on: [push, pull_request]
 
 jobs:
-  centos7:
+  Linux:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
