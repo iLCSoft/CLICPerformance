@@ -1,3 +1,11 @@
+# v02-05-01
+
+* 2024-05-29 Andre Sailer ([PR#140](https://github.com/iLCSoft/CLICPerformance/pull/140))
+  - Fix the test dependencies
+
+* 2024-05-14 Andre Sailer ([PR#139](https://github.com/iLCSoft/CLICPerformance/pull/139))
+  - Tests: Add dependencies for FCCee reco tests
+
 # v02-05
 
 * 2023-11-21 Andre Sailer ([PR#138](https://github.com/ilcsoft/CLICPerformance/pull/138))
