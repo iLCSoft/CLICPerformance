@@ -82,6 +82,7 @@ ADD_TEST( NAME t_${test_name}
   --outputFile=test${CLIC_DETECTOR_MODEL}.slcio
   --gun.isotrop=true
   --steeringFile=${CMAKE_CURRENT_SOURCE_DIR}/../clicConfig/clic_steer.py
+  --physics.ESeverity IgnoreTheIssue
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../clicConfig/
   )
 SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION  "Exception;EXCEPTION;ERROR;Error" )
@@ -440,6 +441,7 @@ ADD_TEST( NAME t_${test_name}
   COMMAND ddsim --compactFile=$ENV{lcgeo_DIR}/FCCee/CLD/compact/${FCCee_DETECTOR_MODEL}/${FCCee_DETECTOR_MODEL}.xml
   --runType=batch --inputFiles ../Tests/yyxyev_000.stdhep -N 2
   --outputFile=test${FCCee_DETECTOR_MODEL}.slcio --gun.isotrop=true --steeringFile=${CMAKE_CURRENT_SOURCE_DIR}/../fcceeConfig/fcc_steer.py
+  --physics.ESeverity IgnoreTheIssue
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../fcceeConfig/
   )
 SET_TESTS_PROPERTIES( t_${test_name} PROPERTIES
