@@ -332,7 +332,8 @@ void ClicEfficiencyCalculator::processEvent( LCEvent* evt ) {
     // Get the collection of tracker hit relations
     LCCollection* trackerHitRelationCollection = 0 ;
     getCollection(trackerHitRelationCollection, m_inputTrackerHitRelationCollections[collection], evt);
-    
+    if(trackerHitRelationCollection == 0) continue;
+
     // Create the relations navigator
     std::shared_ptr<LCRelationNavigator> relation =
       std::make_shared<LCRelationNavigator>( LCRelationNavigator( trackerHitRelationCollection ) );
