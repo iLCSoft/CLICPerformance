@@ -1,3 +1,14 @@
+# v02-05-02
+
+* 2026-05-10 Juan Miguel Carceller ([PR#147](https://github.com/iLCSoft/CLICPerformance/pull/147))
+  - Add a check for when there isn't a trackerHitRelationCollection, like for all the other collections
+
+* 2026-04-17 Thomas Madlener ([PR#146](https://github.com/iLCSoft/CLICPerformance/pull/146))
+  - Make sure that the `DetType`s are defined in the CLIC visualization geometry to avoid failing to load the geometry with newer versions of DD4hep
+
+* 2025-09-09 Juan Miguel Carceller ([PR#145](https://github.com/iLCSoft/CLICPerformance/pull/145))
+  - Fix tests by not using `run_test_k4geo` (removed in https://github.com/key4hep/k4geo/pull/502) and also ignoring the warnings about mass differences for unstable particles
+
 # v02-05-01
 
 * 2024-05-29 Andre Sailer ([PR#140](https://github.com/iLCSoft/CLICPerformance/pull/140))
