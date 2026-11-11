@@ -1,3 +1,8 @@
+# v02-06
+
+* 2026-11-11 Juan Miguel Carceller ([PR#148](https://github.com/iLCSoft/CLICPerformance/pull/148))
+  - Require CMake 3.10 to fix `Compatibility with CMake < 3.5 has been removed from CMake.`
+
 # v02-05-02
 
 * 2026-05-10 Juan Miguel Carceller ([PR#147](https://github.com/iLCSoft/CLICPerformance/pull/147))
